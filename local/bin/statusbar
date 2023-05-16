@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+while sleep 1
+do
+	rold=$rnew rnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/rx_bytes)
+	told=$tnew tnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/tx_bytes)
+	rsum=$(numfmt --to=iec-i $(( rnew - ${rold:-0} )))B
+	tsum=$(numfmt --to=iec-i $(( tnew - ${told:-0} )))B
+	bat0=$(cd /sys/class/power_supply/BAT0/ && cat status capacity | tr '\n' ' ' || echo Error)
+	stat=" NET $rsum $tsum | BAT $bat0 | CAL $(date '+%a %d %b %I:%M %p') "
+	[ "$XDG_SESSION_TYPE" = 'x11' ] && xsetroot -name "$stat" ||  echo "$stat"
+done 2> /dev/null

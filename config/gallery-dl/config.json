@@ -1,0 +1,1 @@
+{"extractor":{"base-directory":"~","pixiv":{"directory":{"height >= width":["tatenaga","{user[id]:>08}"],"height < width":["yokonaga","{user[id]:>08}"]}}}}

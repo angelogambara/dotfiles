@@ -1,0 +1,15 @@
+colors:
+  primary:
+    background: '#323232'
+    foreground: '#ffffff'
+font:
+  normal:
+    family: monospace
+  size: 10
+window:
+  opacity: 0.70
+  padding:
+    x: 5
+    y: 5
+  scrolling:
+    history: 50000

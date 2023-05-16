@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Warning: This script is a concept and should not
+# be used in a production environment.
+
+set -- "$1" "${2:+$2/$(date '+%Y-%m-%d_%H-%M-%S')}" "${2:+$(realpath "$2"/* | tail -n 1)}"
+
+sudo rsync -axii --delete --exclude=/swapfile --link-dest="$3"       "$1"/      "$2"/
+sudo rsync -axii --delete --exclude=/swapfile --link-dest="$3"/boot/ "$1"/boot/ "$2"/boot/
+sudo rsync -axii --delete --exclude=/swapfile --link-dest="$3"/home/ "$1"/home/ "$2"/home/

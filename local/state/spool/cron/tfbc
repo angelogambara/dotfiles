@@ -1,0 +1,2 @@
+00 10-20/05 * * * export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1; swaynag -t warning -m 'Press the button when you are ready to snapshot.' -b Snapshot 'sudo snapshot' -s Snooze
+15-45/15 20 * * * export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1; swaynag -t warning -m 'Press the button when you are ready to poweroff.' -b Poweroff 'sudo poweroff' -s Snooze
