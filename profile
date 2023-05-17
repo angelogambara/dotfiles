@@ -10,8 +10,8 @@ export XDG_STATE_HOME=~/.local/state
 export ELINKS_CONFDIR="$XDG_CONFIG_HOME"/elinks
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 
-export RANDFILE="$XDG_STATE_HOME"/hst
-export HISTFILE="$XDG_STATE_HOME"/rnd
+export HISTFILE="$XDG_STATE_HOME"/hst
+export RANDFILE="$XDG_STATE_HOME"/rnd
 
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR"/gnupg/S.gpg-agent.ssh
 export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus

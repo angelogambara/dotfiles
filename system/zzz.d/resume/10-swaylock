@@ -1,0 +1,2 @@
+#!/bin/bash
+export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1; sudo -Eu tfbc swaylock -i ~/.cache/picture

@@ -8,9 +8,9 @@ bindsym F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym F2 exec pactl set-sink-volume @DEFAULT_SINK@ -05%
 bindsym F3 exec pactl set-sink-volume @DEFAULT_SINK@ +05%
 
-bindsym Mod4+a exec alacritty -e '/usr/bin/bash'
+bindsym Mod4+Shift+p exec alacritty
 bindsym Mod4+d exec swayidle timeout 1 $dpms resume $undo
-bindsym Mod4+f exec dmenu_run -nf '#ffffff' -nb '#323232'
+bindsym Mod4+p exec dmenu_run -nf '#ffffff' -nb '#323232'
 bindsym Mod4+s exec sxiv -ro tatenaga/ yokonaga/
 
 bindsym Mod4+1 workspace 1
@@ -65,7 +65,7 @@ bar {
 	}
 }
 
-output * bg ~/.picture fill
+output * bg ~/.cache/picture fill
 
 input type:keyboard {
 	repeat_delay 250
