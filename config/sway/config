@@ -33,6 +33,9 @@ bindsym Mod4+Shift+7 move workspace 7
 bindsym Mod4+Shift+8 move workspace 8
 bindsym Mod4+Shift+9 move workspace 9
 
+bindsym Mod4+Shift+Return reload
+bindsym Mod4+Return sticky toggle
+
 bindsym Mod4+Space focus mode_toggle
 bindsym Mod4+Shift+Space floating toggle
 

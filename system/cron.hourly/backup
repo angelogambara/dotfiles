@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+BORG_REPO=/borg
+BORG_ARCH=$(date '+%Y%m%d%H%M')
+BORG_LOGS=$BORG_REPO/logs/$BORG_ARCH.log
+BORG_DATA=$BORG_REPO::$BORG_ARCH
+
+mkdir -p "$BORG_REPO/logs/"
+set -- / /boot /home --compression auto,zstd,18 --one-file-system
+
+borg create "$BORG_DATA" "$@" --list 2>&1 | tee "$BORG_LOGS"
+borg prune -m 12 -w 4 -d 7 "$BORG_REPO" && borg compact "$BORG_REPO"
