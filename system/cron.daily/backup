@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+set -- "$@" -C auto,zstd,18 -xe /swapfile /borg::"$(date '+%Y%m%d%H%M')" / /boot /home
+
+borg create "$@"
+borg prune -m 12 -w 4 -d 7 /borg
+borg compact /borg
