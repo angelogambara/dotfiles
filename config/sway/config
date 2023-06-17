@@ -4,9 +4,9 @@ set $undo 'swaymsg "output * dpms  on" && pkill swayidle'
 exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
 exec autotiling & dunst & fcitx5 & pipewire & pipewire-pulse & wireplumber &
 
-bindsym F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym F2 exec pactl set-sink-volume @DEFAULT_SINK@ -05%
-bindsym F3 exec pactl set-sink-volume @DEFAULT_SINK@ +05%
+bindsym --locked F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -05%
+bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +05%
 
 bindsym Mod4+Shift+p exec alacritty
 bindsym Mod4+d exec swayidle timeout 1 $dpms resume $undo
