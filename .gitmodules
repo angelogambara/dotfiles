@@ -1,9 +1,15 @@
+[submodule "config/nvim/pack/plug/start/emmet-vim"]
+	path = config/nvim/pack/plug/start/emmet-vim
+	url = https://github.com/mattn/emmet-vim
 [submodule "config/nvim/pack/plug/start/goyo.vim"]
 	path = config/nvim/pack/plug/start/goyo.vim
 	url = https://github.com/junegunn/goyo.vim
-[submodule "config/nvim/pack/plug/start/vimwiki"]
-	path = config/nvim/pack/plug/start/vimwiki
-	url = https://github.com/vimwiki/vimwiki
 [submodule "config/nvim/pack/plug/start/undotree"]
 	path = config/nvim/pack/plug/start/undotree
 	url = https://github.com/mbbill/undotree
+[submodule "config/nvim/pack/plug/start/vim-surround"]
+	path = config/nvim/pack/plug/start/vim-surround
+	url = https://github.com/tpope/vim-surround
+[submodule "config/nvim/pack/plug/start/vimwiki"]
+	path = config/nvim/pack/plug/start/vimwiki
+	url = https://github.com/vimwiki/vimwiki

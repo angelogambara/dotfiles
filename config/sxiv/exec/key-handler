@@ -1,7 +1,8 @@
 #!/bin/sh
 
 case "$1" in
-	"0") [ "$(dmenu <&- -p 'sxiv: ignore files? [y/N]')" = 'y' ] && while read -r f; do printf '%s\0' "$f"; done | xargs -0 -I{} sh -c ':> {}' ;;
+	"b") read f; ln -fs "$(realpath "$f")" ~/.background; exit 0 ;;
+	"l") read f; ln -fs "$(realpath "$f")" ~/.lockscreen; exit 0 ;;
 	"r") [ "$(dmenu <&- -p 'sxiv: remove files? [y/N]')" = 'y' ] && while read -r f; do printf '%s\0' "$f"; done | xargs -0 -I{} sh -c 'rm {}' ;;
-	"x") read f; (ln -f -s "$(realpath "${f}")" ~/.cache/picture && swaymsg "output * bg $f fill" || xwallpaper --zoom "$f"); exit 0 ;;
+	"0") [ "$(dmenu <&- -p 'sxiv: ignore files? [y/N]')" = 'y' ] && while read -r f; do printf '%s\0' "$f"; done | xargs -0 -I{} sh -c ':> {}' ;;
 esac

@@ -1,0 +1,5 @@
+[default_session]
+user = "_greeter"
+command = "agreety --cmd 'dbus-run-session -- sway'"
+[terminal]
+vt = 7

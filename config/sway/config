@@ -1,12 +1,14 @@
 set $dpms 'swaymsg "output * dpms off" && pgrep swayidle'
 set $undo 'swaymsg "output * dpms  on" && pkill swayidle'
 
-exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
-exec autotiling & dunst & fcitx5 & pipewire & pipewire-pulse & wireplumber &
+exec autotiling & fcitx5 & pipewire & pipewire-pulse & wireplumber &
 
 bindsym --locked F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -05%
-bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +05%
+bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+bindsym --locked F7 exec swaymsg 'output * transform 270'
+bindsym --locked F8 exec swaymsg 'output * transform 0'
 
 bindsym Mod4+Shift+p exec alacritty
 bindsym Mod4+d exec swayidle timeout 1 $dpms resume $undo
@@ -68,7 +70,7 @@ bar {
 	}
 }
 
-output * bg ~/.cache/picture fill
+output * bg ~/.background fill
 
 input type:keyboard {
 	repeat_delay 250

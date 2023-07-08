@@ -1,3 +1,3 @@
 #!/bin/sh
-xbps-remove -O
+xbps-remove -Oyo
 vkpurge rm all

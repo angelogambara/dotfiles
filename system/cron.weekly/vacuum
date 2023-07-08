@@ -1,2 +1,3 @@
 #!/bin/sh
 cd /var/log/socklog && rm */@*
+cd ~/.local/share && rm -fr Trash/*

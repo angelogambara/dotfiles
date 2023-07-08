@@ -1,5 +1,5 @@
 set clipboard+=unnamedplus
-set tabstop=4 shiftwidth=4
+set tabstop=2 shiftwidth=2
 
 set list spelllang=en,it shada="NONE"
 
@@ -13,3 +13,13 @@ nnoremap <C-n> :n<CR>
 nnoremap <C-p> :N<CR>
 nnoremap <F10> :nohlsearch<CR>
 nnoremap <F11> :set spell!<CR>
+
+let g:mapleader = " "
+let g:vimwiki_list =
+			\ [{
+			\ 'syntax': 'markdown',
+			\ 'path': '~/schedule',
+			\ 'index': 'README',
+			\ 'ext': '.md',
+			\ 'auto_diary_index': 1
+			\ }]

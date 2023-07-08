@@ -1,5 +1,15 @@
-[user]
-	name = Angelo Gambara
-	email = gambara.angelo@gmail.com
+[alias]
+	google = log --pretty='format:%C(blue)%ae %C(green)%cr %C(yellow)%h %C(red)%G? %C(reset)%s'
+
 [init]
 	defaultBranch = main
+
+[core]
+	autocrlf = input
+
+[user]
+	email = gambara.angelo@gmail.com
+	name = Angelo Gambara
+
+[safe]
+	directory = /usr/share/nginx/html

@@ -2,4 +2,4 @@
 export WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-1}
 export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
 
-sudo -Eu \#1000 swaylock -efi ~/.lockscreen
+swaynag -t warning -m 'Select the action you want to perform.' -b 'Poweroff' 'sudo poweroff' -b 'Reboot' 'sudo reboot'
