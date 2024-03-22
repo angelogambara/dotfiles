@@ -1,0 +1,16 @@
+[alias]
+	browse = "!git remote -v | grep origin | head -1 | sed 's/^.*\\t//;s/\\s.*$//;s|:|/|;s|git@|https://|'"
+	google = log --pretty='format:%C(blue)%ae %C(green)%cr %C(yellow)%h %C(red)%G? %C(reset)%s'
+
+[core]
+	autocrlf = input
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = true
+
+[user]
+	email = gambara.angelo@gmail.com
+	name = Angelo Gambara

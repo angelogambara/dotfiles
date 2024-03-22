@@ -1,0 +1,1 @@
+user_pref("gfx.color_management.display_profile", "/home/angelogambara/Documents/GitHub Repos/dotfiles/local/share/color/icc/benq-sw240_i5-12400_panel.icc"); user_pref("gfx.color_management.mode", 1); user_pref("network.http.referer.XOriginPolicy", 0);

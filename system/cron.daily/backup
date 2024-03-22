@@ -1,0 +1,2 @@
+#!/bin/sh
+borg create "$@" -xC 'auto,zstd,18' /borg::"$(date '+%Y%m%d')" / /boot

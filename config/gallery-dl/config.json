@@ -1,0 +1,24 @@
+{
+   "extractor":{
+      "base-directory":"~/Pictures",
+      "cookies":[
+         "firefox"
+      ],
+      "pixiv":{
+         "bookmark":{
+            "directory":[
+               "Pixiv Artwork",
+               "{user['id']:>08}"
+            ]
+         }
+      },
+      "twitter":{
+         "bookmark":{
+            "directory":[
+               "Twitter Artwork",
+               "{author['id']:>20}"
+            ]
+         }
+      }
+   }
+}

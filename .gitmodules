@@ -1,0 +1,6 @@
+[submodule "config/nvim/pack/plug/start/goyo.vim"]
+	path = config/nvim/pack/plug/start/goyo.vim
+	url = https://github.com/junegunn/goyo.vim
+[submodule "config/nvim/pack/plug/start/undotree"]
+	path = config/nvim/pack/plug/start/undotree
+	url = https://github.com/mbbill/undotree

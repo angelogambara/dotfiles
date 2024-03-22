@@ -1,0 +1,15 @@
+color info black white
+color listfocus_unread black white bold
+color listfocus black white
+
+macro e set browser "mpv --shuffle %u > /dev/null 2>&1 &" ; open-in-browser
+
+bind-key h quit
+bind-key j next
+bind-key k prev
+bind-key l open
+
+confirm-mark-all-feeds-read no
+confirm-mark-feed-read no
+
+max-items 15

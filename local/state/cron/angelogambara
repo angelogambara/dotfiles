@@ -1,0 +1,2 @@
+*/30 03-22 * * * . ./.profile && muttsetup -y gambara.angelo@gmail.com
+*/30 19-22 * * * . ./.profile && swayzzz

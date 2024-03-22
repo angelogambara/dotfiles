@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+# See original at https://www.reddit.com/ayedi1
+
+sh_pid=$(pgrep -nP "$(swaymsg -t get_tree | jq \
+	'.. | select(.type?) | select(.type=="con") | select(.focused==true).pid')")
+
+readlink /proc/"$sh_pid"/cwd || printf "$HOME\n"

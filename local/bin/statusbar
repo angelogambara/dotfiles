@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# licensed under ISC by angelo gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+while sleep 1
+do
+	echo "$time" | grep -qo '00:00\|30:00' && swayzzz &
+	trap "logger -t ${0##*/} 'Your screen time since the last boot ($(uptime -s)): $time'" TERM
+	rold=$rnew rnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/rx_bytes)
+	told=$tnew tnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/tx_bytes)
+	rsum=$(numfmt --to=iec-i $(( rnew - ${rold:-0} )))B
+	tsum=$(numfmt --to=iec-i $(( tnew - ${told:-0} )))B
+	time=$(python -c 'import datetime,time;print(str(datetime.timedelta(seconds=time.clock_gettime(time.CLOCK_MONOTONIC)))[:-7])')
+	stat=" NET $rsum $tsum | RUN $time | CAL $(date '+%a %d %b %I:%M %p') "
+	[ "$XDG_SESSION_TYPE" = 'x11' ] && xsetroot -name "${stat}" || printf "${stat}\n"
+done 2> /dev/null

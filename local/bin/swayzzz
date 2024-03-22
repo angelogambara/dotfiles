@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
+export WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-1}
+
+swaynag -t warning -m 'Shut down this system now?' \
+  -b 'Shut Down' 'sudo poweroff' -b 'Restart' 'sudo reboot' -b 'Suspend' 'sudo zzz'
