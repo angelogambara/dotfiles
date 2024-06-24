@@ -1,0 +1,2 @@
+* 00-15 * * * chmod -x /usr/bin/prismlauncher
+* 16-23 * * * chmod +x /usr/bin/prismlauncher

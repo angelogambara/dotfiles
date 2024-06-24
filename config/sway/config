@@ -1,0 +1,76 @@
+exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
+exec pipewire & pipewire-pulse & wireplumber & autotiling & dunst
+
+font pango:JetbrainsMono Nerd Font 11
+
+bar {
+  position top
+  status_command while date +' %A, %B %d %l:%M '; do sleep 1; done
+
+  colors {
+    statusline #ffffff
+    background #323232
+    inactive_workspace #323232 #323232 #5c5c5c
+  }
+}
+
+output * bg ~/.local/share/backgrounds/sway fill
+
+input type:keyboard {
+  repeat_delay 250
+  repeat_rate 50
+}
+
+bindsym --locked F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+bindsym Mod4+Return exec alacritty
+bindsym Mod4+Shift+Return exec dm-run
+
+bindsym Mod4+space focus mode_toggle
+bindsym Mod4+Shift+space floating toggle
+
+bindsym Mod4+Tab workspace next
+bindsym Mod4+Shift+Tab workspace prev
+
+bindsym Mod4+h focus left
+bindsym Mod4+j focus down
+bindsym Mod4+k focus up
+bindsym Mod4+l focus right
+
+bindsym Mod4+Shift+h move left
+bindsym Mod4+Shift+j move down
+bindsym Mod4+Shift+k move up
+bindsym Mod4+Shift+l move right
+
+bindsym Mod4+o output 'DP-1' toggle
+bindsym Mod4+Shift+o output 'DP-2' toggle
+
+bindsym Mod4+p exec grim -g "$(slurp)" - | swappy -f -
+
+bindsym Mod4+s exec sxiv -P '' -ro manga pixiv
+bindsym Mod4+Shift+s exec sxiv -ro manga pixiv
+
+bindsym Mod4+q kill
+bindsym Mod4+Shift+q exit
+
+bindsym Mod4+1 workspace 1
+bindsym Mod4+2 workspace 2
+bindsym Mod4+3 workspace 3
+bindsym Mod4+4 workspace 4
+bindsym Mod4+5 workspace 5
+bindsym Mod4+6 workspace 6
+bindsym Mod4+7 workspace 7
+bindsym Mod4+8 workspace 8
+bindsym Mod4+9 workspace 9
+
+bindsym Mod4+Shift+1 move workspace 1
+bindsym Mod4+Shift+2 move workspace 2
+bindsym Mod4+Shift+3 move workspace 3
+bindsym Mod4+Shift+4 move workspace 4
+bindsym Mod4+Shift+5 move workspace 5
+bindsym Mod4+Shift+6 move workspace 6
+bindsym Mod4+Shift+7 move workspace 7
+bindsym Mod4+Shift+8 move workspace 8
+bindsym Mod4+Shift+9 move workspace 9
