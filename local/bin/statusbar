@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+while sleep 1
+do
+  rold=$rnew rnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/rx_bytes)
+  told=$tnew tnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/tx_bytes)
+  rsum=$(numfmt --to=iec-i $(( rnew - ${rold:-0} )))B
+  tsum=$(numfmt --to=iec-i $(( tnew - ${told:-0} )))B
+  stat=" NET $rsum $tsum | CAL $(date '+%a %d %b %I:%M %p') "
+  [ "$XDG_SESSION_TYPE" = 'wayland' ] && printf "${stat}\n" || xsetroot -name "${stat}"
+done
+
+# #!/usr/bin/env python3
+# 
+# # Licensed under ISC by Angelo Gambara, published at
+# # https://github.com/angelogambara/dotfiles
+# 
+# import datetime, os, time
+# 
+# dnew, unew = 0, 0
+# while True:
+#     time.sleep(1)
+#     dold, uold = dnew, unew
+# 
+#     with open('/sys/class/net/wlp2s0/statistics/rx_bytes', 'r') as f: dnew = int(f.read())
+#     with open('/sys/class/net/wlp2s0/statistics/tx_bytes', 'r') as f: unew = int(f.read())
+#     dps = str(os.popen('numfmt --to=iec-i ' + str(dnew - dold)).read().strip() + 'B')
+#     ups = str(os.popen('numfmt --to=iec-i ' + str(unew - uold)).read().strip() + 'B')
+#     use = str(datetime.timedelta(seconds=time.clock_gettime(time.CLOCK_MONOTONIC)))[:-7]
+#     cal = str(datetime.datetime.now().strftime('%a %d %b %I:%M %p'))
+#     bar = ' NET ' + dps + ' ' + ups + ' | USE ' + use + ' | CAL ' + cal + ' '
+#     print(bar, flush=True) if os.environ['XDG_SESSION_TYPE'] == 'wayland' else os.system('xsetroot -name ' + bar)

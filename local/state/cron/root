@@ -1,0 +1,2 @@
+* 01-18 * * * chmod +x /usr/lib/firefox/firefox
+* 19-23 * * * chmod -x /usr/lib/firefox/firefox

@@ -1,0 +1,5 @@
+#!/bin/sh
+xbps-remove -O
+fstrim /
+rm ~/.local/share/Trash/*/*
+rm /var/log/socklog/*/@*
