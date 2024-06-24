@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case "$1" in
+  "0") [ "$(dmenu <&- -p 'sxiv: key-handler: ignore? [y/N]')" = 'y' ] && while read r; do printf '"%s"\0' "$r"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
+  "r") [ "$(dmenu <&- -p 'sxiv: key-handler: remove? [y/N]')" = 'y' ] && while read r; do printf '"%s"\0' "$r"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
+  "p") while read r; do d=$(echo "$r" | awk -F '/' '{print $3}') && printf "https://www.pixiv.net/users/${d#${d%%[!0]*}}\0"; done | sort -z | uniq -z | xargs -0 firefox ;;
+  "o") read r; ln -fs "$(realpath "$r")" ~/.local/share/backgorunds/swaybg; exit 0 ;;
+esac

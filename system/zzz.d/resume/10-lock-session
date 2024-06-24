@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-1}"
+sudo -Eu '#1000' swaylock -efi ~/.local/share/backgorunds/swaybg
