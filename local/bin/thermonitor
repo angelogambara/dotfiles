@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+while true; do
+  sensors | awk '/Core 0/ { print $3 }'
+  sleep 1
+done

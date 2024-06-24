@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+# Display uptime excluding sleep time
+# https://unix.stackexchange.com/q/172020
+
+import datetime
+import time
+
+clock = time.clock_gettime(time.CLOCK_MONOTONIC)
+print(datetime.timedelta(seconds=clock))
