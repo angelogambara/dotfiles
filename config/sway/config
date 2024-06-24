@@ -1,0 +1,92 @@
+font pango:JetbrainsMono Nerd Font 11
+
+bar {
+  position top
+  status_command swayutils -b
+
+  colors {
+    statusline #ffffff
+    background #323232
+    inactive_workspace #323232 #323232 #5c5c5c
+  }
+}
+
+exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
+exec pipewire & pipewire-pulse & wireplumber & autotiling & dunst
+
+bindsym Mod4+Tab workspace next
+bindsym Mod4+Shift+Tab workspace prev
+
+bindsym Mod4+Space focus mode_toggle
+bindsym Mod4+Shift+Space floating toggle
+
+bindsym Mod4+Return exec alacritty --working-directory "$(swayutils -c)"
+bindsym Mod4+Shift+Return exec dmenu_run -nf '#ffffff' -nb '#323232'
+
+bindsym Mod4+t layout tabbed
+bindsym Mod4+Shift+t layout stacking
+
+bindsym Mod4+s exec sxiv -ro ~/Pictures
+bindsym Mod4+Shift+s exec sxiv -ro ~/"Pictures/Nyaa Literature/Akebi's Sailor Uniform"
+
+bindsym Mod4+r reload
+bindsym Mod4+Shift+r mode "output"
+
+bindsym Mod4+q kill
+bindsym Mod4+Shift+q exit
+
+bindsym Mod4+h focus left
+bindsym Mod4+j focus down
+bindsym Mod4+k focus up
+bindsym Mod4+l focus right
+
+bindsym Mod4+Shift+h move left
+bindsym Mod4+Shift+j move down
+bindsym Mod4+Shift+k move up
+bindsym Mod4+Shift+l move right
+
+bindsym Mod4+1 workspace 1
+bindsym Mod4+2 workspace 2
+bindsym Mod4+3 workspace 3
+bindsym Mod4+4 workspace 4
+bindsym Mod4+5 workspace 5
+bindsym Mod4+6 workspace 6
+bindsym Mod4+7 workspace 7
+bindsym Mod4+8 workspace 8
+bindsym Mod4+9 workspace 9
+
+bindsym Mod4+Shift+1 move workspace 1
+bindsym Mod4+Shift+2 move workspace 2
+bindsym Mod4+Shift+3 move workspace 3
+bindsym Mod4+Shift+4 move workspace 4
+bindsym Mod4+Shift+5 move workspace 5
+bindsym Mod4+Shift+6 move workspace 6
+bindsym Mod4+Shift+7 move workspace 7
+bindsym Mod4+Shift+8 move workspace 8
+bindsym Mod4+Shift+9 move workspace 9
+
+bindsym --locked F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+output * bg ~/.local/share/backgorunds/swaybg fill
+
+mode "output" {
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+
+  bindsym Mod4+1 output 'DP-1' transform 90 clockwise
+  bindsym Mod4+Shift+1 output 'DP-1' transform 90 anticlockwise
+  bindsym Mod4+Shift+Ctrl+1 output 'DP-1' toggle
+
+  bindsym Mod4+2 output 'DP-2' transform 90 clockwise
+  bindsym Mod4+Shift+2 output 'DP-2' transform 90 anticlockwise
+  bindsym Mod4+Shift+Ctrl+2 output 'DP-2' toggle
+}
+
+for_window [app_id="mpv"] floating enable
+
+input type:keyboard {
+  repeat_delay 250
+  repeat_rate 50
+}

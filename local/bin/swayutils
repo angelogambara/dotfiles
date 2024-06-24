@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Licensed under ISC by Angelo Gambara, published at
+# https://github.com/angelogambara/dotfiles
+
+swaybar() {
+  while sleep 1
+  do
+    rold=$rnew rnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/rx_bytes)
+    told=$tnew tnew=$(sed '/^0/d' /sys/class/net/[ew]*/statistics/tx_bytes)
+    rsum=$(numfmt --to=iec-i $(( rnew - ${rold:-0} )))B
+    tsum=$(numfmt --to=iec-i $(( tnew - ${told:-0} )))B
+    stat=" NET $rsum $tsum | CAL $(date '+%a %d %b %I:%M %p') "
+    [ "$XDG_SESSION_TYPE" = 'wayland' ] && printf "${stat}\n" || xsetroot -name "${stat}"
+  done 2>/dev/null
+}
+
+swaycwd() {
+  focused=$(swaymsg -t get_tree | jq '.. | select(.type?) | select(.type=="con") | select(.focused==true).pid')
+  readlink /proc/"$(pgrep -nP "$focused")"/cwd || echo ~
+}
+
+swayuse() {
+  python -c 'import datetime,time;print(str(datetime.timedelta(seconds=time.clock_gettime(time.CLOCK_MONOTONIC)))[:-7])'
+}
+
+case $1 in
+  -b) shift && swaybar "$@" ;;
+  -c) shift && swaycwd "$@" ;;
+  -u) shift && swayuse "$@" ;;
+   *) echo "${0##*/}: usage: ${0##*/} [-bcu [args ...]]" ;;
+esac
