@@ -1,0 +1,10 @@
+#!/bin/sh
+
+case "$1" in
+  "0") [ "$(dmenu <&- -p 'sxiv: key-handler: ignore? [y/N]')" = 'y' ] && while read r; do printf '"%s"\0' "$r"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
+  "r") [ "$(dmenu <&- -p 'sxiv: key-handler: remove? [y/N]')" = 'y' ] && while read r; do printf '"%s"\0' "$r"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
+  "a") while read r; do echo "$r" | awk -F '/' '{gsub(/^0+/,"",$4); gsub(/_.*$/,"",$4); printf("https://www.pixiv.net/artworks/%s\n", $4)}'; done | uniq | xargs firefox ;;
+  "u") while read r; do echo "$r" | awk -F '/' '{gsub(/^0+/,"",$3); printf("https://www.pixiv.net/users/%s\n", $3)}'; done | uniq | xargs firefox ;;
+  "q") while read r; do echo "$r"; done > ~/Desktop/"$(date '+nsxiv-%y%m%d-%H%M%S.log')" ;;
+  "w") read r; ln -fs "$(realpath "$r")" ~/.cache/wallpaper; exit 0 ;;
+esac

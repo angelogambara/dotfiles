@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>ICC Color Management &amp; Rendering Intent Test</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato%3A300%2C400%2C400italic&#038;subset=latin%2Clatin-ext" type="text/css" media="all" />
+		<style>
+		html {
+			background: #030ef8; /* Old browsers */
+			background: -moz-radial-gradient(center, ellipse cover, rgba(9,10,11,0) 0%, rgba(9,10,11,0.8) 100%), -moz-linear-gradient(top,  #030ef8 0%, #0752f5 50%, #ffb1dd 100%); /* FF3.6+ */
+			background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(9,10,11,0)), color-stop(100%,rgba(9,10,11,0.8))), -webkit-gradient(linear, left top, left bottom, color-stop(0%,#030ef8), color-stop(50%,#0752f5), color-stop(100%,#ffb1dd)); /* Chrome,Safari4+ */
+			background: -webkit-radial-gradient(center, ellipse cover, rgba(9,10,11,0) 0%,rgba(9,10,11,0.8) 100%), -webkit-linear-gradient(top,  #030ef8 0%,#0752f5 50%,#ffb1dd 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-radial-gradient(center, ellipse cover, rgba(9,10,11,0) 0%,rgba(9,10,11,0.8) 100%), -o-linear-gradient(top,  #030ef8 0%,#0752f5 50%,#ffb1dd 100%); /* Opera 11.10+ */
+			background: -ms-radial-gradient(center, ellipse cover, rgba(9,10,11,0) 0%,rgba(9,10,11,0.8) 100%), -ms-linear-gradient(top,  #030ef8 0%,#0752f5 50%,#ffb1dd 100%); /* IE10+ */
+			background: radial-gradient(ellipse at center, rgba(9,10,11,0) 0%,rgba(9,10,11,0.8) 100%), linear-gradient(to bottom,  #030ef8 0%,#0752f5 50%,#ffb1dd 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#110d86', endColorstr='#916787',GradientType=0 ); /* IE6-9 */
+			background-attachment: fixed;
+
+			border-top: 12px solid #6c0;
+		}
+		body {
+			color: rgba(255, 255, 255, .7);
+			font-family: Lato, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+		a {
+			color: #fff;
+			text-decoration: none;
+		}
+		a:hover,
+		a:focus {
+			color: #6cf;
+		}
+		p, h1, h2, h3, h4, ul {
+			margin: 1.5em auto 1em;
+			max-width: 512px;
+		}
+		p, h1, h2, h3, h4 {
+			padding: 0 1em;
+		}
+		h1, h2, h3, h4 {
+			color: #fff;
+			font-weight: 300;
+			text-transform: uppercase;
+		}
+		p {
+			margin: 1.5em auto;
+		}
+		p, li {
+			line-height: 1.4;
+			text-align: justify;
+		}
+		ul {
+			padding-left: 2em;
+		}
+		div, h1, h2, h3 {
+			text-align: center;
+		}
+		div {
+			background: #020202;
+
+			border-bottom: 5px solid rgba(255, 255, 255, .1);
+			border-top: 5px solid rgba(255, 255, 255, .1);
+			padding-bottom: 1.5em;
+		}
+		img {
+			max-width: 90%;
+		}
+		</style>
+	</head>
+	<body>
+		<h1>ICC Color Management &amp; Rendering Intent Test</h1>
+
+		<p><small>Revision history:<br>
+		2018-04-08 v1.1.1 Added licensing information (CC-BY-SA)<br>
+		2018-04-07 v1.1 Added display test profiles, and RGB elements to images.<br>
+		2018-04-06 v1.0</small></p>
+
+		<h2>Test images</h2>
+
+		<p>The test images are designed to test the color management capabilities (or lack thereof) of web browsers and graphics applications. Each image has an embedded ICCv2 profile that defines how the image should look. You may also <a href="ICC_CM_Test.zip">download this test</a> for off-line use.</p>
+
+		<h2>Test profiles</h2>
+
+		<p>You will also want to make sure that an application is actually using the display profile and not a generic profile like sRGB. For that purpose, several <a href="vcgt_cm_test_profiles.zip">test profiles</a> are available which, when installed and assigned to a display device, will introduce a strong color cast to the whole display—except in correctly color managed applications that use the display profile, which will cancel out the color cast. So, if after installing and assigning one of the test profiles, you see a strong color cast on gray elements in the pictures below, the display profile isn't being used.</p>
+
+		<p>Each profile comes in two variants: Matrix based and color lookup table + matrix based, so you can also use them to test for correct support of lookup table display profiles (if color lookup table profiles are not supported, the test profiles will swap the red, green and blue channels to blue, red and green).</p>
+
+		<h2>Test No. 1: Color Management with matrix based profiles</h2>
+		<p>The following images show whether or not color management and/or embedded matrix profiles are used (note that this test can not distinguish between color management not being used, or the embedded matrix profile not being used).</p>
+
+		<div>
+			<h3>JPEG image with embedded matrix profile</h3>
+			<img src="sRGB_Gray.jpg" alt="">
+			
+			<h3>PNG image with embedded matrix profile</h3>
+			<img src="sRGB_Gray.png" alt="">
+			
+			<h2>Expected Results</h2>
+			<img src="sRGB_Gray-expected-result.png" alt="">
+			<p>If you see this result above, then the application seemingly supports embedded matrix profiles for the respective image file type.</p>
+
+			<img src="sRGB_Gray-expected-result-no-cm.png" alt="">
+			<p>If you see this result above, then the application seemingly <em>does not</em> support color management or embedded matrix profiles for the respective image file type.</p>
+		</div>
+
+		<h2>Test No. 2: Color Management with lookup table based profiles</h2>
+		<p>The following images show whether or not color management and/or embedded color lookup table profiles are used (note that this test can not distinguish between color management not being used, or the embedded profile not being used), and if so, which rendering intent is being utilized. It also allows, to a limited extent, a quality assessment of the color transform.</p>
+		<p>Things to look out for:</p>
+		<p>On the left and right hand side of each image are three filled circles. Each circle has a lightness difference of L*=1 (in the sRGB color space) from the previous circle (or the background in case of the topmost circle on each side). All circles should ideally be visible on an <a href="https://displaycal.net/">accurately calibrated and profiled display</a>, although it's ok if the topmost and middle circles are hard to see (they will be easier to see in a dark room).</p>
+		<p>The grayscale gradients next to the circles should not show color casts.</p>
+		
+		<div>
+			<h3>JPEG image with embedded color lookup table profile (has fallback matrix tags)</h3>
+			<img src="ICC%20Rendering%20Intent%20Test.jpg?v=1.1" alt="">
+			
+			<h3>PNG image with embedded color lookup table profile (has fallback matrix tags)</h3>
+			<img src="ICC%20Rendering%20Intent%20Test.png?v=1.1" alt="">
+
+			<h3>JPEG image with embedded color lookup table profile (no fallback matrix tags)</h3>
+			<img src="ICC%20Rendering%20Intent%20Test%20(cLUT%20only).jpg?v=1.1" alt="">
+			
+			<h3>PNG image with embedded color lookup table profile (no fallback matrix tags)</h3>
+			<img src="ICC%20Rendering%20Intent%20Test%20(cLUT%20only).png?v=1.1" alt="">
+			
+			<h2>Expected Results</h2>
+			<img src="ICC-Rendering-Intent-Test-expected-result.png?v=1.1" alt="">
+			<p>If you see this result above, then the application seemingly supports embedded color lookup table profiles for the respective image file type. Note that if the application lets you choose a rendering intent or does not default to perceptual, you may see the word "colorimetric" or "saturation" instead.</p>
+
+			<img src="ICC-Rendering-Intent-Test-expected-result-fallback-matrix.png?v=1.1" alt="">
+			<p>If you see this result above, then the application seemingly supports only matrix profiles for the respective image file type.</p>
+
+			<img src="ICC-Rendering-Intent-Test-expected-result-no-cm.png?v=1.1" alt="">
+			<p>If you see this result above, then the application seemingly <em>does not</em> support color management or embedded color lookup table profiles for the respective image file type.</p>
+			<p>If you see an altogether different result, it probably means the application's color management implementation is flawed or has bugs.</p>
+
+			<p><small>© Florian Höch | <a href="https://displaycal.net/">displaycal.net</a> | Licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a></small></p>
+		</div>
+	</body>
+</html>

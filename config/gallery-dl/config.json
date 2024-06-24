@@ -1,0 +1,21 @@
+{
+  "extractor": {
+    "base-directory": "~/Pictures",
+    "cookies": ["firefox"],
+    "pixiv": {
+      "base-directory": "~/Pictures/Pixiv Bookmarks",
+      "directory": ["{user['id']:>08}"],
+      "filename": "{id:>010}_p{num:>02}.{extension}"
+    },
+    "fanbox": {
+      "base-directory": "~/Pictures/FANBOX Creators",
+      "directory": ["{user['userId']:>08}"],
+      "filename": "{id:>010}_p{num:>02}.{extension}"
+    },
+    "exhentai": {
+      "base-directory": "~/Pictures/E-Hentai Artbooks",
+      "directory": ["{gid:>08}"],
+      "filename": "{num:>03}.{extension}"
+    }
+  }
+}
