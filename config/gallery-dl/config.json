@@ -1,0 +1,28 @@
+{
+  "extractor": {
+    "cookies": [
+      "firefox"
+    ],
+    "pixiv": {
+      "base-directory": "~/pixiv",
+      "directory": [
+        "{user['id']:>08}"
+      ],
+      "filename": "{id:>010}_p{num:>02}.{extension}"
+    },
+    "fanbox": {
+      "base-directory": "~/fanbox",
+      "directory": [
+        "{user['userId']:>08}"
+      ],
+      "filename": "{id:>010}_p{num:>02}.{extension}"
+    },
+    "exhentai": {
+      "base-directory": "~/exhentai",
+      "directory": [
+        "{gid:>08}"
+      ],
+      "filename": "{num:>03}.{extension}"
+    }
+  }
+}

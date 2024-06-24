@@ -1,0 +1,10 @@
+[Shortcuts]
+KisToolSelectContiguous=W
+KisToolSelectOutline=Ctrl+F
+KritaShape/KisToolMultiBrush=none
+filter_apply_again=none
+reload_preset_action=Shift+/
+set_simple_brush_smoothing=Shift+S
+set_stabilizer_brush_smoothing=S
+show_snap_options_popup=none
+toggle_layer_visibility=Q
