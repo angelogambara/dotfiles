@@ -1,0 +1,7 @@
+chrome-extension-scheme
+moz-extension-scheme
+github.com
+google.com
+reddit.com
+x.com
+

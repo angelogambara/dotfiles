@@ -1,0 +1,25 @@
+{
+   "extractor":{
+      "base-directory":"~/Pictures",
+      "cookies":[
+         "firefox"
+      ],
+      "exhentai":{
+         "gallery":{
+            "directory":[
+               "E-Hentai Galleries",
+               "{gid:>08}"
+            ],
+            "filename":"{num:>03}.{extension}"
+         }
+      },
+      "pixiv":{
+         "bookmark":{
+            "directory":[
+               "Pixiv Bookmarks",
+               "{user['id']:>08}"
+            ]
+         }
+      }
+   }
+}

@@ -1,0 +1,100 @@
+exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
+exec pipewire & pipewire-pulse & wireplumber & autotiling & dunst
+
+bindsym --locked F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+set $dpms 'swaymsg "output * dpms off" && pgrep swayidle'
+set $undo 'swaymsg "output * dpms  on" && pkill swayidle'
+
+bindsym Mod4+s exec sxiv -ro Pictures
+bindsym Mod4+Shift+s exec swayidle timeout 1 $dpms resume $undo
+
+bindsym Mod4+p exec dmenu_run -nf '#ffffff' -nb '#323232'
+bindsym Mod4+Shift+p exec swayutils -h
+
+bindsym Mod4+x move absolute position 640 510
+bindsym Mod4+Shift+x move absolute position 640 510
+
+bindsym Mod4+y move absolute position 640 510
+bindsym Mod4+Shift+y move absolute position 640 510
+
+bindsym Mod4+r resize set 480 800
+bindsym Mod4+Shift+r resize set 360 480
+
+bindsym Mod4+u resize set 800 480
+bindsym Mod4+Shift+u resize set 480 360
+
+bindsym Mod4+m output 'DP-1' transform 90 anticlockwise
+bindsym Mod4+Shift+m output 'DP-1' transform 90 clockwise
+
+bindsym Mod4+n output 'DP-2' transform 90 anticlockwise
+bindsym Mod4+Shift+n output 'DP-2' transform 90 clockwise
+
+bindsym Mod4+i output 'DP-1' toggle
+bindsym Mod4+o output 'DP-2' toggle
+
+bindsym Mod4+Return exec alacritty --working-directory "$(swayutils -c)"
+bindsym Mod4+Shift+Return reload
+
+bindsym Mod4+1 workspace 1
+bindsym Mod4+2 workspace 2
+bindsym Mod4+3 workspace 3
+bindsym Mod4+4 workspace 4
+bindsym Mod4+5 workspace 5
+bindsym Mod4+6 workspace 6
+bindsym Mod4+7 workspace 7
+bindsym Mod4+8 workspace 8
+bindsym Mod4+9 workspace 9
+
+bindsym Mod4+Shift+1 move workspace 1
+bindsym Mod4+Shift+2 move workspace 2
+bindsym Mod4+Shift+3 move workspace 3
+bindsym Mod4+Shift+4 move workspace 4
+bindsym Mod4+Shift+5 move workspace 5
+bindsym Mod4+Shift+6 move workspace 6
+bindsym Mod4+Shift+7 move workspace 7
+bindsym Mod4+Shift+8 move workspace 8
+bindsym Mod4+Shift+9 move workspace 9
+
+bindsym Mod4+h focus left
+bindsym Mod4+j focus down
+bindsym Mod4+k focus up
+bindsym Mod4+l focus right
+
+bindsym Mod4+Shift+h move left
+bindsym Mod4+Shift+j move down
+bindsym Mod4+Shift+k move up
+bindsym Mod4+Shift+l move right
+
+bindsym Mod4+q kill
+bindsym Mod4+Shift+q exit
+
+bindsym Mod4+Space focus mode_toggle
+bindsym Mod4+Shift+Space floating toggle
+
+bindsym Mod4+Tab workspace next
+bindsym Mod4+Shift+Tab workspace prev
+
+font pango:Fira Mono 11
+
+bar {
+  position top
+  status_command swayutils -b
+
+  colors {
+    statusline #ffffff
+    background #323232
+    inactive_workspace #323232 #323232 #5c5c5c
+  }
+}
+
+for_window [app_id="mpv"] floating enable
+
+input type:keyboard {
+  repeat_delay 250
+  repeat_rate 50
+}
+
+output * bg ~/.local/state/sway/swaybg fill
