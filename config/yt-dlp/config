@@ -1,0 +1,2 @@
+-f b/bv*+ba -o '%(upload_date)s.%(id)s.%(ext)s'
+--embed-chapters --embed-subs --embed-thumbnail
