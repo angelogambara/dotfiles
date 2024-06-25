@@ -14,12 +14,6 @@ bindsym Mod4+Shift+s exec swayidle timeout 1 $dpms resume $undo
 bindsym Mod4+p exec dmenu_run -nf '#ffffff' -nb '#323232'
 bindsym Mod4+Shift+p exec swayutils -h
 
-bindsym Mod4+x move absolute position 640 510
-bindsym Mod4+Shift+x move absolute position 640 510
-
-bindsym Mod4+y move absolute position 640 510
-bindsym Mod4+Shift+y move absolute position 640 510
-
 bindsym Mod4+r resize set 480 800
 bindsym Mod4+Shift+r resize set 360 480
 
@@ -77,7 +71,7 @@ bindsym Mod4+Shift+Space floating toggle
 bindsym Mod4+Tab workspace next
 bindsym Mod4+Shift+Tab workspace prev
 
-font pango:Fira Mono 11
+font pango:JetbrainsMono Nerd Font 11
 
 bar {
   position top
@@ -97,4 +91,4 @@ input type:keyboard {
   repeat_rate 50
 }
 
-output * bg ~/.local/state/sway/swaybg fill
+output * bg ~/.local/share/backgorunds/swaybg fill

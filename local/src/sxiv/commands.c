@@ -428,6 +428,41 @@ bool ci_slideshow(arg_t _)
 	return true;
 }
 
+bool cg_navigate_folder(arg_t d)
+{
+	const int dx = d > 0 ? 1 : -1;
+	int i = fileidx + dx, og = fileidx;
+	bool again = d < 0;
+	size_t sdir_len = strrchr(files[og].path, '/') - files[og].path;
+
+	while (i < filecnt && i >= 0) {
+		size_t ddir_len = strrchr(files[i].path, '/') - files[i].path;
+		if (sdir_len != ddir_len ||
+		    strncmp(files[og].path, files[i].path, sdir_len) != 0)
+		{
+			if (!again)
+				break;
+			og = i;
+			sdir_len = strrchr(files[og].path, '/') - files[og].path;
+			again = false;
+		}
+		i += dx;
+	}
+	if (d < 0 && i >= -1)
+		++i;
+
+	if (i < filecnt && i >= 0 && fileidx != i) {
+		if (mode == MODE_IMAGE) {
+			load_image(i);
+			return true;
+		} else {
+			return tns_move_selection(&tns, d < 0 ? DIR_LEFT : DIR_RIGHT,
+			                       ((i-fileidx) > 0 ? (i-fileidx) : (fileidx-i)));
+		}
+	}
+	return false;
+}
+
 bool ct_move_sel(arg_t dir)
 {
 	return tns_move_selection(&tns, dir, prefix);

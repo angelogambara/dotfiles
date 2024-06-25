@@ -75,16 +75,16 @@ static const Key keys[] = {
 	{ Mod4Mask,           XK_0, view, {.ui = ~0 } },
 	{ Mod4Mask|ShiftMask, XK_0, tag,  {.ui = ~0 } },
 
-	{ Mod4Mask, XK_d, spawn, COMMAND("sleep 1; xset dpms force off") },
-	{ Mod4Mask, XK_s, spawn, COMMAND("sxiv -ro tatenaga/ yokonaga/") },
+	{ Mod4Mask, XK_s, spawn, COMMAND("sxiv -ro Pictures") },
+	{ Mod4Mask|ShiftMask, XK_s, spawn, COMMAND("sleep 1; xset dpms force off") },
 
 	TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2)
 	TAGKEYS(XK_4, 3) TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5)
 	TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7) TAGKEYS(XK_9, 8)
 
-	{ Mod4Mask, XK_less, spawn, COMMAND("pactl set-sink-volume @DEFAULT_SINK@ -3%") },
-	{ Mod4Mask|ControlMask|ShiftMask, XK_less, spawn, COMMAND("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
-	{ Mod4Mask|ShiftMask, XK_less, spawn, COMMAND("pactl set-sink-volume @DEFAULT_SINK@ +3%") },
+	{ Mod4Mask, XK_F1, spawn, COMMAND("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
+	{ Mod4Mask, XK_F2, spawn, COMMAND("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
+	{ Mod4Mask, XK_F3, spawn, COMMAND("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
 
 	{ Mod4Mask, XK_f, setlayout, {.v = &layouts[1]} },
 	{ Mod4Mask, XK_m, setlayout, {.v = &layouts[2]} },

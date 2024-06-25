@@ -1,5 +1,5 @@
 #!/bin/sh
 
-borg create "${PS1:+--list}" -xC zstd /backup::"$(date '+%Y-%m-%d')" /
+borg create "${PS1:+--list}" -xC zstd /backup::"$(date '+%Y-%m-%d')" / -e /var/lib/libvirt/images
 borg prune "${PS1:+--list}" -m 1 -w 1 -d 3 /backup
 borg compact "${PS1:+--progress}" /backup

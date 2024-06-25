@@ -41,9 +41,9 @@ Krita/Ocio/OcioConfigPath=
 Krita/Ocio/OcioLockColorVisualRepresentation=false
 Krita/Ocio/OcioLutPath=
 Krita/Ocio/UseOcio=false
-LastBackGroundColor=<!DOCTYPE LastBackGroundColor>\n<LastBackGroundColor>\n <RGB r="1" g="1" b="1" space="SW240 2_D65_L120_G22_2024-06-02T09.00"/>\n</LastBackGroundColor>\n
+LastBackGroundColor=<!DOCTYPE LastBackGroundColor>\n<LastBackGroundColor>\n <RGB r="1" g="1" space="SW240 2_D65_L120_G22_2024-06-02T09.00" b="1"/>\n</LastBackGroundColor>\n
 LastEraser_0=a) Eraser Circle
-LastForeGroundColor=<!DOCTYPE LastForeGroundColor>\n<LastForeGroundColor>\n <RGB r="0" g="0" b="0" space="SW240 2_D65_L120_G22_2024-06-02T09.00"/>\n</LastForeGroundColor>\n
+LastForeGroundColor=<!DOCTYPE LastForeGroundColor>\n<LastForeGroundColor>\n <RGB r="0" g="0" space="SW240 2_D65_L120_G22_2024-06-02T09.00" b="0"/>\n</LastForeGroundColor>\n
 LastPreset=b) Basic-2 Opacity
 LastPreset_-1=b) Basic-2 Opacity
 LineSmoothingDelayDistance=50
@@ -154,7 +154,7 @@ logviewer_enabled=false
 maxAllowedSpeedValue=30
 maxSwapSize=4096
 maximumBrushSize=1000
-mdiBackgroundColorXML=<!DOCTYPE color>\n<color channeldepth="U8">\n <RGB r="0.301960796117783" g="0.301960796117783" b="0.301960796117783" space="SW240 2_D65_L120_G22_2024-06-02T09.00"/>\n</color>\n
+mdiBackgroundColorXML=<!DOCTYPE color>\n<color channeldepth="U8">\n <RGB r="0.301960796117783" g="0.301960796117783" space="SW240 2_D65_L120_G22_2024-06-02T09.00" b="0.301960796117783"/>\n</color>\n
 mdiBackgroundImage=
 mdi_rubberband=1
 mdi_viewmode=0

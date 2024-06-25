@@ -13,36 +13,28 @@ swaybar() {
     time=$(python -c 'import datetime,time;print(str(datetime.timedelta(seconds=time.clock_gettime(time.CLOCK_MONOTONIC)))[:-7])')
     stat=" NET $rsum $tsum | RUN $time | CAL $(date '+%a %d %b %I:%M %p') "
     [ "$XDG_SESSION_TYPE" = 'wayland' ] && printf "${stat}\n" || xsetroot -name "${stat}"
-  done 2> /dev/null
+  done 2>/dev/null
 }
 
 swaycwd() {
-  focused_pid=$(pgrep -nP "$(swaymsg -t get_tree | jq '.. | select(.type?) | select(.type=="con") | select(.focused==true).pid')")
-  readlink /proc/"$focused_pid"/cwd || echo ~
+  readlink /proc/"$(pgrep -nP "$(swaymsg -t get_tree | jq '.. | select(.type?) | select(.type=="con") | select(.focused==true).pid')")"/cwd || echo ~
 }
 
 swayhex() {
   grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -1 | cut -d' ' -f4 | wl-copy -n
 }
 
-swayrec() {
-  grim -g "$(slurp)" - | swappy -f -
-}
-
 swayzzz() {
   swaynag -m 'Power off GNU/Linux?' -b 'Restart' 'sudo reboot' -b 'Shut Down' 'sudo poweroff' -b 'Sleep' 'sudo zzz'
 }
 
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
-export WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-1}
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-1}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
 
-while getopts 'bchrz' o
-do
-  case $o in
-    b) swaybar ;;
-    c) swaycwd ;;
-    h) swayhex ;;
-    r) swayrec ;;
-    z) swayzzz ;;
-  esac
-done 2>/dev/null
+case $1 in
+  -b) shift && swaybar "$@" ;;
+  -c) shift && swaycwd "$@" ;;
+  -h) shift && swayhex "$@" ;;
+  -z) shift && swayzzz "$@" ;;
+   *) echo "${0##*/}: usage: ${0##*/} [-bchz [args ...]]" ;;
+esac
