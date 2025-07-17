@@ -1,1 +1,0 @@
-%root, %wheel ALL=(ALL) ALL, NOPASSWD: /bin/poweroff, /bin/reboot, /bin/zzz

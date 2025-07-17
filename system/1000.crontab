@@ -1,3 +1,0 @@
-*/05 * * * * rclone sync artworks gdrive:artworks
-*/05 * * * * rclone sync password gdrive:password
-*/30 * * * * . ./.profile && muttsetup -y gambara.angelo@gmail.com 

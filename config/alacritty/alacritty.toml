@@ -35,6 +35,6 @@ normal = { family = "Noto Sans Mono", style = "Regular" }
 
 # Define keyboard bindings here
 bindings = [
-  #  { key = "n", mods = "Control", action = "SpawnNewInstance" },
   { key = "n", mods = "Control|Shift", action = "SpawnNewInstance" },
 ]
+

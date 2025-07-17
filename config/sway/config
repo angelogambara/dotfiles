@@ -1,11 +1,12 @@
-exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
-exec pipewire & pipewire-pulse & wireplumber & autotiling & dunst
+# exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
+# exec pipewire & pipewire-pulse & wireplumber & autotiling & dunst
+exec autotiling & dunst
 
 font pango:Noto Sans Bold 10
 
 bar {
   position top
-  status_command i3status.py
+  status_command while date +' %B %d, %Y %-I:%M %p '; do sleep 1; done
 
   colors {
     statusline #ffffff
@@ -28,11 +29,17 @@ bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym Mod4+Return exec alacritty
 bindsym Mod4+Shift+Return exec dm-run
 
-bindsym Mod4+space focus mode_toggle
-bindsym Mod4+Shift+space floating toggle
+bindsym Mod4+Space focus mode_toggle
+bindsym Mod4+Shift+Space floating toggle
 
 bindsym Mod4+Tab workspace next
 bindsym Mod4+Shift+Tab workspace prev
+
+bindsym Mod4+b chromium
+bindsym Mod4+Shift+b chromium
+
+bindsym Mod4+e thunar
+bindsym Mod4+Shift+e thunar
 
 bindsym Mod4+h focus left
 bindsym Mod4+j focus down
@@ -54,6 +61,9 @@ bindsym Mod4+Shift+s exec sxiv -ro gallery-dl
 
 bindsym Mod4+q kill
 bindsym Mod4+Shift+q exit
+
+bindsym Mod4+r reload
+bindsym Mod4+Shift+r reload
 
 bindsym Mod4+1 workspace 1
 bindsym Mod4+2 workspace 2

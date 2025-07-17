@@ -1,2 +1,0 @@
-#!/bin/sh
-echo -- RP01 > /proc/acpi/wakeup

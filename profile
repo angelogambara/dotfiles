@@ -13,10 +13,10 @@ prependpath() {
   esac
 }
 
-export JAVA_HOME=/usr/local/lib/intellij-idea/jbr
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk/bin
 
 prependpath "$HOME/.local/bin"
-prependpath "$HOME/dotfiles/local/bin"
+prependpath "$HOME/git/angelogambara/dotfiles/local/bin"
 prependpath "$JAVA_HOME/bin"
 unset prependpath
 
