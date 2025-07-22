@@ -2,7 +2,11 @@
 
 # User environment and startup programs.
 
-export PS1=$([ "$USER" = 'root' ] && echo '# ' || echo '$ ')
+export EDITOR=/usr/bin/nvim
+export VISUAL=/usr/bin/nvim
+
+PS1=$([ "$USER" = 'root' ] && echo '# ' || echo '$ ')
+export PS1
 
 prependpath() {
   case ":$PATH:" in
@@ -25,16 +29,13 @@ export PATH
 # Set default umask
 umask 022
 
-# Load profiles from /etc/profile.d
+# Load profiles from ~/.profile.d
 if [ -d ~/.profile.d/ ]; then
   for f in ~/.profile.d/*.sh; do
     [ -r "$f" ] && . "$f"
   done
   unset f
 fi
-
-export GTK_THEME=Adwaita:dark
-export QT_IM_MODULE=fcitx
 
 # Setting other environment variables
 if [ -z "$XDG_CONFIG_HOME" ]; then
@@ -56,5 +57,9 @@ fi
 export DBUS_SESSION_BUS_ADDRESS=unix:path="$XDG_RUNTIME_DIR"/bus
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR"/gnupg/S.gpg-agent.ssh
 
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export GOPATH="$XDG_DATA_HOME"/go
 export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
+
+export GTK_THEME=Adwaita:dark
+export QT_IM_MODULE=fcitx

@@ -21,19 +21,27 @@
 
     ### Geometry ###
 
+    # The width of the window, excluding the frame.
     # dynamic width from 0 to 300
     # width = (0, 300)
     # constant width of 300
-    width = (360, 540)
+    width = 450
 
     # The height of a single notification, excluding the frame.
-    height = 300
+    # dynamic height from 0 to 300
+    height = (0, 300)
+    # constant height of 300
+    # height = 300
+    # NOTE: Dunst from version 1.11 and older don't support dynamic height
+    #       and the given value is treated as the maximum height
 
     # Position the notification in the top right corner
     origin = top-right
 
     # Offset from the origin
-    offset = 10x50
+    # NOTE: Dunst from version 1.11 and older use this alternative notation
+    # offset = 10x50
+    offset = (10, 50)
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
@@ -90,7 +98,7 @@
     separator_height = 2
 
     # Padding between text and separator.
-    padding = 10
+    padding = 8
 
     # Horizontal padding.
     horizontal_padding = 8
@@ -100,10 +108,10 @@
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.
-    frame_width = 5
+    frame_width = 3
 
     # Defines color of the frame around the notification window.
-    frame_color = "#5c5c5c"
+    frame_color = "#aaaaaa"
 
     # Size of gap to display between notifications - requires a compositor.
     # If value is greater than 0, separator_height will be ignored and a border
@@ -136,7 +144,7 @@
 
     ### Text ###
 
-    font = monospace 10
+    font = Noto Sans 11
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -211,7 +219,7 @@
 
     # Recursive icon lookup. You can set a single theme, instead of having to
     # define all lookup paths.
-    enable_recursive_icon_lookup = false
+    enable_recursive_icon_lookup = true
 
     # Set icon theme (only used for recursive icon lookup)
     icon_theme = Adwaita
@@ -333,28 +341,30 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
-    background = "#323232"
-    foreground = "#ffffff"
+    background = "#2E3440"  # nord0
+    foreground = "#D8DEE9"  # nord5
+    frame_color = "#4C566A" # nord4
     timeout = 10
-    # Icon for notifications with low urgency, uncomment to enable
-    #default_icon = /path/to/icon
+    # Icon for notifications with low urgency
+    #default_icon = dialog-information
 
 [urgency_normal]
-    background = "#323232"
-    foreground = "#ffffff"
+    background = "#3B4252"  # nord3
+    foreground = "#ECEFF4"  # nord6
+    frame_color = "#81A1C1" # nord9
     timeout = 10
     override_pause_level = 30
-    # Icon for notifications with normal urgency, uncomment to enable
-    #default_icon = /path/to/icon
+    # Icon for notifications with normal urgency
+    #default_icon = dialog-information
 
 [urgency_critical]
-    background = "#900000"
-    foreground = "#ffffff"
-    frame_color = "#ff0000"
+    background = "#3B4252"  # nord3
+    foreground = "#ECEFF4"  # nord6
+    frame_color = "#81A1C1" # nord9
     timeout = 0
     override_pause_level = 60
-    # Icon for notifications with critical urgency, uncomment to enable
-    #default_icon = /path/to/icon
+    # Icon for notifications with critical urgency
+    #default_icon = dialog-warning
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

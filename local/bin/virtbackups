@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import datetime
+import subprocess
+import libvirt
+
+# === CONFIG ===
+VM_IMAGE_DIR = "/var/lib/libvirt/images"
+BORG_REPO = "/mnt/backup/libvirt-images"
+BACKUP_PREFIX = "libvirt-images"
+# ==============
+
+def connect_libvirt():
+    try:
+        return libvirt.open("qemu:///system")
+    except libvirt.libvirtError as e:
+        sys.exit(f"Failed to connect to libvirt: {e}")
+
+def list_vm_images(directory):
+    valid_extensions = (".qcow2", ".img", ".raw")
+    return [
+        os.path.join(directory, f)
+        for f in os.listdir(directory)
+        if os.path.isfile(os.path.join(directory, f)) and f.endswith(valid_extensions)
+    ]
+
+def get_all_running_domains(conn):
+    running = []
+    for dom_id in conn.listDomainsID():
+        dom = conn.lookupByID(dom_id)
+        state, _ = dom.state()
+        if state == libvirt.VIR_DOMAIN_RUNNING:
+            running.append(dom)
+    return running
+
+def pause_domains(domains):
+    paused = []
+    for dom in domains:
+        try:
+            print(f"Pausing VM: {dom.name()}")
+            dom.suspend()
+            paused.append(dom)
+        except libvirt.libvirtError as e:
+            print(f"Failed to pause {dom.name()}: {e}")
+    return paused
+
+def resume_domains(domains):
+    for dom in domains:
+        try:
+            print(f"Resuming VM: {dom.name()}")
+            dom.resume()
+        except libvirt.libvirtError as e:
+            print(f"Failed to resume {dom.name()}: {e}")
+
+def backup_images(paths):
+    archive_name = f"{BACKUP_PREFIX}-{datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
+    borg_cmd = [
+        "borg", "create", "--list",
+        f"{BORG_REPO}::{archive_name}"
+    ] + paths
+
+    print(f"\n📦 Backing up {len(paths)} disk image(s) to Borg repo:\n  Archive: {archive_name}")
+    result = subprocess.run(borg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    if result.returncode != 0:
+        print("❌ Borg backup failed:")
+        print(result.stderr.decode())
+        return True
+    else:
+        print("✅ Borg backup completed successfully:")
+        print(result.stdout.decode())
+        return False
+
+def prune_old_backups():
+    borg_prune_cmd = [
+        "borg", "prune",
+        "--keep-daily", "3",
+        "--keep-monthly", "1",
+        "--keep-weekly", "2",
+    ] + BORG_REPO
+
+    print(f"\n📦 Pruning old archives from Borg repo:")
+    result = subprocess.run(borg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    if result.returncode != 0:
+        print("❌ Borg pruning failed:")
+        print(result.stderr.decode())
+    else:
+        print("✅ Borg pruning completed successfully:")
+        print(result.stdout.decode())
+
+def main():
+    if os.geteuid() != 0:
+        sys.exit("This script must be run as root.")
+
+    conn = connect_libvirt()
+    print("📡 Connected to libvirt.")
+
+    image_paths = list_vm_images(VM_IMAGE_DIR)
+    if not image_paths:
+        print("⚠️ No VM image files found. Exiting.")
+        sys.exit(1)
+    print(f"🧩 Found {len(image_paths)} image(s) to back up.")
+
+    running_domains = get_all_running_domains(conn)
+    paused_domains = pause_domains(running_domains)
+
+    backup_failed = False
+
+    try:
+        backup_failed = backup_images(image_paths)
+        prune_old_backups()
+    finally:
+        resume_domains(paused_domains)
+        print("\n♻️ All previously running VMs have been resumed.")
+
+    if backup_failed:
+        sys.exit("Borg backup failed.")
+
+if __name__ == "__main__":
+    main()
