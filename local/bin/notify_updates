@@ -1,11 +1,10 @@
-#!/bin/bash
-
+#!/bin/sh
 UPDATES=$(checkupdates --nocolor 2>/dev/null)
 
 if [ $? -ne 0 ]; then
   notify-send -u critical 'Update Check Failed' "Could not check for updates. Make sure 'checkupdates' is installed."
 elif [ -n "$UPDATES" ]; then
-  notify-send -u critical "checkupdates: $(echo "$UPDATES" | wc -l)" "$UPDATES"
+  notify-send -u critical "Pending Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES"
 else
   notify-send -u low 'System Up-to-Date' "No pending updates found."
 fi

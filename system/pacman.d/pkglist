@@ -21,6 +21,7 @@ fcitx5-configtool
 fcitx5-gtk
 fcitx5-mozc
 fd
+firewalld
 fzf
 go
 gparted
@@ -72,7 +73,6 @@ pipewire-pulse
 plocate
 postgresql
 powerline
-prismlauncher
 python-mutagen
 qbittorrent
 qemu-desktop
@@ -82,7 +82,6 @@ ripgrep
 rofi-pass
 rsync
 seahorse
-steam
 swappy
 sway
 swaybg
@@ -96,20 +95,22 @@ trash-cli
 ttf-jetbrains-mono-nerd
 tumbler
 udiskie
-ufw
 unrar
 unzip
 upower
 urlscan
 virt-manager
 virt-viewer
+vulkan-intel
 wget
 xdg-desktop-portal-hyprland
+xdg-user-dirs
 xfsprogs
 xorg-server
 xorg-xdpyinfo
 xorg-xinit
 xorg-xkill
+xorg-xrandr
 xorg-xsetroot
 xorg-xwininfo
 xsel

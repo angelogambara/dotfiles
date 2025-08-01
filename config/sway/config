@@ -1,6 +1,8 @@
 # exec dbus-daemon --session --address=unix:path=/run/user/1000/bus
-# exec pipewire & pipewire-pulse & wireplumber & autotiling & dunst
-exec autotiling & dunst
+# exec autotiling & dunst & pipewire & pipewire-pulse & wireplumber
+
+exec autotiling & fcitx5 & dunst & udiskie
+exec notify_updates
 
 font pango:Noto Sans Bold 10
 
@@ -35,12 +37,6 @@ bindsym Mod4+Shift+Space floating toggle
 bindsym Mod4+Tab workspace next
 bindsym Mod4+Shift+Tab workspace prev
 
-bindsym Mod4+b chromium
-bindsym Mod4+Shift+b chromium
-
-bindsym Mod4+e thunar
-bindsym Mod4+Shift+e thunar
-
 bindsym Mod4+h focus left
 bindsym Mod4+j focus down
 bindsym Mod4+k focus up
@@ -51,19 +47,21 @@ bindsym Mod4+Shift+j move down
 bindsym Mod4+Shift+k move up
 bindsym Mod4+Shift+l move right
 
+bindsym Mod4+b chromium
+bindsym Mod4+e thunar
+
+bindsym Mod4+i exec sxiv -P '' -ro manga pixiv
+bindsym Mod4+Shift+i exec sxiv -ro manga pixiv
+
 bindsym Mod4+o output 'DP-1' toggle
 bindsym Mod4+Shift+o output 'DP-2' toggle
 
 bindsym Mod4+p exec grim -g "$(slurp)" - | swappy -f -
 
-bindsym Mod4+s exec sxiv -P '' -ro gallery-dl
-bindsym Mod4+Shift+s exec sxiv -ro gallery-dl
-
 bindsym Mod4+q kill
 bindsym Mod4+Shift+q exit
 
 bindsym Mod4+r reload
-bindsym Mod4+Shift+r reload
 
 bindsym Mod4+1 workspace 1
 bindsym Mod4+2 workspace 2

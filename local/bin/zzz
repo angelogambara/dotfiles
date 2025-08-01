@@ -1,2 +1,3 @@
 #!/bin/sh
-pgrep hyprlock || hyprlock & systemctl suspend
+pgrep hyprlock || hyprlock &
+systemctl suspend

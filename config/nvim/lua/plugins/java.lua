@@ -1,4 +1,5 @@
--- lua/plugins/java.lua
+-- stylua: ignore
+if true then return {} end
 
 return {
   -- 1. Install the plugin
