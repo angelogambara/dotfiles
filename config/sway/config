@@ -2,7 +2,7 @@
 # exec autotiling & dunst & pipewire & pipewire-pulse & wireplumber
 
 exec autotiling & fcitx5 & dunst & udiskie
-exec notify_updates
+exec notify_updates & gtk-launch xencelabs
 
 font pango:Noto Sans Bold 10
 

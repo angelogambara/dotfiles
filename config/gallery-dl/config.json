@@ -1,1 +1,25 @@
-{"extractor":{"cookies":["chromium"]}}
+{
+  "extractor": {
+    "base-directory": "~/art",
+    "cookies": [
+      "chromium+gnomekeyring"
+    ],
+    "pixiv": {
+      "artwork": {
+        "directory": [
+          "pixiv",
+          "artworks",
+          "{user['id']:>08}"
+        ]
+      },
+      "favorite": {
+        "directory": [
+          "pixiv",
+          "bookmarks",
+          "{user['id']:>08}"
+        ]
+      },
+      "filename": "{id:>010}_p{num:>02}.{extension}"
+    }
+  }
+}
