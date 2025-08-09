@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if UPDATES="$(checkupdates --nocolor)"; then
+  notify-send -u critical "Pending Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES"
+  if echo "$UPDATES" | grep -q 'linux' && ! pacman -Qqme | grep -q 'linux-preserve-modules'; then
+    notify-send -u critical "Kernel update detected" \
+      "Reboot after updating the system! Alternatively, install aur/linux-preserve-modules to suppress this notification."
+  fi
+elif [ "$?" -ne 2 ]; then
+  notify-send "Update Check Failed" "Could not check for updates. Make sure 'checkupdates' is installed."
+  exit 1
+fi

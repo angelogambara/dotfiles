@@ -20,7 +20,7 @@ prependpath() {
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk/bin
 
 prependpath "$HOME/.local/bin"
-prependpath "$HOME/dotfiles/local/bin"
+prependpath "$HOME/git/dotfiles/local/bin"
 prependpath "$JAVA_HOME/bin"
 unset prependpath
 

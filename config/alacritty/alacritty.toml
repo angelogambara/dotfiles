@@ -16,7 +16,7 @@ import = ["~/.config/alacritty/nord.toml"]
 [window]
 
 # Opacity
-opacity = 0.8
+opacity = 0.7
 
 ########
 # FONT #

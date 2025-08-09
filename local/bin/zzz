@@ -1,3 +1,15 @@
 #!/bin/sh
-pgrep hyprlock || hyprlock &
+
+if [ "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+  echo "Locking screen with hyprlock"
+  pgrep hyprlock || hyprlock &
+else [ "$SWAYSOCK" ]
+  echo "Locking screen with swaylock"
+  pgrep swaylock || swaylock &
+  if [ "$?" -ne 0 ]; then
+    echo "Error: Could not lock the screen with swaylock."
+    echo "Edit this script at $0 to handle your wm."
+  fi
+fi
+
 systemctl suspend

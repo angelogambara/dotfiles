@@ -1,5 +1,5 @@
 # ==============================
-#  Variables And Options
+# Variables And Options
 # ==============================
 
 HISTFILE=/dev/null
@@ -16,7 +16,7 @@ setopt hist_reduce_blanks
 unsetopt extended_history
 
 # ==============================
-#  Vi Prompt
+# Vi Prompt
 # ==============================
 
 bindkey -v
@@ -31,7 +31,7 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
 # ==============================
-#  Autocompletion
+# Autocompletion
 # ==============================
 
 zstyle :compinstall filename '/home/angelo/.zshrc'
@@ -41,7 +41,7 @@ compinit
 _comp_options+=(globdots)
 
 # ==============================
-#  Navigation
+# Navigation
 # ==============================
 
 bindkey "${terminfo[kich1]}" overwrite-mode
@@ -77,7 +77,7 @@ bindkey "${terminfo[kLFT5]}" backward-word
 bindkey "${terminfo[kRIT5]}"  forward-word
 
 # ==============================
-#  Plugins
+# Plugins
 # ==============================
 
 powerline-daemon -q

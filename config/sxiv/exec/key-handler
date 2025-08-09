@@ -1,13 +1,10 @@
 #!/bin/sh
 
 case "$1" in
-"0") [ "$(dmenu <&- -p 'sxiv: key-handler: ignore? [y/N]')" = 'y' ] && while read -r r; do printf '"%s"\0' "$r"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
-"r") [ "$(dmenu <&- -p 'sxiv: key-handler: remove? [y/N]')" = 'y' ] && while read -r r; do printf '"%s"\0' "$r"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
-"a") while read -r r; do echo "$r" | awk -F '/' '{gsub(/^0+/,"",$5); gsub(/_.*$/,"",$5); printf("https://www.pixiv.net/artworks/%s\n", $5)}'; done | uniq | xargs chromium ;;
-"u") while read -r r; do echo "$r" | awk -F '/' '{gsub(/^0+/,"",$4); printf("https://www.pixiv.net/users/%s\n", $4)}'; done | uniq | xargs chromium ;;
-"w")
-  read -r r
-  ln -fs "$(realpath "$r")" ~/.local/share/backgrounds/sway
-  exit 0
-  ;;
+"0") [ "$(dmenu <&- -p 'sxiv: key-handler: ignore? [y/N]')" = 'y' ] && while read -r i; do printf '"%s"\0' "$i"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
+"r") [ "$(dmenu <&- -p 'sxiv: key-handler: remove? [y/N]')" = 'y' ] && while read -r i; do printf '"%s"\0' "$i"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
+"a") while read -r i; do echo "$i" | awk -F '/' '{gsub(/^0+/,"",$5); gsub(/_.*$/,"",$5); printf("https://www.pixiv.net/artworks/%s\n", $5)}'; done | uniq | xargs chromium ;;
+"u") while read -r i; do echo "$i" | awk -F '/' '{gsub(/^0+/,"",$4); printf("https://www.pixiv.net/users/%s\n", $4)}'; done | uniq | xargs chromium ;;
+"h") read -r i && ln -fs "$(realpath "$i")" ~/.local/share/backgrounds/hypr && exit 0 ;;
+"w") read -r i && ln -fs "$(realpath "$i")" ~/.local/share/backgrounds/sway && exit 0 ;;
 esac
