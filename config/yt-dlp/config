@@ -1,1 +1,1 @@
-yt-dlp --cookies-from-browser chromium+gnomekeyring --embed-chapters --embed-metadata --embed-thumbnail -f bv*+ba/b -o '%(upload_date)s.%(id)s.%(ext)s'
+yt-dlp --cookies-from-browser chromium+gnomekeyring --embed-chapters --embed-metadata -f bv*+ba/b -o '%(upload_date)s.%(id)s.%(ext)s'
