@@ -12,6 +12,7 @@
   ],
   "modules-center": [],
   "modules-right": [
+    "idle_inhibitor",
     "pulseaudio",
     "cpu",
     "memory",

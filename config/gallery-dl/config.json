@@ -1,13 +1,19 @@
 {
   "extractor": {
-    "base-directory": "~/art",
-    "cookies": [
-      "chromium+gnomekeyring"
-    ],
+    "base-directory": "~/gallery-dl",
+    "cookies": "$HOME/.cache/gallery-dl/cookies.txt",
+    "patreon": {
+      "base-directory": "/mnt/home/angelo/gallery-dl",
+      "directory": [
+        "{category}",
+        "{creator[vanity]}"
+      ],
+      "filename": "{title} [{id:>010}].{extension}"
+    },
     "pixiv": {
       "artwork": {
         "directory": [
-          "pixiv",
+          "{category}",
           "artworks",
           "{user['id']:>08}"
         ]

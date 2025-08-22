@@ -1,1 +1,1 @@
-yt-dlp --cookies-from-browser chromium+gnomekeyring --embed-chapters --embed-metadata -f bv*+ba/b -o '%(upload_date)s.%(id)s.%(ext)s'
+--cookies-from-browser chromium+gnomekeyring --download-archive archive.txt --sub-langs all --write-comments --write-description --write-info-json --write-subs --write-thumbnail -f ba -o '%(uploader_id)s/%(playlist_id)s/%(upload_date)s.%(id)s.%(ext)s'
