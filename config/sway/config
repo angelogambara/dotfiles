@@ -77,8 +77,8 @@ bindsym Mod4+Shift+9 move workspace 9
 bindsym Mod4+c exec grim -g "$(slurp)" - | wl-copy
 bindsym Mod4+Shift+c exec grim -g "$(slurp)" - | swappy -f -
 
-bindsym Mod4+v exec sxiv -P '' -ro art/manga art/pixiv
-bindsym Mod4+Shift+v exec sxiv -ro art/manga art/pixiv
+bindsym Mod4+v exec sxiv -P '' -ro gallery-dl
+bindsym Mod4+Shift+v exec sxiv -ro gallery-dl
 
 # ==============================
 # Minimize w/Keyboard
