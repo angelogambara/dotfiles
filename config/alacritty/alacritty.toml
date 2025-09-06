@@ -27,6 +27,9 @@ opacity = 0.7
 # Normal font style
 normal = { family = "Noto Sans Mono", style = "Regular" }
 
+# Change size
+size = 14
+
 ############
 # KEYBOARD #
 ############
@@ -37,4 +40,3 @@ normal = { family = "Noto Sans Mono", style = "Regular" }
 bindings = [
   { key = "n", mods = "Control|Shift", action = "SpawnNewInstance" },
 ]
-

@@ -1,12 +1,6 @@
-# ~/.profile
-
-# User environment and startup programs.
-
-export EDITOR=/usr/bin/nvim
-export VISUAL=/usr/bin/nvim
-
-PS1=$([ "$USER" = 'root' ] && echo '# ' || echo '$ ')
-export PS1
+# ==============================
+# Executables
+# ==============================
 
 prependpath() {
   case ":$PATH:" in
@@ -29,27 +23,26 @@ export PATH
 # Set default umask
 umask 022
 
-# Load profiles from ~/.profile.d
-if [ -d ~/.profile.d/ ]; then
-  for f in ~/.profile.d/*.sh; do
-    [ -r "$f" ] && . "$f"
-  done
-  unset f
-fi
+# ==============================
+# Environment
+# ==============================
 
-# Setting other environment variables
 if [ -z "$XDG_CONFIG_HOME" ]; then
   export XDG_CONFIG_HOME="$HOME/.config"
 fi
+
 if [ -z "$XDG_DATA_HOME" ]; then
   export XDG_DATA_HOME="$HOME/.local/share"
 fi
+
 if [ -z "$XDG_CACHE_HOME" ]; then
   export XDG_CACHE_HOME="$HOME/.cache"
 fi
+
 if [ -z "$XDG_STATE_HOME" ]; then
   export XDG_STATE_HOME="$HOME/.local/state"
 fi
+
 if [ -z "$XDG_RUNTIME_DIR" ]; then
   export XDG_RUNTIME_DIR='/run/user/1000'
 fi
@@ -63,3 +56,5 @@ export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
 
 export GTK_THEME=Adwaita:dark
 export QT_IM_MODULE=fcitx
+export EDITOR=/usr/bin/nvim
+export VISUAL=/usr/bin/nvim

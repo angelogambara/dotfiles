@@ -1,3 +1,4 @@
+7zip
 alacritty
 autotiling
 base
@@ -5,7 +6,6 @@ base-devel
 bash-completion
 borg
 bridge-utils
-chromium
 chrony
 colord
 cronie
@@ -21,6 +21,7 @@ fcitx5-configtool
 fcitx5-gtk
 fcitx5-mozc
 fd
+firefox
 firewalld
 fzf
 go
@@ -74,6 +75,9 @@ plocate
 postgresql
 powerline
 python-mutagen
+python-pipx
+python-pyfuse3
+python-secretstorage
 qbittorrent
 qemu-desktop
 rclone
@@ -92,16 +96,17 @@ syncthing
 testdisk
 thunar
 trash-cli
+ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 tumbler
 udiskie
 unrar
 unzip
-upower
 urlscan
 virt-manager
 virt-viewer
 vulkan-intel
+waybar
 wget
 xdg-desktop-portal-hyprland
 xdg-user-dirs

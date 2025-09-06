@@ -142,4 +142,6 @@ exec swayidle -w \
 # Userspace Daemons
 # ==============================
 
-exec autotiling & fcitx5 & dunst & notify-checkupdates & udiskie
+exec pipewire & pipewire-pulse & wireplumber
+exec autotiling & notify-checkupdates
+exec fcitx5 & dunst & udiskie
