@@ -1,14 +1,65 @@
 {
   "extractor": {
-    "base-directory": "~/gallery-dl",
+    "base-directory": "/mnt/home/angelo/gallery-dl",
     "cookies": ["firefox"],
+    "exhentai": {
+      "directory": [
+        "{category}",
+        "g",
+        "{gid}",
+        "{token}"
+      ],
+      "filename": "{gid}_{num:>04}_{image_token}_{filename}.{extension}"
+    },
+    "fanbox": {
+      "directory": [
+        "{category}",
+        "posts",
+        "@{creatorId}"
+      ],
+      "filename": "{id}_p{num}.{extension}"
+    },
     "pixiv": {
       "directory": [
         "{category}",
-        "{subcategory}",
-        "{user['id']:>10}"
+        "users",
+        "{user[id]}"
       ],
-      "filename": "{id:>010}_p{num:>02}.{extension}"
+      "favorite": {
+        "directory": [
+          "{category}",
+          "users",
+          "{user[id]}",
+          "bookmarks",
+          "{user_bookmark[id]}"
+        ]
+      },
+      "filename": "{id}_p{num}.{extension}"
+    },
+    "patreon": {
+      "directory": [
+        "{category}",
+        "c",
+        "{creator[vanity]}"
+      ],
+      "filename": "[{date:%Y.%m.%d}] {title}.{extension}"
+    },
+    "twitter": {
+      "likes": {
+        "directory": [
+          "{category}",
+          "likes",
+          "{user[name]}"
+        ]
+      },
+      "media": {
+        "directory": [
+          "{category}",
+          "media",
+          "{user[name]}"
+        ]
+      },
+      "filename": "{tweet_id}_{num}.{extension}"
     }
   }
 }

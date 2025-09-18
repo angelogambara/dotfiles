@@ -240,6 +240,6 @@
   },
   "hyprland/window": {
     "format": " {}",
-    "max-length": 70
+    "max-length": 50
   }
 }
