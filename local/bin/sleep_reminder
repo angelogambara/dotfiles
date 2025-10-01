@@ -1,0 +1,7 @@
+#!/bin/sh
+
+dunstify "Bedtime Alert!" "Time to hit the sack! Or stay up and join the league of groggy zombies tomorrow. 🧟‍♂️" \
+  --action="shutdown,Shut down system" |
+  while read -r action; do
+    [ "$action" = "shutdown" ] && sudo systemctl poweroff
+  done

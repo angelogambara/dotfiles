@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+ARCHIVE=/mnt/backup::$(date +'%Y%m%d')
+PATHS=(/)
+
+if [ -z "$(pgrep qemu)" ]; then
+	sudo borg create --list \
+		--compression auto,zstd,6 \
+		--one-file-system \
+		"$ARCHIVE" "${PATHS[@]}"
+fi

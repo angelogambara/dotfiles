@@ -1,6 +1,6 @@
 {
   "extractor": {
-    "base-directory": "/mnt/home/angelo/gallery-dl",
+    "base-directory": "~/gallery-dl",
     "cookies": ["firefox"],
     "exhentai": {
       "directory": [
@@ -29,9 +29,9 @@
         "directory": [
           "{category}",
           "users",
-          "{user[id]}",
+          "{user_bookmark[id]}",
           "bookmarks",
-          "{user_bookmark[id]}"
+          "{user[id]}"
         ]
       },
       "filename": "{id}_p{num}.{extension}"

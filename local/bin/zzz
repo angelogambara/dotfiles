@@ -1,15 +1,18 @@
 #!/bin/sh
 
-if [ "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-  echo "Locking screen with hyprlock"
-  pgrep hyprlock || hyprlock &
-else [ "$SWAYSOCK" ]
-  echo "Locking screen with swaylock"
-  pgrep swaylock || swaylock &
-  if [ "$?" -ne 0 ]; then
-    echo "Error: Could not lock the screen with swaylock."
-    echo "Edit this script at $0 to handle your wm."
+if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+  echo "Locking screen with hyprlock..."
+  if ! pgrep -x hyprlock >/dev/null; then
+    hyprlock &
   fi
+elif [ -n "$SWAYSOCK" ]; then
+  echo "Locking screen with swaylock..."
+  if ! pgrep -x swaylock >/dev/null; then
+    swaylock &
+  fi
+else
+  echo "No supported window manager detected. Cannot lock screen."
+  echo "(Edit $0 to implement an handler for your wm.)"
 fi
 
-systemctl suspend
+sudo systemctl suspend
