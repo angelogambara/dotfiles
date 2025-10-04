@@ -1,0 +1,25 @@
+[Unit]
+Description=Mount Borg repository
+Documentation=man:borg(1)
+After=network-online.target
+Wants=network-online.target
+RequiresMountsFor=/mnt/backup
+
+[Service]
+Type=simple
+Environment=BORG_PASSPHRASE=none
+ExecStart=/usr/bin/borg mount -o allow_other --foreground /mnt/backup::20250929 /mnt/borgfs
+ExecStop=/usr/bin/fusermount -u /mnt/borgfs
+ExecStopPost=/bin/fusermount -u /mnt/borgfs
+
+# Ensure the process stays managed properly
+RemainAfterExit=yes
+KillMode=process
+Restart=on-failure
+RestartSec=5s
+
+# FUSE mounts sometimes need more relaxed sandboxing
+PrivateTmp=false
+
+[Install]
+WantedBy=multi-user.target

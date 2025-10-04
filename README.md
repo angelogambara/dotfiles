@@ -1,0 +1,5 @@
+# DOTFILES
+
+## Hyprland
+
+## Sway

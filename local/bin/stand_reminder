@@ -1,0 +1,7 @@
+#!/bin/sh
+
+dunstify "Stretch Alert!" "Don’t let your spine turn into a question mark. Get up and shake it out! 🌀" \
+  --action="suspend,Suspend to RAM" |
+  while read -r action; do
+    [ "$action" = "suspend" ] && sudo zzz
+  done

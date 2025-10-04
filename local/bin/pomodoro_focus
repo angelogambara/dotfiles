@@ -1,0 +1,7 @@
+#!/bin/sh
+
+dunstify "🍅 Pomodoro is Served!" "🍀 You’ve got this. 25 minutes of pure, glorious progress starts now." \
+  --action="pomodoro,Pomodoro technique" --timeout 1500000 |
+  while read -r action; do
+    [ "$action" = "pomodoro" ] && break
+  done
