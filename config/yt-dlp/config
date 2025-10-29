@@ -1,0 +1,1 @@
+--output '%(upload_date)s.%(id)s.%(ext)s'

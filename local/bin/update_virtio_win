@@ -1,0 +1,65 @@
+#!/bin/sh
+
+BASE_URL="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio"
+
+get_latest_iso_name() {
+  curl -fsSL "$BASE_URL" |
+    grep -Eo 'virtio-win-[0-9.]+.iso' |
+    sort -V |
+    tail -n 1
+}
+
+usage() {
+  echo "Usage: $(basename "$0") [-d directory]"
+  exit 1
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+  -d)
+    if [ -z "$2" ]; then
+      echo "Error: Option -d requires an argument." >&2
+      usage
+    fi
+    if [ "${2#-}" != "$2" ]; then
+      echo "Error: Directory cannot start with '-'" >&2
+      usage
+    fi
+    output_dir="$2"
+    shift
+    shift
+    ;;
+  -h | --help)
+    usage
+    ;;
+  --)
+    shift
+    for arg in "$@"; do
+      args="${args:+"$args":}${arg}"
+    done
+    set --
+    break
+    ;;
+  -*)
+    echo "Error: Unknown option: $1" >&2
+    usage
+    ;;
+  *)
+    args="${args:+"$args":}${1}"
+    shift
+    ;;
+  esac
+done
+
+output_dir="${output_dir:-/opt/virtio-win}"
+
+if [ ! -w "$output_dir" ]; then
+  if [ ! -d "$output_dir" ]; then
+    echo "$(basename "$0"): cannot access '$output_dir': No such file or directory" >&2
+  else
+    echo "$(basename "$0"): cannot write to '$output_dir': Permission denied" >&2
+  fi
+  exit 1
+fi
+
+curl --output-dir "$output_dir" -LOC - "$BASE_URL/$(get_latest_iso_name)"

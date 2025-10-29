@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+TERMINAL_EMULATOR=alacritty
+
+action_handler() {
+  expected_action=$1 command=$2
+  while read -r action; do
+    [ "$action" = "$expected_action" ] &&
+      "$TERMINAL_EMULATOR" --command bash -c "$command"
+  done
+}
+
+notify_update() {
+  dunstify "📦 Total Pending Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES" \
+    --action="update,Update of system level packages" \
+    --urgency=critical |
+    action_handler update "sudo pacman -Syu --noconfirm; read -p '(Press enter if everything looks good)'; yay -Syu"
+}
+
+notify_reboot() {
+  dunstify "🔄 Reboot required" "Active kernel modules are removed by default. Install aur/linux-preserve-modules to change this behaviour and suppress this warning." \
+    --action="reboot,Reboot due to kernel update" \
+    --urgency=critical |
+    action_handler reboot "set -e; if ! command -v yay >/dev/null 2>&1; then sudo pacman -S --needed --noconfirm git base-devel; cd /tmp; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si --noconfirm; cd ..; rm -rf yay; fi; yay -S --noconfirm linux-preserve-modules; sudo systemctl reboot"
+}
+
+if UPDATES="$(checkupdates --nocolor)"; then
+  notify_update
+  if [[ $UPDATES == *linux* ]] && ! pacman -Qqs 'linux-preserve-modules'; then
+    notify_reboot
+  fi
+fi

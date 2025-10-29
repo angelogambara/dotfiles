@@ -1,0 +1,147 @@
+# ==============================
+# Main Keys
+# ==============================
+
+bindsym Mod4+Return exec alacritty
+bindsym Mod4+Shift+Return exec dm-run
+
+bindsym Mod4+space focus mode_toggle
+bindsym Mod4+Shift+space floating toggle
+
+bindsym Mod4+Tab workspace next
+bindsym Mod4+Shift+Tab workspace prev
+
+bindsym Mod4+q kill
+bindsym Mod4+Shift+q exit
+
+bindsym Mod4+r reload
+
+# ==============================
+# User Keys
+# ==============================
+
+bindsym Mod4+b exec chromium
+bindsym Mod4+e exec thunar
+bindsym Mod4+x exec gtk-launch xencelabs
+
+# ==============================
+# Volume Keys
+# ==============================
+
+bindsym --locked F1 exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked F2 exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked F3 exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+# ==============================
+# Navigation
+# ==============================
+
+bindsym Mod4+h focus left
+bindsym Mod4+j focus down
+bindsym Mod4+k focus up
+bindsym Mod4+l focus right
+
+bindsym Mod4+Shift+h move left
+bindsym Mod4+Shift+j move down
+bindsym Mod4+Shift+k move up
+bindsym Mod4+Shift+l move right
+
+# ==============================
+# Workspaces
+# ==============================
+
+bindsym Mod4+1 workspace 1
+bindsym Mod4+2 workspace 2
+bindsym Mod4+3 workspace 3
+bindsym Mod4+4 workspace 4
+bindsym Mod4+5 workspace 5
+bindsym Mod4+6 workspace 6
+bindsym Mod4+7 workspace 7
+bindsym Mod4+8 workspace 8
+bindsym Mod4+9 workspace 9
+
+bindsym Mod4+Shift+1 move workspace 1
+bindsym Mod4+Shift+2 move workspace 2
+bindsym Mod4+Shift+3 move workspace 3
+bindsym Mod4+Shift+4 move workspace 4
+bindsym Mod4+Shift+5 move workspace 5
+bindsym Mod4+Shift+6 move workspace 6
+bindsym Mod4+Shift+7 move workspace 7
+bindsym Mod4+Shift+8 move workspace 8
+bindsym Mod4+Shift+9 move workspace 9
+
+# ==============================
+# Copy/View Images
+# ==============================
+
+bindsym Mod4+c exec grim -g "$(slurp)" - | wl-copy
+bindsym Mod4+Shift+c exec grim -g "$(slurp)" - | swappy -f -
+
+bindsym Mod4+v exec sxiv -P '' -ro gallery-dl
+bindsym Mod4+Shift+v exec sxiv -ro gallery-dl
+
+# ==============================
+# Minimize w/Keyboard
+# ==============================
+
+bindsym Mod4+minus scratchpad show
+bindsym Mod4+Shift+minus move scratchpad
+
+# ==============================
+# Toggle Monitors On/Off
+# ==============================
+
+bindsym Mod4+o output 'DP-2' toggle
+bindsym Mod4+Shift+o output 'DP-1' toggle
+
+# ==============================
+# General Settings
+# ==============================
+
+font pango:Noto Sans Bold 10
+
+input type:keyboard {
+  repeat_delay 250
+  repeat_rate 50
+}
+
+output * bg ~/.local/share/backgrounds/sway fill
+
+bar {
+  position top
+  status_command while date +' %B %d, %Y %-I:%M %p '; do sleep 1; done
+
+  colors {
+    statusline #ffffff
+    background #323232
+    inactive_workspace #323232 #323232 #5c5c5c
+  }
+}
+
+# ==============================
+# Systemd Environment
+# ==============================
+
+exec systemctl --user set-environment XDG_CURRENT_DESKTOP=sway
+exec systemctl --user import-environment DISPLAY SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+
+exec hash dbus-update-activation-environment 2>/dev/null && \
+          dbus-update-activation-environment --systemd DISPLAY SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+# ==============================
+# Idle Manager
+# ==============================
+
+exec swayidle -w \
+  timeout 150 'swaymsg output DP-1 dpms off' \
+    resume 'swaymsg output DP-1 dpms on' \
+  timeout 300 'pgrep swaylock || swaylock & systemctl suspend' \
+  timeout  30 'pgrep swaylock && systemctl suspend'
+
+# ==============================
+# Userspace Daemons
+# ==============================
+
+exec pipewire & pipewire-pulse & wireplumber
+exec autotiling & notify-checkupdates
+exec fcitx5 & dunst & udiskie
