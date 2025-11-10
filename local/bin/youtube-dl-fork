@@ -1,0 +1,80 @@
+#!/bin/bash
+
+notify_override() {
+  local summary=$1 body=$2 pid=$3
+  dunstify "$summary" "$body" \
+    --action="stop,Stop youtube-dl" \
+    --block |
+    while read -r action; do
+      [ "$action" = "stop" ] && kill "$pid"
+    done &
+  echo $!
+}
+
+get_titles() {
+  local dunstify
+  local pid
+
+  "$YTDL_BINARY" \
+    --get-filename \
+    --output '%(title)s' \
+    --skip-download \
+    -- "${urls[@]}" 2>&- &
+  pid=$!
+
+  dunstify=$(notify_override "YouTube-dl fetching titles 📝" "$(printf '%s\n' "${urls[@]}")" "$pid")
+
+  wait "$pid"
+  status=$?
+
+  if [ "$status" -eq 0 ]; then
+    kill "$dunstify"
+  else
+    printf '%s\n' "${urls[@]}"
+  fi
+}
+
+download() {
+  local dunstify
+  local pid
+  local titles=$1
+
+  "$YTDL_BINARY" \
+    "${args[@]}" \
+    -- "${urls[@]}" \
+    >"$LOGFILE" 2>&1 &
+  pid=$!
+
+  dunstify=$(notify_override "YouTube-dl started 🚀" "$titles" "$pid")
+
+  wait "$pid"
+  status=$?
+
+  if [ "$status" -eq 0 ]; then
+    kill "$dunstify"
+  else
+    notify-send "YouTube-dl failed 🔴" "$(grep '^ERROR' "$LOGFILE")"
+    exit 1
+  fi
+}
+
+YTDL_BINARY=yt-dlp
+LOGFILE=/tmp/ytdl-$(date +%Y%m%d-%H%M%S).log
+
+while [ $# -ne 0 ]; do
+  if [ "$1" == '--' ]; then
+    shift
+    urls+=("$@")
+    break
+  else
+    args+=("$1")
+    shift
+  fi
+done
+
+if [[ ${#urls[@]} -eq 0 ]]; then
+  notify-send -t 60000 "Need help ❓" "Usage: ${0##*/} [OPTION]... -- URL..."
+  exit 1
+fi
+
+download "$(get_titles)"

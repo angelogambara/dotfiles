@@ -1,1 +1,5 @@
---output '%(upload_date)s.%(id)s.%(ext)s'
+--embed-chapters
+--embed-metadata
+--embed-thumbnail
+-f "bestvideo[height<=720]+bestaudio/best[height<=720]"
+-o "%(upload_date>%Y-%m-%d)s - %(title)s [%(id)s].%(ext)s"

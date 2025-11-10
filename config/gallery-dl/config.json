@@ -2,7 +2,7 @@
   "extractor": {
     "base-directory": "~/gallery-dl",
     "cookies": [
-      "brave+gnomekeyring"
+      "firefox"
     ],
     "exhentai": {
       "directory": [
@@ -19,7 +19,8 @@
         "posts",
         "@{creatorId}"
       ],
-      "filename": "{id}_p{num}.{extension}"
+      "filename": "{id}_p{num}.{extension}",
+      "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
     },
     "pixiv": {
       "directory": [

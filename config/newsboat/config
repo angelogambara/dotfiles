@@ -1,6 +1,6 @@
 include /usr/share/doc/newsboat/contrib/colorschemes/plain
 
-browser "mpv %u 1>&- 2>&- &"
+browser "youtube-dl-fork -- %u &"
 
 bind-key J next-feed articlelist
 bind-key K prev-feed articlelist
