@@ -33,9 +33,9 @@ alias grep='grep --color=auto'
 alias f='find . -type f -iname'
 
 alias dirsed='$EDITOR $DIRSTACKFILE'
-alias dirsrm='rm -f $DIRSTACKFILE'
 alias histed='$EDITOR $HISTFILE'
-alias histrm='rm -f $HISTFILE'
+alias dirsrm='rm -i $DIRSTACKFILE'
+alias histrm='rm -i $HISTFILE'
 
 # ------------------------------------------------------------------------------
 # System & Process Management
@@ -164,9 +164,9 @@ swap() {
     return 1
   fi
 
-  local tmp="${file1}.swap.$$"
+  local tmp="$1.swap.$$"
 
   mv -- "$1" "$tmp" || return 1
-  mv -- "$2" "$1" || { mv -- "$tmp" "$file1"; return 1; }
+  mv -- "$2" "$1" || { mv -- "$tmp" "$1"; return 1; }
   mv -- "$tmp" "$2" || return 1
 }
