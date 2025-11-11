@@ -28,7 +28,7 @@ opacity = 0.7
 normal = { family = "Noto Sans Mono", style = "Regular" }
 
 # Change size
-size = 14
+size = 15
 
 ############
 # KEYBOARD #
