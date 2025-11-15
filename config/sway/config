@@ -98,7 +98,7 @@ bindsym Mod4+Shift+o output 'DP-1' toggle
 # General Settings
 # ==============================
 
-font pango:Noto Sans Bold 10
+font pango:Roboto 11
 
 input type:keyboard {
   repeat_delay 250

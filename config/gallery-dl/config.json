@@ -1,9 +1,10 @@
 {
   "extractor": {
-    "base-directory": "~/gallery-dl",
+    "base-directory": "~/Downloads/gallery-dl",
     "cookies": [
       "firefox"
     ],
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0",
     "exhentai": {
       "directory": [
         "{category}",
@@ -13,57 +14,31 @@
       ],
       "filename": "{gid}_{num:>04}_{image_token}_{filename}.{extension}"
     },
+    "patreon": {
+      "directory": [
+        "{category}",
+        "c",
+        "{creator[vanity]}",
+        "posts"
+      ],
+      "filename": "{date:%Y-%m-%d} - {title} {num:>02}.{extension}"
+    },
     "fanbox": {
       "directory": [
         "{category}",
-        "posts",
-        "@{creatorId}"
+        "@{creatorId}",
+        "posts"
       ],
-      "filename": "{id}_p{num}.{extension}",
-      "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+      "filename": "{id}_p{num}.{extension}"
     },
     "pixiv": {
       "directory": [
         "{category}",
         "users",
-        "{user[id]}"
+        "{user[id]}",
+        "artworks"
       ],
-      "favorite": {
-        "directory": [
-          "{category}",
-          "users",
-          "{user_bookmark[id]}",
-          "bookmarks",
-          "artworks",
-          "{user[id]}"
-        ]
-      },
       "filename": "{id}_p{num}.{extension}"
-    },
-    "patreon": {
-      "directory": [
-        "{category}",
-        "c",
-        "{creator[vanity]}"
-      ],
-      "filename": "[{date:%Y.%m.%d}] {title}.{extension}"
-    },
-    "twitter": {
-      "likes": {
-        "directory": [
-          "{category}",
-          "likes",
-          "{user[name]}"
-        ]
-      },
-      "media": {
-        "directory": [
-          "{category}",
-          "media",
-          "{user[name]}"
-        ]
-      },
-      "filename": "{tweet_id}_{num}.{extension}"
     }
   }
 }

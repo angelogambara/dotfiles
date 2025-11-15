@@ -1,42 +1,20 @@
-# https://alacritty.org/config-alacritty.html
-
-###########
-# GENERAL #
-###########
+# ==============================
+# Alacritty Configuration
+# ==============================
 
 [general]
-
-# Import additional configuration files
 import = ["~/.config/alacritty/nord.toml"]
 
-##########
-# WINDOW #
-##########
-
 [window]
-
-# Opacity
-opacity = 0.7
-
-########
-# FONT #
-########
+opacity = 0.75
 
 [font]
-
-# Normal font style
-normal = { family = "Noto Sans Mono", style = "Regular" }
-
-# Change size
-size = 15
-
-############
-# KEYBOARD #
-############
+normal = { family = "MesloLGS NF", style = "Regular" }
+bold   = { family = "MesloLGS NF", style = "Bold" }
+italic = { family = "MesloLGS NF", style = "Italic" }
+size = 14.0
 
 [keyboard]
-
-# Define keyboard bindings here
 bindings = [
-  { key = "n", mods = "Control|Shift", action = "SpawnNewInstance" },
+  { key = "N", mods = "Control|Shift", action = "SpawnNewInstance" },
 ]

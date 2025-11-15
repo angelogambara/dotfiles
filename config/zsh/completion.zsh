@@ -22,16 +22,13 @@ setopt AUTO_LIST
 setopt AUTO_MENU
 
 # Complete the next match on double-tab (instead of listing again)
-setopt MENU_COMPLETE
+# setopt MENU_COMPLETE
 
 # Don’t insert a slash after completing directories if the next char is already /
 setopt COMPLETE_IN_WORD
 
 # Don’t beep on failed completion
 setopt NO_BEEP
-
-# Allow completion from the middle of words
-setopt COMPLETE_IN_WORD
 
 # ------------------------------------------------------------------------------
 # Styles (using zstyle)
@@ -58,15 +55,8 @@ zstyle ':completion:*:corrections' format '%F{red}%d (errors: %e)%f'
 # Don’t try to complete hostnames unless needed
 zstyle ':completion:*:hosts' use-ip yes
 
-# ------------------------------------------------------------------------------
-# Special completions
-# ------------------------------------------------------------------------------
-
 # Completion for `sudo` — complete as if no sudo
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin
-
-# Ignore backup and temporary files during completion
-zstyle ':completion:*:(rm|mv|cp):*' ignore-patterns '*~' '*.swp' '*.tmp'
 
 # ------------------------------------------------------------------------------
 # Performance tweaks

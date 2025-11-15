@@ -1,172 +1,78 @@
-# ------------------------------------------------------------------------------
-# Zsh Aliases Configuration
-# ------------------------------------------------------------------------------
+# ==============================
+# Aliases
+# ==============================
 
-# This file defines shell aliases, grouped by purpose.
-# Keep aliases simple and predictable — prefer short, memorable names
-# for frequently used commands.
+# Arch Linux package manager aliases
+alias pacls='pacman -Qqett'
+alias paclsorphans='pacman -Qdt'
+alias pacrmorphans='sudo pacman -Rns $(pacman -Qtdq)'
 
-# ------------------------------------------------------------------------------
-# Navigation
-# ------------------------------------------------------------------------------
-
+# Change directory aliases
+alias cd..='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ~='cd ~'
-alias -- -='cd -'
-alias md='mkdir -p'
-alias rd='rmdir'
+alias .....='cd ../../../..'
 
-# ------------------------------------------------------------------------------
-# Listing & File Operations
-# ------------------------------------------------------------------------------
+# Permission aliases
+alias mx='chmod a+x'
+alias 000='chmod -R 000'
+alias 644='chmod -R 644'
+alias 666='chmod -R 666'
+alias 755='chmod -R 755'
+alias 777='chmod -R 777'
 
-alias ll='ls -lh'            # long format, human-readable
-alias la='ls -A'             # show all except . and ..
-alias l='ls -CF'             # classify entries
-alias lla='ls -lha'          # full long list, all files
+# List aliases
+alias ll='ls -lh'
+alias la='ls -A'
+alias lla='ls -lha'
 
-alias catn='cat -n'          # cat with line numbers
-alias less='less -R'         # preserve colors
-alias grep='grep --color=auto'
-alias f='find . -type f -iname'
+# Directory aliases
+alias mkdir='mkdir -p'
+alias rmdir='rmdir -p'
 
-alias dirsed='$EDITOR $DIRSTACKFILE'
-alias histed='$EDITOR $HISTFILE'
-alias dirsrm='rm -i $DIRSTACKFILE'
-alias histrm='rm -i $HISTFILE'
-
-# ------------------------------------------------------------------------------
-# System & Process Management
-# ------------------------------------------------------------------------------
-
-alias df='df -h'             # human-readable disk usage
-alias du='du -h -d 1'        # summarize folder sizes
-alias free='free -m'
-alias psx='ps aux | grep'
-alias psg='ps aux | grep -v grep | grep'
-alias topmem='ps aux --sort=-%mem | head'
-alias topcpu='ps aux --sort=-%cpu | head'
-
-# ------------------------------------------------------------------------------
-# Git Essentials
-# ------------------------------------------------------------------------------
-
-alias g='git'
-alias ga='git add'
-alias gc='git commit -v'
-alias gca='git commit -v -a'
-alias gco='git checkout'
-alias gcb='git checkout -b'
-alias gd='git diff'
-alias gs='git status -sb'
-alias gl='git log --oneline --graph --decorate'
-alias gp='git push'
-alias gpl='git pull --rebase'
-alias gcl='git clone'
-
-# ------------------------------------------------------------------------------
-# Package Management
-# ------------------------------------------------------------------------------
-
-if command -v apt >/dev/null; then
-  alias update='sudo apt update && sudo apt upgrade -y'
-  alias install='sudo apt install'
-  alias remove='sudo apt remove'
-  alias cleanup='sudo apt autoremove -y && sudo apt autoclean'
-fi
-
-if command -v pacman >/dev/null; then
-  alias pacls="pacman -Qqentt"
-  alias paclsorphans='sudo pacman -Qdt'
-  alias pacrmorphans='sudo pacman -Rns $(pacman -Qtdq)'
-fi
-
-# ------------------------------------------------------------------------------
-# Safety Aliases (Interactive Overwrites)
-# ------------------------------------------------------------------------------
-
-alias rm='rm -i'
+# Safety aliases
 alias cp='cp -i'
 alias mv='mv -i'
-alias mkdir='mkdir -p'
+alias rm='rm -i'
 
-# ------------------------------------------------------------------------------
-# Miscellaneous Shortcuts
-# ------------------------------------------------------------------------------
+# Readability aliases
+alias df='df -h'
+alias du='du -h'
+alias free='free -h'
 
-alias c='clear'
-alias h='history'
-alias j='jobs -l'
-alias reload='source ~/.zshrc'
-alias path='echo -e ${PATH//:/\\n}'
-alias please='sudo $(fc -ln -1)'
+# Interactive aliases
+alias grep='grep --color=auto'
+alias less='less -R'
 
-# ------------------------------------------------------------------------------
-# Networking
-# ------------------------------------------------------------------------------
+# Grep aliases
+alias f='find . | grep'
+alias h='history | grep'
+alias p='ps aux | grep'
 
-alias myip='curl -s https://ipinfo.io/ip'
-alias ports='sudo lsof -i -P -n | grep LISTEN'
-alias pingg='ping 8.8.8.8'
-alias speedtest='curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
+# More aliases
+alias dirs='dirs -v'
+alias jobs='jobs -l'
 
-# ------------------------------------------------------------------------------
-# Conditional Aliases
-# ------------------------------------------------------------------------------
+# Dirstack aliases
+alias ed='$EDITOR $DIRSTACKFILE'
+alias rd='rm $DIRSTACKFILE'
 
+# Histfile aliases
+alias eh='$EDITOR $HISTFILE'
+alias rh='rm $HISTFILE'
+
+# Use bat insted of cat
 if command -v bat >/dev/null; then
   alias cat='bat --paging=never'
 fi
 
+# Use eza insted of ls
 if command -v eza >/dev/null; then
-  alias ls='eza --icons'
-  alias ll='eza -lh --icons'
-  alias la='eza -A --icons'
+  alias ls='eza --icons=always'
 fi
 
-# ------------------------------------------------------------------------------
-# Functions
-# ------------------------------------------------------------------------------
-
-backup() {
-  local ARCHIVE=/mnt/backup::$(date +'%Y%m%d')
-  local PATHS=(/)
-
-  if [ -z "$(pgrep qemu)" ]; then
-    sudo borg create --list \
-      --compression auto,zstd,6 \
-      --one-file-system \
-      "$ARCHIVE" "${PATHS[@]}"
-  fi
-}
-
-kra2png() {
-  for kra in "$@"; do
-    krita "$kra" --export --export-filename "${kra%.kra}".png >/dev/null 2>&1
-  done
-}
-
-swap() {
-  if [[ $# -ne 2 ]]; then
-    echo "Usage: $0 <file1> <file2>" >&2
-    return 1
-  fi
-
-  if [[ ! -e $1 ]]; then
-    echo "'$1': No such file or directory" >&2
-    return 1
-  fi
-
-  if [[ ! -e $2 ]]; then
-    echo "'$2': No such file or directory" >&2
-    return 1
-  fi
-
-  local tmp="$1.swap.$$"
-
-  mv -- "$1" "$tmp" || return 1
-  mv -- "$2" "$1" || { mv -- "$tmp" "$1"; return 1; }
-  mv -- "$tmp" "$2" || return 1
-}
+# Use trash insted of rm
+if command -v trash >/dev/null; then
+  alias rm='trash'
+fi

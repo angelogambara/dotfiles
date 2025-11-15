@@ -3,8 +3,8 @@
 case "$1" in
 "0") [ "$(dmenu <&- -p 'sxiv: key-handler: ignore? [y/N]')" = 'y' ] && while read -r i; do printf '"%s"\0' "$i"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
 "r") [ "$(dmenu <&- -p 'sxiv: key-handler: remove? [y/N]')" = 'y' ] && while read -r i; do printf '"%s"\0' "$i"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
-"a") while read -r i; do echo "$i" | awk -F '/' '{gsub(/^0+/,"",$8); gsub(/_.*$/,"",$8); printf("https://www.pixiv.net/artworks/%s\n", $8)}'; done | uniq | xargs firefox ;;
-"u") while read -r i; do echo "$i" | awk -F '/' '{gsub(/^0+/,"",$7); printf("https://www.pixiv.net/users/%s\n", $7)}'; done | uniq | xargs firefox ;;
+"a") while read -r i; do echo "$i" | awk -F '/' '{gsub(/^0+/,"",$10); gsub(/_.*$/,"",$10); printf("https://www.pixiv.net/artworks/%s\n", $10)}'; done | uniq | xargs firefox ;;
+"u") while read -r i; do echo "$i" | awk -F '/' '{gsub(/^0+/,"",$8); printf("https://www.pixiv.net/users/%s\n", $8)}'; done | uniq | xargs firefox ;;
 "h") read -r i && ln -fs "$(realpath "$i")" ~/.local/share/backgrounds/hyprland && exit 0 ;;
 "s") read -r i && ln -fs "$(realpath "$i")" ~/.local/share/backgrounds/sway && exit 0 ;;
 esac

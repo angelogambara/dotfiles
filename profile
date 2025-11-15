@@ -9,9 +9,14 @@ prependpath() {
   esac
 }
 
-export JAVA_HOME="/usr/lib/jvm/java-21-openjdk/bin"
+export JAVA_HOME="/usr/lib/jvm/default/bin"
 
-for dir in "$HOME/git/dotfiles/local/bin" "$HOME/.local/bin" "$JAVA_HOME/bin"; do
+for dir in "$JAVA_HOME" \
+  "/var/lib/flatpak/exports/bin" \
+  "$HOME/.local/share/flatpak/exports/bin" \
+  "$HOME/.cargo/bin" \
+  "$HOME/.local/bin" \
+  "$HOME/Documents/Repos/dotfiles/local/bin"; do
   prependpath "$dir"
 done
 
@@ -34,6 +39,12 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
 
 export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh"
+
+# ==============================
+# XDG Support: Configs
+# ==============================
+
+export GOPATH="$XDG_DATA_HOME/go"
 
 # ==============================
 # Preferences

@@ -1,6 +1,9 @@
-include /usr/share/doc/newsboat/contrib/colorschemes/plain
+include /usr/share/doc/newsboat/contrib/colorschemes/cyanism
+macro y set browser "yt-dlp -- %u >&- 2>&- &" ; open-in-browser ; set browser "mpv %u"
+browser "mpv %u"
 
-browser "youtube-dl-fork -- %u &"
+bind-key ^u pageup
+bind-key ^d pagedown
 
 bind-key J next-feed articlelist
 bind-key K prev-feed articlelist
@@ -13,3 +16,5 @@ bind-key k prev articlelist
 
 bind-key h quit
 bind-key l open
+
+bind-key u toggle-article-read

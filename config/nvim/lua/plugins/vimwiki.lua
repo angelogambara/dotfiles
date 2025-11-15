@@ -4,9 +4,9 @@ return {
     init = function()
       vim.g.vimwiki_list = {
         {
-          path = "~/vimwiki/static",
-          path_html = "~/vimwiki/public",
-          index = "notes/notes",
+          diary_rel_path = ".",
+          path = "~/Documents/Diary/static",
+          path_html = "~/Documents/Diary/public",
         },
       }
     end,

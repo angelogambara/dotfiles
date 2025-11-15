@@ -2,8 +2,8 @@
 # Initialize ZSH
 # ==============================
 
-powerline-daemon -q
-source /usr/share/powerline/bindings/zsh/powerline.zsh
+gsettings set org.gnome.desktop.interface  gtk-theme Adwaita
+gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
 
 for f in "${XDG_CONFIG_HOME:-$HOME/.config}"/zsh/*.zsh; do
   source "$f"

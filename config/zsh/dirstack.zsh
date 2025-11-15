@@ -10,11 +10,16 @@ mkdir -p "${DIRSTACKFILE%/*}"                                 # ensure parent di
 if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then  # if new terminal is opened:
     tmpstack=("${(@f)"$(< "$DIRSTACKFILE")"}")                # read file into array
     if  [[ -d "${tmpstack[1]}" ]]; then                       # if directory still exists:
-        builtin cd -q -- "${tmpstack[1]}"                     # go to last directory
-        dirstack=("${tmpstack[@]:1}")                         # restore stack without current dir
+        if [[ -z "$ALACRITTY_WORKDIR_SET" ]]; then            # unless working directory is set:
+            builtin cd -q -- "${tmpstack[1]}"                 # go to last directory
+            dirstack=("${tmpstack[@]:1}")                     # restore stack without current dir
+        else                                                  # if it was unset:
+            dirstack=("${tmpstack[@]}")                       # restore stack with current dir
+        fi
     fi
 fi
 
+# load function to add custom hooks
 autoload -Uz add-zsh-hook
 
 # save stack whenever directory changes
