@@ -1,0 +1,60 @@
+########################################
+# Keybindings
+########################################
+
+# Unset
+bind index \Cf noop
+bind index,pager C noop
+bind index,pager M noop
+bind index,pager g noop
+bind index,pager i noop
+
+# Vim keys
+bind attach h exit
+bind attach j next-entry
+bind attach k previous-entry
+bind attach l view-mailcap
+bind browser h exit
+bind browser j next-entry
+bind browser k previous-entry
+bind browser l select-entry
+bind index D delete-message
+bind index U undelete-message
+bind index d half-down
+bind index u half-up
+bind index G last-entry
+bind index gg first-entry
+bind index h noop
+bind index j next-entry
+bind index k previous-entry
+bind index l display-message
+bind pager d half-down
+bind pager u half-up
+bind pager G bottom
+bind pager gg top
+bind pager h exit
+bind pager j next-line
+bind pager k previous-line
+bind pager l view-attachments
+
+# Sidebar
+bind index,pager B sidebar-toggle-visible
+bind index,pager \Co sidebar-open
+bind index,pager \Cj sidebar-next
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cn sidebar-next-new
+bind index,pager \Cp sidebar-prev-new
+
+# Mouse Wheel
+bind index \005 next-undeleted
+bind index \031 previous-undeleted
+bind pager \005 next-line
+bind pager \031 previous-line
+
+# Mutt-Wizard
+bind editor <Tab> complete-query
+bind index,query <space> tag-entry
+bind index L limit
+bind index,pager H view-raw-message
+bind index,pager R group-reply
+bind index,pager S sync-mailbox

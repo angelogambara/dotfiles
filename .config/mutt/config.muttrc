@@ -1,0 +1,55 @@
+########################################
+# General Behavior
+########################################
+
+# Main settings
+set charset = "utf-8"                   # Default character set
+set copy = yes                          # Save a copy of sent messages
+set editor = "vim"                      # Editor used to write messages
+set include = yes                       # Include original message in replies
+set reply_to = yes                      # Respect Reply-To header
+set reverse_name = yes                  # Use alternate From address when replying
+set smart_wrap = yes                    # Wrap lines intelligently at word boundaries
+set text_flowed                         # Use format=flowed for better formatting in plain text
+set quit = ask-yes                      # Confirm before quitting
+set wrap = 72                           # Maximum line width
+
+# Miscellaneous
+set fast_reply = yes                    # Skip to message entry when replying
+set fcc_attach                          # Include attachments in Fcc copy
+set mail_check_stats                    # Show mail check stats in the status line
+set markers = no                        # Don't show "----" markers between attachments
+set read_inc = 5                        # Number of lines to read at a time
+set sleep_time = 0                      # Time to sleep after displaying messages
+set tilde = no                          # Don't display ~ at end of buffer
+set wait_key = no                       # Don't wait for key press after sending mail
+
+set index_format = "%4C %Z %{%b %d} %-16.16F (%4c) %s"
+
+set pager_context = 3
+set pager_index_lines = 10
+set pager_stop
+
+set sidebar_format = "  %B%?F? [%F]?%* %?N?%N/?  "
+set sidebar_visible = yes
+set sidebar_width = 20
+
+set status_chars = "-*%A"
+set status_format = "─── %f %>─ %p/%l ───"
+set status_on_top
+
+alternative_order text/plain text/html
+auto_view text/html
+auto_view application/pgp-encrypted
+
+set mime_type_query_command = "file --brief --mime-type %s"
+
+set forward_attachments = yes
+set forward_format = "Fwd:%s"
+
+set sort = reverse-date
+set sort_aux = reverse-last-date-received
+
+set pgp_autosign = yes
+set crypt_replyencrypt = yes
+set crypt_replysign = yes
