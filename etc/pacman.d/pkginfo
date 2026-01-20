@@ -1,0 +1,548 @@
+Name            : 7zip
+Description     : File archiver for extremely high compression
+
+Name            : alacritty
+Description     : A cross-platform, GPU-accelerated terminal emulator
+
+Name            : autotiling
+Description     : Script for sway and i3 to automatically switch the horizontal / vertical window split orientation
+
+Name            : base
+Description     : Minimal package set to define a basic Arch Linux installation
+
+Name            : base-devel
+Description     : Basic tools to build Arch Linux packages
+
+Name            : bash-completion
+Description     : Programmable completion for the bash shell
+
+Name            : bat
+Description     : Cat clone with syntax highlighting and git integration
+
+Name            : bc
+Description     : An arbitrary precision calculator language
+
+Name            : bluez-utils
+Description     : Development and debugging utilities for the bluetooth protocol stack
+
+Name            : borg
+Description     : Deduplicating backup program with compression and authenticated encryption
+
+Name            : bridge-utils
+Description     : Utilities for configuring the Linux ethernet bridge
+
+Name            : btop
+Description     : A monitor of system resources, bpytop ported to C++
+
+Name            : calcurse
+Description     : A text-based personal organizer
+
+Name            : chrony
+Description     : Lightweight NTP client and server
+
+Name            : chrpath
+Description     : Change or delete the rpath or runpath in ELF files
+
+Name            : cmake
+Description     : A cross-platform open-source make system
+
+Name            : colord
+Description     : System daemon for managing color devices
+
+Name            : cronie
+Description     : Daemon that runs specified programs at scheduled times and related tools
+
+Name            : curlie
+Description     : The power of curl, the ease of use of httpie.
+
+Name            : direnv
+Description     : A shell extension that manages your environment
+
+Name            : dkms
+Description     : Dynamic Kernel Modules System
+
+Name            : dmenu
+Description     : Generic menu for X
+
+Name            : dmidecode
+Description     : Desktop Management Interface table related utilities
+
+Name            : dnsmasq
+Description     : Lightweight, easy to configure DNS forwarder and DHCP server
+
+Name            : docker
+Description     : Pack, ship and run any application as a lightweight container
+
+Name            : docker-compose
+Description     : Fast, isolated development environments using Docker
+
+Name            : doggo
+Description     : Command-line DNS Client for Humans.
+
+Name            : dosfstools
+Description     : DOS filesystem utilities
+
+Name            : dunst
+Description     : Customizable and lightweight notification-daemon
+
+Name            : efibootmgr
+Description     : Linux user-space application to modify the EFI Boot Manager
+
+Name            : exfatprogs
+Description     : exFAT filesystem userspace utilities for the Linux Kernel exfat driver
+
+Name            : expac
+Description     : alpm data (pacman database) extraction utility
+
+Name            : eza
+Description     : A modern replacement for ls (community fork of exa)
+
+Name            : fcitx5-configtool
+Description     : Configuration Tool for Fcitx5
+
+Name            : fcitx5-gtk
+Description     : Fcitx5 gtk im module and glib based dbus client library
+
+Name            : fcitx5-mozc
+Description     : Fcitx5 Module of A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)
+
+Name            : fd
+Description     : Simple, fast and user-friendly alternative to find
+
+Name            : feh
+Description     : Fast and light imlib2-based image viewer
+
+Name            : ffmpegthumbnailer
+Description     : Lightweight video thumbnailer that can be used by file managers
+
+Name            : firefox
+Description     : Fast, Private & Safe Web Browser
+
+Name            : firewalld
+Description     : Firewall daemon with D-Bus interface
+
+Name            : flameshot
+Description     : Powerful yet simple to use screenshot software
+
+Name            : flatpak
+Description     : Linux application sandboxing and distribution framework (formerly xdg-app)
+
+Name            : flite
+Description     : A lightweight speech synthesis engine
+
+Name            : fwupd
+Description     : Simple daemon to allow session software to update firmware
+
+Name            : fzf
+Description     : Command-line fuzzy finder
+
+Name            : gallery-dl
+Description     : Command-line program to download image-galleries and collections from several image hosting sites
+
+Name            : git-delta
+Description     : Syntax-highlighting pager for git and diff output
+
+Name            : git-extras
+Description     : GIT utilities -- repo summary, commit counting, repl, changelog population and more
+
+Name            : go
+Description     : Core compiler tools for the Go programming language
+
+Name            : gparted
+Description     : A Partition Magic clone, frontend to GNU Parted
+
+Name            : grc
+Description     : Yet another colouriser for beautifying your logfiles or output of commands
+
+Name            : grub
+Description     : GNU GRand Unified Bootloader (2)
+
+Name            : gtklock
+Description     : GTK-based lockscreen for Wayland
+
+Name            : gvfs
+Description     : Virtual filesystem implementation for GIO
+
+Name            : i3-wm
+Description     : Improved dynamic tiling window manager
+
+Name            : i3blocks
+Description     : Define blocks for your i3bar status line
+
+Name            : i3lock
+Description     : Improved screenlocker based upon XCB and PAM
+
+Name            : i3status
+Description     : Generates status bar to use with i3bar, dzen2 or xmobar
+
+Name            : intel-media-driver
+Description     : Intel Media Driver for VAAPI — Broadwell+ iGPUs
+
+Name            : intel-ucode
+Description     : Microcode update files for Intel CPUs
+
+Name            : intellij-idea-community-edition
+Description     : IDE for Java, Groovy and other programming languages with advanced refactoring features
+
+Name            : iw
+Description     : nl80211 based CLI configuration utility for wireless devices
+
+Name            : iwd
+Description     : Internet Wireless Daemon
+
+Name            : jq
+Description     : Command-line JSON processor
+
+Name            : krita
+Description     : Edit and paint images
+
+Name            : lazygit
+Description     : Simple terminal UI for git commands
+
+Name            : libva-utils
+Description     : Intel VA-API Media Applications and Scripts for libva
+
+Name            : linux-firmware-intel
+Description     : Firmware files for Linux - Firmware for Intel devices
+
+Name            : linux-firmware-realtek
+Description     : Firmware files for Linux - Firmware for Realtek devices
+
+Name            : linux-keep-modules
+Description     : Preserve the Linux kernel modules during and after an upgrade
+
+Name            : linux-lts
+Description     : The LTS Linux kernel and modules
+
+Name            : linux-lts-headers
+Description     : Headers and scripts for building modules for the LTS Linux kernel
+
+Name            : lvm2
+Description     : Logical Volume Manager 2 utilities
+
+Name            : lxappearance
+Description     : Feature-rich GTK theme switcher of the LXDE Desktop
+
+Name            : lynx
+Description     : A text browser for the World Wide Web
+
+Name            : man-db
+Description     : A utility for reading man pages
+
+Name            : man-pages
+Description     : Linux man pages
+
+Name            : mariadb
+Description     : Fast SQL database server, derived from MySQL
+
+Name            : mpd
+Description     : Flexible, powerful, server-side application for playing music
+
+Name            : mpv
+Description     : a free, open source, and cross-platform media player
+
+Name            : mullvad-browser-bin
+Description     : Privacy-focused web browser developed by Mullvad VPN and the Tor Project
+
+Name            : mullvad-vpn-bin
+Description     : The Mullvad VPN client app for desktop
+
+Name            : mutt-wizard-git
+Description     : Easily auto-configure neomutt and isync/mpop with safe passwords (IMAP/POP3/SMTP)
+
+Name            : ncdu
+Description     : Disk usage analyzer with an ncurses interface
+
+Name            : neovim
+Description     : Fork of Vim aiming to improve user experience, plugins, and GUIs
+
+Name            : newsboat
+Description     : RSS/Atom feed reader for text terminals
+
+Name            : nginx
+Description     : Lightweight HTTP server and IMAP/POP3 proxy server
+
+Name            : ninja
+Description     : Small build system with a focus on speed
+
+Name            : notmuch
+Description     : Notmuch is not much of an email program
+
+Name            : noto-fonts-emoji
+Description     : Google Noto Color Emoji font
+
+Name            : npm
+Description     : JavaScript package manager
+
+Name            : openbsd-netcat
+Description     : TCP/IP swiss army knife. OpenBSD variant.
+
+Name            : os-prober
+Description     : Utility to detect other OSes on a set of drives
+
+Name            : otf-font-awesome
+Description     : Iconic font designed for Bootstrap - otf format
+
+Name            : otf-ipafont
+Description     : Japanese outline fonts by Information-technology Promotion Agency, Japan (IPA)
+
+Name            : pacman-contrib
+Description     : Contributed scripts and tools for pacman systems
+
+Name            : papirus-icon-theme
+Description     : Papirus icon theme
+
+Name            : parcellite
+Description     : Lightweight GTK clipboard manager
+
+Name            : pass-otp
+Description     : A pass extension for managing one-time-password (OTP) tokens.
+
+Name            : perl-image-exiftool
+Description     : Read and write EXIF information
+
+Name            : php-fpm
+Description     : FastCGI Process Manager for PHP
+
+Name            : php-mongodb
+Description     : MongoDB driver for PHP
+
+Name            : php-pgsql
+Description     : PostgreSQL modules for PHP
+
+Name            : phpmyadmin
+Description     : PHP web-based tool to administrate MySQL and MariaDB databases over the web
+
+Name            : picom
+Description     : Lightweight compositor for X11
+
+Name            : pipewire-pulse
+Description     : Low-latency audio/video router and processor - PulseAudio replacement
+
+Name            : plocate
+Description     : Alternative to locate, faster and compatible with mlocate's database.
+
+Name            : postgresql
+Description     : Sophisticated object-relational DBMS
+
+Name            : prismlauncher
+Description     : Minecraft launcher with ability to manage multiple instances
+
+Name            : python-build
+Description     : A simple, correct Python build frontend
+
+Name            : python-installer
+Description     : Low-level library for installing a Python package from a wheel distribution
+
+Name            : python-mutagen
+Description     : An audio metadata tag reader and writer (python library)
+
+Name            : python-pipx
+Description     : Install and Run Python Applications in Isolated Environments
+
+Name            : python-pyfuse3
+Description     : Python bindings for libfuse 3 with asynchronous API
+
+Name            : python-secretstorage
+Description     : Securely store passwords and other private data using the SecretService DBus API
+
+Name            : python-setuptools
+Description     : Easily download, build, install, upgrade, and uninstall Python packages
+
+Name            : qbittorrent
+Description     : An advanced BitTorrent client programmed in C++, based on Qt toolkit and libtorrent-rasterbar
+
+Name            : qemu-desktop
+Description     : A QEMU setup for desktop environments
+
+Name            : quota-tools
+Description     : Tools to manage kernel-level quotas in Linux
+
+Name            : reflector
+Description     : A Python 3 module and script to retrieve and filter the latest Pacman mirror list.
+
+Name            : ripgrep
+Description     : A search tool that combines the usability of ag with the raw speed of grep
+
+Name            : rofi-pass
+Description     : bash script to handle pass storages in a convenient way
+
+Name            : rustup
+Description     : The Rust toolchain installer
+
+Name            : sd
+Description     : Intuitive find & replace
+
+Name            : seahorse
+Description     : GNOME application for managing PGP keys
+
+Name            : smartmontools
+Description     : Control and monitor S.M.A.R.T. enabled ATA and SCSI Hard Drives
+
+Name            : swappy
+Description     : A Wayland native snapshot editing tool
+
+Name            : sway
+Description     : Tiling Wayland compositor and replacement for the i3 window manager
+
+Name            : swaybg
+Description     : Wallpaper tool for Wayland compositors
+
+Name            : swayidle
+Description     : Idle management daemon for Wayland
+
+Name            : swaylock
+Description     : Screen locker for Wayland
+
+Name            : swtpm
+Description     : Libtpms-based TPM emulator with socket, character device, and Linux CUSE interface
+
+Name            : sxhkd
+Description     : Simple X hotkey daemon
+
+Name            : syncthing
+Description     : Open Source Continuous Replication / Cluster Synchronization Thing
+
+Name            : systemd-resolvconf
+Description     : systemd resolvconf replacement (for use with systemd-resolved)
+
+Name            : testdisk
+Description     : Checks and undeletes partitions + PhotoRec, signature based recovery tool
+
+Name            : thunar-archive-plugin
+Description     : Adds archive operations to the Thunar file context menus
+
+Name            : thunar-volman
+Description     : Automatic management of removable drives and media for Thunar
+
+Name            : tldr
+Description     : Command line client for tldr, a collection of simplified man pages.
+
+Name            : trash-cli
+Description     : Command line trashcan (recycle bin) interface
+
+Name            : ttf-hack
+Description     : A hand groomed and optically balanced typeface based on Bitstream Vera Mono.
+
+Name            : tumbler
+Description     : Thumbnail service implementing the thumbnail management D-Bus specification
+
+Name            : udiskie
+Description     : Removable disk automounter using udisks
+
+Name            : unclutter
+Description     : A small program for hiding the mouse cursor
+
+Name            : unrar
+Description     : The RAR uncompression program
+
+Name            : unzip
+Description     : For extracting and viewing files in .zip archives
+
+Name            : urlscan
+Description     : Mutt and terminal url selector
+
+Name            : urlview-xdg-git
+Description     : A curses URL parser for text files. Git version, adds support for QUITONLAUNCH option and XDG Base Directory specification compliance.
+
+Name            : usbutils
+Description     : A collection of USB tools to query connected USB devices
+
+Name            : virt-manager
+Description     : Desktop user interface for managing virtual machines
+
+Name            : virt-viewer
+Description     : A lightweight interface for interacting with the graphical display of virtualized guest OS.
+
+Name            : vulkan-headers
+Description     : Vulkan header files and API registry
+
+Name            : vulkan-intel
+Description     : Open-source Vulkan driver for Intel GPUs
+
+Name            : vulkan-tools
+Description     : Vulkan tools and utilities
+
+Name            : waybar
+Description     : Highly customizable Wayland bar for Sway and Wlroots based compositors
+
+Name            : wget
+Description     : Network utility to retrieve files from the web
+
+Name            : wireguard-tools
+Description     : next generation secure network tunnel - tools for configuration
+
+Name            : wl-clipboard
+Description     : Command-line copy/paste utilities for Wayland
+
+Name            : xarchiver
+Description     : GTK frontend to various command line archivers
+
+Name            : xdg-desktop-portal-wlr
+Description     : xdg-desktop-portal backend for wlroots
+
+Name            : xdg-user-dirs
+Description     : Manage user directories like ~/Desktop and ~/Music
+
+Name            : xfsprogs
+Description     : XFS filesystem utilities
+
+Name            : xh
+Description     : Friendly and fast tool for sending HTTP requests
+
+Name            : xorg-server
+Description     : Xorg X server
+
+Name            : xorg-xdpyinfo
+Description     : Display information utility for X
+
+Name            : xorg-xinit
+Description     : X.Org initialisation program
+
+Name            : xorg-xkill
+Description     : Kill a client by its X resource
+
+Name            : xorg-xrandr
+Description     : Primitive command line interface to RandR extension
+
+Name            : xorg-xset
+Description     : User preference utility for X
+
+Name            : xorg-xsetroot
+Description     : Classic X utility to set your root window background to a given pattern or color
+
+Name            : xorg-xwayland
+Description     : run X clients under wayland
+
+Name            : xorg-xwininfo
+Description     : Command-line utility to print information about windows on an X server
+
+Name            : xsel
+Description     : Command-line program for getting and setting the contents of the X selection
+
+Name            : xwallpaper
+Description     : Wallpaper setting utility for X
+
+Name            : yay-git
+Description     : Yet another yogurt. Pacman wrapper and AUR helper written in go. (development version)
+
+Name            : ydotool
+Description     : Generic command-line automation tool (no X!)
+
+Name            : yt-dlp
+Description     : A youtube-dl fork with additional features and fixes
+
+Name            : yt-dlp-ejs
+Description     : External JavaScript for yt-dlp supporting many runtimes
+
+Name            : zathura-pdf-poppler
+Description     : Adds pdf support to zathura by using the poppler engine
+
+Name            : zip
+Description     : Compressor/archiver for creating and modifying zipfiles
+
+Name            : zoxide
+Description     : A smarter cd command for your terminal
+
+Name            : zsh
+Description     : A very advanced and programmable command interpreter (shell) for UNIX
