@@ -1,0 +1,20 @@
+# ==============================
+# Alacritty Configuration
+# ==============================
+
+[general]
+import = ["nordic.toml"]
+
+[window]
+opacity = 0.80
+
+[font]
+normal = { family = "MesloLGS NF", style = "Regular" }
+bold   = { family = "MesloLGS NF", style = "Bold" }
+italic = { family = "MesloLGS NF", style = "Italic" }
+size = 13.0
+
+[keyboard]
+bindings = [
+  { key = "N", mods = "Control|Shift", action = "SpawnNewInstance" },
+]
