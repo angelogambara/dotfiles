@@ -1,0 +1,9 @@
+[Default Applications]
+application/x-shellscript=userapp-alacritty -e nvim %F-OWYYI3.desktop
+application/x-zerosize=userapp-alacritty -e nvim %F-OWYYI3.desktop
+text/plain=userapp-alacritty -e nvim %F-OWYYI3.desktop
+
+[Added Associations]
+application/x-shellscript=userapp-alacritty -e nvim %F-OWYYI3.desktop;userapp-sh -c %f-KOOYI3.desktop;
+application/x-zerosize=userapp-alacritty -e nvim %F-OWYYI3.desktop;
+text/plain=userapp-alacritty -e nvim %F-OWYYI3.desktop;
