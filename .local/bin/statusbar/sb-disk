@@ -1,0 +1,4 @@
+#!/bin/sh
+printf '%s %s\n' \
+  " $(df -h "/home" | awk ' /[0-9]/ {print $5}')" \
+  " $(df -h "/" | awk ' /[0-9]/ {print $5}')"
