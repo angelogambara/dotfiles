@@ -11,9 +11,16 @@ fi
 
 xrandr --output DP-2 --auto --left-of DP-1
 xrandr --output DP-1 --off
-xset r rate 330 50 dpms 0 0 150
+xset r rate 330 50 dpms 0 0 300
 
 feh --no-fehbg --bg-fill '/home/angelo/.local/state/setbg'
+
+setsid -f xidlehook \
+  --not-when-fullscreen \
+  --not-when-audio \
+  --timer 60 'pgrep slock && systemctl suspend' '' \
+  --timer 240 'xset s off' 'xset s on' \
+  --timer 300 'pgrep slock || slock & systemctl suspend' ''
 
 autostart="\
     dunst
