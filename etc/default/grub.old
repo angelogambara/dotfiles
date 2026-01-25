@@ -3,7 +3,7 @@
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=1
 GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="cryptdevice=UUID=6478f93a-4e92-4523-8653-7754455a5f60:cryptlvm:allow-discards root=/dev/archvg/root cryptkey=UUID=d6e2345f-e706-4cc4-b537-b7402e5c258a:ext4:/keys/cryptlvm.key intel_iommu=on nvidia-drm.modeset=1 pcie_aspm=off usbcore.autosuspend=-1 loglevel=3 quiet"
+GRUB_CMDLINE_LINUX_DEFAULT="cryptdevice=UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX:cryptlvm:allow-discards cryptkey=UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX:ext4:/keys/cryptlvm.key loglevel=3 quiet"
 GRUB_CMDLINE_LINUX=""
 
 # Preload both GPT and MBR modules so that they are not missed

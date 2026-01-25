@@ -1,7 +1,0 @@
-intel-ucode
-intel-video-accel
-linux-firmware-intel
-linux-firmware-network
-mesa-dri
-mesa-vulkan-intel
-vulkan-loader
