@@ -1,0 +1,10 @@
+#!/bin/sh
+while echo \
+  "$(sb-record)" \
+  "$(sb-mic)" \
+  "$(sb-volume)" \
+  "$(sb-network)" \
+  "$(sb-battery)" \
+  "$(sb-date)"; do
+  sleep 3
+done

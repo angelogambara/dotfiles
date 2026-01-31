@@ -1,0 +1,55 @@
+#!/bin/bash
+set -euo pipefail
+
+# ----------------------------
+# Variables
+# ----------------------------
+
+BORG_PASSCOMMAND="gpg --decrypt ~/.ssh/borg.gpg"
+export BORG_PASSCOMMAND
+
+ARCHIVE="ssh://borg/var/backup/borg::{hostname}@{now:%s}"
+
+# ----------------------------
+# Functions
+# ----------------------------
+
+die() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+check_dependencies() {
+  for cmd in borg pgrep ssh; do
+    command -v "$cmd" >/dev/null || die "Command not found: $cmd"
+  done
+}
+
+check_qemu() {
+  if pgrep -x qemu >/dev/null; then
+    die "QEMU is running"
+  fi
+}
+
+check_exclude_file() {
+  if [[ ! -f "$EXCLUDE_FILE" ]]; then
+    die "Exclude file not found: $EXCLUDE_FILE"
+  fi
+}
+
+# ----------------------------
+# Main
+# ----------------------------
+
+EXCLUDE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/borg/excludefile"
+
+check_dependencies
+check_qemu
+check_exclude_file
+
+exec sudo borg create \
+  --exclude-from "$EXCLUDE_FILE" \
+  --one-file-system \
+  --list --stats -- \
+  "$ARCHIVE" \
+  "$@"

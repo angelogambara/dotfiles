@@ -1,0 +1,41 @@
+#!/bin/bash
+set -o pipefail
+
+get_volume() {
+  local source volume
+
+  source=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+  volume=$(echo "$source" | cut -d'.' -f2 | cut -d' ' -f1)
+
+  local icon
+  if [[ $source =~ MUTED ]]; then
+    icon=""
+  else
+    if [[ $volume -le 25 ]]; then
+      icon="" # 0-25
+    elif [[ $volume -le 50 ]]; then
+      icon="" # 25-50
+    else
+      icon="" # 50-100
+    fi
+  fi
+
+  echo "$icon ${volume}%"
+}
+
+case "$BLOCK_BUTTON" in
+2)
+  wpctl set-mute @DEFAULT_SINK@ toggle
+  pkill -RTMIN+8 dwmblocks
+  ;;
+4)
+  wpctl set-volume @DEFAULT_SINK@ 1%+
+  pkill -RTMIN+8 dwmblocks
+  ;;
+5)
+  wpctl set-volume @DEFAULT_SINK@ 1%-
+  pkill -RTMIN+8 dwmblocks
+  ;;
+esac
+
+get_volume
