@@ -1,0 +1,4 @@
+[submodule ".config/zsh"]
+	path = .config/zsh
+	url = git@github.com:angelogambara/zdotdir.git
+	branch = angelo

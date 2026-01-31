@@ -1,0 +1,15 @@
+#!/bin/sh
+
+nvidia=$(nvidia-smi dmon -c 1 |
+  awk '$1 = /0/ { print \
+    "", $2 "W" " ", \
+    "", $3 "C" " ", \
+    "", $5 "%" " ", \
+    "", $6 "%" " ", \
+    "E", $7 "%" " ", \
+    "D", $8 "%" \
+  }')
+
+if [ -n "$nvidia" ]; then
+  echo "$nvidia"
+fi

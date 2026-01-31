@@ -1,0 +1,35 @@
+{
+  "extractor": {
+    "base-directory": "~/gallery-dl",
+    "cookies": [
+      "firefox"
+    ],
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/147.0",
+    "exhentai": {
+      "directory": [
+        "{category}",
+        "g",
+        "{gid}",
+        "{token}"
+      ],
+      "filename": "{gid}_{num:>04}_{image_token}_{filename}.{extension}"
+    },
+    "fanbox": {
+      "directory": [
+        "{category}",
+        "@{creatorId}",
+        "posts"
+      ],
+      "filename": "{id}_p{num}.{extension}"
+    },
+    "pixiv": {
+      "directory": [
+        "{category}",
+        "users",
+        "{user[id]}",
+        "artworks"
+      ],
+      "filename": "{id}_p{num}.{extension}"
+    }
+  }
+}

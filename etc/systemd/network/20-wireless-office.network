@@ -1,0 +1,10 @@
+# special configuration for office Wi-Fi network
+[Match]
+Name=wlp2s0
+SSID=E-corp
+
+# assign static ip
+[Network]
+Address=10.1.10.9/24
+Gateway=10.1.10.1
+DNS=10.1.10.1

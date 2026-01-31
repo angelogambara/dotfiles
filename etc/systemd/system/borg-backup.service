@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg Backup Service for Systemd
+
+[Service]
+Type=oneshot
+ExecStart=/home/angelo/.local/bin/borg_backup /
+
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

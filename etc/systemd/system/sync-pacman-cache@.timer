@@ -1,0 +1,10 @@
+[Unit]
+Description=Sync pacman cache w/%I - Systemd Timer
+
+[Timer]
+# Try running each hour of the day
+OnCalendar=hourly
+RandomizedDelaySec=5m
+
+[Install]
+WantedBy=timers.target

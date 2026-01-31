@@ -1,0 +1,60 @@
+#!/bin/sh
+
+TERMINAL_EMULATOR=alacritty
+SYNC_PACMAN_CACHE_SERVICE=sync-pacman-cache@tp-x13
+
+# helper function
+spawn_sync_pacman_cache_log() {
+  "$TERMINAL_EMULATOR" -e sh -c "setsid -f journalctl -u $SYNC_PACMAN_CACHE_SERVICE -f" &
+  echo $!
+}
+
+notify_update() {
+  action=$(dunstify --action="update,Update packages" --timeout=60000 "📦 Pending updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")
+
+  if [ "$action" = "update" ]; then
+    if [ -n "$SYNC_PACMAN_CACHE_SERVICE" ]; then
+      pid=$(spawn_sync_pacman_cache_log)
+      sudo systemctl start "$SYNC_PACMAN_CACHE_SERVICE"
+      kill "$pid"
+    fi
+
+    "$TERMINAL_EMULATOR" -e sh -c "sudo pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+  else
+    exit 1
+  fi
+}
+
+notify_reboot() {
+  action=$(dunstify --action="reboot,Reboot system" --timeout=60000 "🔄 Reboot the system" "Kernel modules get removed by default. Install aur/linux-keep-modules to fix it.\nIf you do, next time you will not need to reboot.")
+
+  if [ "$action" = "reboot" ]; then
+    systemctl reboot
+  fi
+}
+
+# only support the following kernels
+contains_kernel() {
+  echo "$UPDATES" |
+    while read -r line; do
+      case "$line" in
+      'linux') return 0 ;;
+      'linux-lts') return 0 ;;
+      'linux-zen') return 0 ;;
+      *) return 1 ;;
+      esac
+    done
+}
+
+# cleaner syntax
+linux_keep_modules() {
+  pacman -Qqs | grep -q 'linux-keep-modules'
+}
+
+# main
+if UPDATES="$(checkupdates --nocolor)"; then
+  notify_update
+  if contains_kernel && ! linux_keep_modules; then
+    notify_reboot
+  fi
+fi

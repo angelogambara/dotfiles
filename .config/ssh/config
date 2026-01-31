@@ -1,0 +1,23 @@
+Host *
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
+
+Host aur
+  HostName aur.archlinux.org
+  User aur
+  Port 22
+
+Host dev
+  HostName angelogambara.dev
+  User angelo
+  Port 22
+
+Host benq-sw240
+  HostName 192.168.1.240
+  User angelo
+  Port 22
+
+Host tp-x13
+  HostName 192.168.1.13
+  User angelo
+  Port 22

@@ -1,0 +1,40 @@
+#!/bin/bash
+shopt -s failglob
+
+get_batteries() {
+  local line
+  for battery in /sys/class/power_supply/BAT?*; do
+    local status capacity
+
+    status="$(cat "$battery"/status 2>&1)"
+    capacity="$(cat "$battery"/capacity 2>&1)"
+
+    local icon
+    if [[ $status == "Charging" ]]; then
+      icon=""
+    else
+      if [[ $capacity -le 10 ]]; then
+        icon="" # 0-10
+      elif [[ $capacity -le 30 ]]; then
+        icon="" # 10-30
+      elif [[ $capacity -le 70 ]]; then
+        icon="" # 30-70
+      elif [[ $capacity -le 90 ]]; then
+        icon="" # 70-90
+      else
+        icon="" # 90-100
+      fi
+    fi
+
+    if [[ -n $line ]]; then
+      line="$icon ${capacity}% $line"
+    else
+      line="$icon ${capacity}%"
+    fi
+  done
+
+  echo "$line"
+}
+
+get_batteries
+

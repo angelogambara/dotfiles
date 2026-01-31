@@ -1,0 +1,44 @@
+#
+# excludefile - like .gitignore
+#
+
+# == temp == #
+
+/home/**/66038798
+/home/**/757415
+/home/*/.local/share/PrismLauncher
+
+# == home == #
+
+/home/**/1960050
+/home/**/@uuuuzan
+/home/*/.cache
+/home/*/.local/state
+/home/*/.local/share/Trash
+/home/*/.local/share/Steam
+/home/*/.local/share/cargo
+/home/*/.local/share/go
+/home/*/.local/share/nvim
+/home/*/.local/share/pipx
+/home/*/.local/share/rustup
+
+# == root == #
+
+# NOTE: mkswap -U clear --size 4G --file /swapfile
+#       pacman -S intellij-idea-community-edition jdk21-openjdk
+
+/swapfile
+/usr/lib/firefox
+/usr/lib/go
+/usr/lib/jvm
+/usr/share/doc
+/usr/share/fonts
+/usr/share/icons
+/usr/share/idea
+/usr/share/locale
+/usr/share/man
+/var/cache
+/var/lib/libvirt/images
+/var/lib/mongodb
+/var/lib/mysql
+/var/lib/postgres

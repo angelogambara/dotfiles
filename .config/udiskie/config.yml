@@ -1,0 +1,5 @@
+device_config:
+  - id_uuid: 1396-1601      # Replace with your partition's UUID
+    automount: false        # Device is still visible but won't auto-mount
+  - id_uuid: d6e2345f-e706-4cc4-b537-b7402e5c258a     # Replace with your partition's UUID
+    automount: false                                  # Device is still visible but won't auto-mount

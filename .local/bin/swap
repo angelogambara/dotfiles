@@ -1,0 +1,23 @@
+#!/bin/sh
+
+file1=${1%/} # strip trailing /
+file2=${2%/} # strip trailing /
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: ${0##*/} <file1> <file2>" >&2
+  return 1
+fi
+
+if [ -e "$file1" ] && [ ! -w "$file1" ]; then
+  echo "ERROR: '$file1': No write access to file or directory" >&2
+  return 1
+fi
+
+if [ -e "$file2" ] && [ ! -w "$file2" ]; then
+  echo "ERROR: '$file2': No write access to file or directory" >&2
+  return 1
+fi
+
+mv -- "$file1" "$file1.tmp.$$" 2>/dev/null
+mv -- "$file2" "$file1" 2>/dev/null
+mv -- "$file1.tmp.$$" "$file2" 2>/dev/null

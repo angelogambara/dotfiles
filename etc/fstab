@@ -1,0 +1,22 @@
+# Static information about the filesystems.
+# See fstab(5) for details.
+
+# <file system> <dir> <type> <options> <dump> <pass>
+# /dev/mapper/archvg-root
+UUID=e64ac6de-43c7-437d-898a-5ef787cc9807	/         	xfs       	rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota	0 1
+
+# /dev/mapper/archvg-home
+UUID=9efafb99-58b2-447f-a9ab-bf70d40e9238	/home     	xfs       	rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota	0 2
+
+# /dev/nvme1n1p2
+UUID=14449439-2200-43fc-a21b-30c3dd5277aa	/boot     	ext4      	rw,relatime	0 2
+
+# /dev/nvme1n1p1
+UUID=AF70-C80D      	/boot/efi 	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+
+# /dev/mapper/archvg-wine
+UUID=360cf718-79ee-4a15-a04d-c33890996630	/mnt/wine 	xfs       	rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota	0 2
+
+# /dev/mapper/archvg-ytdl
+UUID=a56cfd52-fc4d-4905-914e-576c928c6c51	/mnt/ytdl 	xfs       	rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota	0 2
+

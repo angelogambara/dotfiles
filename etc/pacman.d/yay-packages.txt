@@ -1,0 +1,16 @@
+adwaita-qt5
+adwaita-qt6
+bridge-utils
+doggo
+gallery-dl
+git-extras
+linux-preserve-modules
+mullvad-browser-bin
+mullvad-vpn-bin
+mutt-wizard-git
+pip2pkgbuild
+protonup-qt
+python-bgutil-ytdlp-pot-provider
+urlview-xdg-git
+yay
+yay-debug

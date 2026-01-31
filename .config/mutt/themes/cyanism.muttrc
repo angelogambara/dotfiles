@@ -1,0 +1,25 @@
+########################################
+# Color Scheme (Cyanism)
+########################################
+
+color header      cyan default   ".*"       # All headers
+color index       cyan default   ".*"       # All e-mails
+color indicator   black cyan
+color normal      white black
+color status      white blue
+
+color header    cyan default   "^From:"
+color header    cyan default   "^Subject:"
+color header    cyan default   "^Date:"
+color header    cyan default   "^To:"
+color header    cyan default   "^Cc:"
+color header    cyan default   "^Reply-To:"
+
+color index     cyan default   "~N"
+color index     cyan default   "~T"
+color index     cyan default   "~F"
+
+color sidebar_highlight   black cyan        # Current focus
+color sidebar_indicator   white blue        # Current inbox
+color sidebar_new         cyan default      # Unread color
+color sidebar_ordinary    cyan default      # Normal color

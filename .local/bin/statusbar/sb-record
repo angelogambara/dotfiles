@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if [ -e /tmp/record.pid ]; then
+  echo ""
+fi

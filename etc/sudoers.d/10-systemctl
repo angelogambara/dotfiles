@@ -1,0 +1,2 @@
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/systemctl start borg-backup@dev
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/systemctl start delivery-optimization@tp-x13
