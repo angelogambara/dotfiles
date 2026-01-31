@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = Syncing pacman cache to tp-x13...
+When = PostTransaction
+Exec = /usr/bin/systemctl start sync-pacman-cache@tp-x13.service
