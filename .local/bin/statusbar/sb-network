@@ -1,0 +1,60 @@
+#!/bin/bash
+shopt -s nullglob
+
+get_signal_strength() {
+  iw dev wlan0 link | awk '/signal/ {
+      d=$2;
+      q=2*(d+100);
+      if(q>100) q=100; if(q<0) q=0;
+      print q"%"
+  }'
+}
+
+get_network() {
+  local line
+
+  for w in /sys/class/net/w*; do
+    local operstate flags
+
+    operstate=$(cat "$w"/operstate 2>&1)
+    flags=$(cat "$w"/flags 2>&1)
+
+    if [[ $operstate = 'up' ]]; then
+      icon=""
+    elif [[ $flags = '0x1003' ]]; then
+      icon=""
+    else
+      icon=""
+    fi
+  done
+
+  if [[ $icon = "" ]]; then
+    if strngth=$(get_signal_strength); then
+      icon=" $strngth"
+    fi
+  fi
+
+  if [[ $icon = "" ]]; then
+    for e in /sys/class/net/e*; do
+      local operstate
+
+      operstate=$(cat "$e"/operstate 2>&1)
+
+      if [[ $operstate = 'up' ]]; then
+        icon=""
+      else
+        icon=""
+      fi
+    done
+  fi
+
+  if [[ -n $line ]]; then
+    line="$icon $line"
+  else
+    line="$icon"
+  fi
+
+  echo "$line"
+}
+
+get_network

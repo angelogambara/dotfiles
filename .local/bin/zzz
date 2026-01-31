@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Skip user confirmation
+# undefined = inform the user and ask directly
+# 0 = keep the session, I know what I am doing
+# 1 = immediately quit X11, no warnings (not recommended)
+DESTROY_X11_SESSION=
+
+# Extend the logic if you run another compositor
+if [ -n "$WAYLAND_DISPLAY" ]; then
+  if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+    if ! pidof -s hyprlock; then
+      hyprlock &
+    fi
+  elif [ -n "$SWAYSOCK" ]; then
+    if ! pidof -s swaylock; then
+      swaylock &
+    fi
+  else
+    notify-send "Cannot lock screen: unknown compositor."
+    exit 1
+  fi
+else
+  # Screen locking is not supported on X11
+  if [ -z "$DESTROY_X11_SESSION" ]; then
+    action=$(dunstify --action="destroy,Destroy X11 session" --timeout=60000 "Suspending on X11" "Screen locking is not supported on X11. They are effectively eye candy. Quit the session instead by middle clicking. You can always ignore this message by dismissing it or letting it expire.\nThe user will be dropped on the tty, so make sure to use a login manager. Or, exit after startx. Remember to save all your progress first.")
+
+    case "$action" in
+    "destroy") DESTROY_X11_SESSION=1 ;;
+    1) exit 1 ;;
+    *)
+      # Fallback to slock
+      if ! pidof -s slock; then
+        slock &
+      fi
+      ;;
+    esac
+  fi
+fi
+
+# Replace with your suspend command
+systemctl suspend
+if [ "$DESTROY_X11_SESSION" -eq 1 ]; then
+  killall Xorg
+fi
+
+# Fixes a bug on suspend that unfocuses the cursor
+if [ -n "$SWAYSOCK" ]; then
+  if command -v ydotool >/dev/null 2>&1; then
+    if ! pidof -s ydotoold; then
+      setsid ydotoold & # start ydotoold if not running
+    fi
+    sleep 5             # let the system properly wake up
+    ydotool key 1:1 1:0 # :1 = keydown, :0 = keyup
+  else
+    echo "Warning: 'ydotool': command not found" 2>&1
+  fi
+fi

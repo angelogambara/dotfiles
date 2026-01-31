@@ -1,0 +1,10 @@
+#!/bin/sh
+
+case "$BLOCK_BUTTON" in
+2)
+  mailsync
+  pkill -RTMIN+1 dwmblocks
+  ;;
+esac
+
+echo " $(find "$HOME"/.local/share/mail/*/INBOX/new -type f | wc -l)"
