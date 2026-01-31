@@ -1,0 +1,10 @@
+[Unit]
+Description=Schedule Pacman Cache Synching from %I
+
+[Timer]
+# Try running each hour of the day
+OnCalendar=hourly
+RandomizedDelaySec=5m
+
+[Install]
+WantedBy=timers.target
