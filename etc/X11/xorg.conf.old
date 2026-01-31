@@ -1,0 +1,40 @@
+Section "ServerLayout"
+    Identifier     "nvidia_layout"
+    Screen      0  "nvidia_screen"
+    Inactive       "intel_device"
+    Option         "Xinerama" "0"
+EndSection
+
+Section "Device"
+    Identifier     "nvidia_device"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BusID          "PCI:1:0:0"
+EndSection
+
+Section "Screen"
+    Identifier     "nvidia_screen"
+    Device         "nvidia_device"
+    DefaultDepth    24
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+    Option          "AllowEmptyInitialConfiguration" "Yes"
+EndSection
+
+Section "Device"
+    Identifier     "intel_device"
+    Driver         "modesetting"
+    VendorName     "Intel Corporation"
+    BusID          "PCI:0:2:0"
+    Option         "AccelMethod" "none"
+EndSection
+
+Section "Screen"
+    Identifier     "intel_screen"
+    Device         "intel_device"
+    DefaultDepth    24
+    SubSection     "Display"
+        Depth       24
+    EndSubSection
+EndSection
