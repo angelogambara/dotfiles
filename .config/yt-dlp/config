@@ -1,0 +1,27 @@
+--format "bv*[height<=720][fps<=30][vcodec^=vp9]/bv*[height<=720][fps<=30][vcodec^=av1]/bv*[height<=720][fps<=30]+ba/b[height<=720][fps<=30]"
+--output "/mnt/ytdl/%(playlist_id)s/%(upload_date>%Y-%m-%d)s - %(title).175B [%(id)s].%(ext)s"
+
+--merge-output-format mkv
+--embed-chapters
+--embed-metadata
+--embed-thumbnail
+--convert-thumbnails jpg
+
+--download-archive archive.txt
+--ignore-errors
+--no-overwrites
+--retries infinite
+--fragment-retries infinite
+
+--write-info-json
+--no-write-playlist-metafiles
+
+--sub-langs "live_chat,live_chat_replay,en.*,ja"
+--write-subs
+--write-auto-subs
+--sub-format vtt
+
+# --sleep-interval 5
+# --max-sleep-interval 15
+# --limit-rate 1M
+# --concurrent-fragments 1
