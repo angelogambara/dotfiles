@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<submenu></submenu>
+	<unique-id>1766433181498036-1</unique-id>
+	<command>WORKING_DIRECTORY=1 alacritty --working-directory %f</command>
+	<description></description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>sxiv</icon>
+	<name>Open recursively in sxiv</name>
+	<submenu></submenu>
+	<unique-id>1768911375359729-1</unique-id>
+	<command>sxiv -ro %f</command>
+	<description></description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+</actions>
