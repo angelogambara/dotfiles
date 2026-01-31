@@ -1,0 +1,10 @@
+# --- System backups ---
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/borg create *
+
+# --- System updates ---
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacman -Sy
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacman -Syu
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacman -Syu --needed
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacman -Syu --needed --noconfirm
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacman -Syu --noconfirm
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/pacman -Syu --noconfirm --needed
