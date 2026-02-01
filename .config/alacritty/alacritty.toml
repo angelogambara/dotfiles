@@ -22,5 +22,5 @@ size = 12.0
 
 [keyboard]
 bindings = [
-  { key = "N", mods = "Control|Shift", action = "SpawnNewInstance" },
+  { key = "N", mods = "Control|Shift", command = { program = "sh", args = ["-c", "WORKDIR_SET=1 alacritty"] } }
 ]
