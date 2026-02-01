@@ -11,6 +11,7 @@ fi
 
 xrandr --output DP-2 --auto --left-of DP-1
 xrandr --output DP-1 --off
+xrdb -load ~/.config/X11/themes/macchiato.Xresources
 xset r rate 330 50 dpms 0 0 300
 
 feh --no-fehbg --bg-fill '/home/angelo/.cache/setbg'
