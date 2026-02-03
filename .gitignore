@@ -4,8 +4,12 @@
 
 # Apps
 .config/Thunar
-.config/keepassxc
+.config/mimeapps.list
 .config/qBittorrent
+
+# More stuff
+.config/QtProject.conf
+.config/keepassxc
 .config/xfce4
 
 # Cookies
@@ -17,5 +21,5 @@
 .config/pulse
 
 # Generated
-.config/QtProject.conf
-.config/mimeapps.list
+.config/dconf/user
+.config/nvim/lazy-lock.json
