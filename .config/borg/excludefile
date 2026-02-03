@@ -6,7 +6,7 @@
 
 /home/**/66038798
 /home/**/757415
-/usr/share/locale
+/home/*/.local/share/PrismLauncher
 
 # == home == #
 
@@ -28,6 +28,17 @@
 #       pacman -S intellij-idea-community-edition jdk21-openjdk
 
 /swapfile
+/usr/lib/firefox
+/usr/lib/go
 /usr/lib/jvm
+/usr/share/doc
+/usr/share/fonts
+/usr/share/icons
 /usr/share/idea
+/usr/share/locale
+/usr/share/man
 /var/cache
+/var/lib/libvirt/images
+/var/lib/mongodb
+/var/lib/mysql
+/var/lib/postgres
