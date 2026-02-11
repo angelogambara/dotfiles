@@ -1,32 +1,40 @@
 #!/bin/sh
 
+dmenufont="Hack:pixelsize=14:antialias=true:autohint=false"
+
+gray1="#1e2122"
+gray2="#928374"
+gray3="#A89984"
+gray4="#EBDBB2"
+yellow="#D79921"
+
+dmenucmd() {
+  dmenu -m 0 \
+    -fn "$dmenufont" \
+    -nb "$gray1" \
+    -nf "$gray3" \
+    -sb "$yellow" \
+    -sf "$gray4" \
+    "$@"
+}
+
+dmenuconfirmcmd() {
+  dmenucmd -p 'Are you sure?' </dev/null
+}
+
+PATH=${PATH}:~/.local/bin
+
 case "$1" in
 "e") read -r f && setsid -f thunar "$f" ;;
-"w") read -r f && setbg "$f" & ;;
-"W")
-  read -r f
-  ln -fs "$(readlink -f "$f")" "$HOME"/.cache/setbg
-
-  if [ -n "$WAYLAND_DISPLAY" ]; then
-    if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-      hyprctl reload
-    elif [ -n "$SWAYSOCK" ]; then
-      swaymsg reload
-    fi
-  else
-    feh --no-fehbg --bg-fill "$(readlink -f "$f")"
-  fi
-
-  exit 0
-  ;;
+"w") read -r f && setbg "$f" ;;
 
 "r") read -r f && convert -rotate +90 "$f" "$f" ;;
 "R") read -r f && convert -rotate -90 "$f" "$f" ;;
 "f") read -r f && convert -flop "$f" "$f" ;;
 "F") read -r f && convert -flip "$f" "$f" ;;
 
-"0") [ "$(dmenu -p 'Are you sure?' </dev/null)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
-"d") [ "$(dmenu -p 'Are you sure?' </dev/null)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
+"0") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
+"d") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
 "a") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$9); gsub(/_.*$/,"",$9); printf("https://www.pixiv.net/artworks/%s\n", $9)}'; done | uniq | xargs firefox ;;
 "u") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$7); printf("https://www.pixiv.net/users/%s\n", $7)}'; done | uniq | xargs firefox ;;
 esac

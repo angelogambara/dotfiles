@@ -1,55 +1,23 @@
 #!/bin/bash
+# Exit on error, undefined variable, or pipe failure
 set -euo pipefail
 
-# ----------------------------
-# Variables
-# ----------------------------
-
-BORG_PASSCOMMAND="gpg --decrypt ~/.ssh/borg.gpg"
-export BORG_PASSCOMMAND
-
-ARCHIVE="ssh://borg/var/backup/borg::{hostname}@{now:%s}"
-
-# ----------------------------
-# Functions
-# ----------------------------
-
-die() {
-  echo "Error: $*" >&2
-  exit 1
-}
-
-check_dependencies() {
-  for cmd in borg pgrep ssh; do
-    command -v "$cmd" >/dev/null || die "Command not found: $cmd"
-  done
-}
-
-check_qemu() {
-  if pgrep -x qemu >/dev/null; then
-    die "QEMU is running"
-  fi
-}
-
-check_exclude_file() {
-  if [[ ! -f "$EXCLUDE_FILE" ]]; then
-    die "Exclude file not found: $EXCLUDE_FILE"
-  fi
-}
-
-# ----------------------------
-# Main
-# ----------------------------
-
+# Exclude from file definitions
 EXCLUDE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/borg/excludefile"
 
-check_dependencies
-check_qemu
-check_exclude_file
+# Ensure config directory and files exist
+mkdir -p "${EXCLUDE_FILE%/*}"
+touch "$EXCLUDE_FILE"
 
-exec sudo borg create \
-  --exclude-from "$EXCLUDE_FILE" \
+# Decrypt passphrase
+export BORG_PASSCOMMAND="gpg --decrypt ~/.config/borg/passphrase.gpg"
+
+# Name of the remote archive (hostname + timestamp)
+ARCHIVE="ssh://backup/borg::{hostname}@{now:%Y-%m-%d_%H-%M}"
+
+# Backup whatever you want to back up
+sudo borg create \
   --one-file-system \
-  --list --stats -- \
-  "$ARCHIVE" \
-  "$@"
+  --list \
+  --exclude-from "$EXCLUDE_FILE" \
+  -- "$ARCHIVE" "$@"

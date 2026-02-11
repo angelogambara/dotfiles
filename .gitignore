@@ -2,35 +2,31 @@
 # .gitignore - exclude files
 #
 
-# Apps
-.config/Thunar
-.config/mimeapps.list
-.config/qBittorrent
-
-# More stuff
-.config/QtProject.conf
-.config/keepassxc
-.config/xfce4
-
 # Cookies
-.config/dconf
 .config/fcitx
-.config/fcitx5
-.config/go
 .config/ibus
-.config/mozc
 .config/pulse
+.config/go
 
 # Generated
-.config/dconf/user
+.config/QtProject.conf
 .config/nvim/lazy-lock.json
-
 .local/share/fonts/**/.uuid
 
-# Temp
-.config/heroic
-.config/pupgui
+# Irrelevant
+.config/bat
 .config/htop
-.config/DisplayCAL
+.config/npm
+.config/wget
+.config/keepassxc
+.config/xarchiver
+.config/qBittorrent
+
+# Data
+.config/dconf
+.config/fcitx5
+.config/mozc
+
+# Symlinks
 .config/chromium
-.local/share/icons/hicolor
+.config/heroic

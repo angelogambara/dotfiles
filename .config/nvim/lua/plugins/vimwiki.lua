@@ -1,7 +1,7 @@
 return {
   "vimwiki/vimwiki",
   -- Trigger lazy-loading
-  keys = { "<leader>ww", "<leader>wt" },
+  keys = { "<leader>ww", "<leader>wi", "<leader>wt" },
   init = function()
     vim.g.vimwiki_list = {
       {

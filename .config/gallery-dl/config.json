@@ -30,6 +30,14 @@
         "artworks"
       ],
       "filename": "{id}_p{num}.{extension}"
+    },
+    "twitter": {
+      "directory": [
+        "{category}",
+        "{user[name]}",
+        "media"
+      ],
+      "filename": "{tweet_id}_{num}.{extension}"
     }
   }
 }
