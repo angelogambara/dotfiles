@@ -1,11 +1,11 @@
 #!/bin/sh
 
 TERMINAL_EMULATOR=alacritty
-SYNC_PACMAN_CACHE_SERVICE=sync-pacman-cache@tp-x13
+DELIVERY_OPTIMIZATION=delivery-optimization@tp-x13
 
 # helper function
-spawn_sync_pacman_cache_log() {
-  "$TERMINAL_EMULATOR" -e sh -c "setsid -f journalctl -u $SYNC_PACMAN_CACHE_SERVICE -f" &
+delivery_optimization_journal() {
+  nohup "$TERMINAL_EMULATOR" -e journalctl -u "$DELIVERY_OPTIMIZATION" -f >/dev/null 2>&1 &
   echo $!
 }
 
@@ -13,9 +13,9 @@ notify_update() {
   action=$(dunstify --action="update,Update packages" --timeout=60000 "📦 Pending updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")
 
   if [ "$action" = "update" ]; then
-    if [ -n "$SYNC_PACMAN_CACHE_SERVICE" ]; then
-      pid=$(spawn_sync_pacman_cache_log)
-      sudo systemctl start "$SYNC_PACMAN_CACHE_SERVICE"
+    if [ -n "$DELIVERY_OPTIMIZATION" ]; then
+      pid=$(delivery_optimization_journal)
+      sudo systemctl start "$DELIVERY_OPTIMIZATION"
       kill "$pid"
     fi
 

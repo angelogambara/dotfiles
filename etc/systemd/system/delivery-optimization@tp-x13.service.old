@@ -3,8 +3,11 @@ Description=Sync pacman cache w/%I
 
 [Service]
 Type=oneshot
+ExecStart=/usr/bin/ssh %i "systemctl start paccache"
 ExecStart=/usr/bin/rsync -av %i:/var/cache/pacman/pkg/ /var/cache/pacman/pkg/
+ExecStart=/usr/bin/systemctl start paccache
 ExecStart=/usr/bin/rsync -av /var/cache/pacman/pkg/ %i:/var/cache/pacman/pkg/
+
 Nice=10
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7
