@@ -1,11 +1,11 @@
 #!/bin/sh
 
 TERMINAL_EMULATOR=alacritty
-SYNC_PACMAN_CACHE_SERVICE=sync-pacman-cache@tp-x13
+SYNC_PACMAN_CACHE_SERVICE=sync-pacman-cache@benq-sw240
 
 # helper function
 spawn_sync_pacman_cache_log() {
-  "$TERMINAL_EMULATOR" -e sh -c "setsid -f journalctl -u $SYNC_PACMAN_CACHE_SERVICE -f" &
+  nohup "$TERMINAL_EMULATOR" -e journalctl -u "$SYNC_PACMAN_CACHE_SERVICE" -f >/dev/null 2>&1 &
   echo $!
 }
 
