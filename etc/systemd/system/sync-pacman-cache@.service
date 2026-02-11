@@ -1,5 +1,5 @@
 [Unit]
-Description=Sync Pacman Cache from %I
+Description=Sync pacman cache w/%I
 
 [Service]
 Type=oneshot

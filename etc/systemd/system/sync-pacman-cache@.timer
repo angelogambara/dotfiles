@@ -1,5 +1,5 @@
 [Unit]
-Description=Schedule Pacman Cache Synching from %I
+Description=Sync pacman cache w/%I - Systemd Timer
 
 [Timer]
 # Try running each hour of the day
