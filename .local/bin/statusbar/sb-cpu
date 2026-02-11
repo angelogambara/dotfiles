@@ -1,2 +1,2 @@
 #!/bin/sh
-sensors | awk '/Core 0/ {print "", $3}'
+echo "CPU: $(mpstat 1 1 | awk '/^Average:/ {print "", 100 - $NF "%"}') $(sensors | awk '/Core 0/ {print "", $3}') $(free -h | awk '/^Mem:/ {print "", $3}B')"
