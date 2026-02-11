@@ -1,6 +1,4 @@
 7zip
-adwaita-qt5
-adwaita-qt6
 alacritty
 amdgpu_top
 arch-install-scripts
@@ -12,7 +10,6 @@ bat
 bc
 bluez-utils
 borg
-bridge-utils
 brightnessctl
 btop
 calcurse
@@ -28,7 +25,6 @@ dmidecode
 dnsmasq
 docker
 docker-compose
-doggo
 dosfstools
 dunst
 efibootmgr
@@ -50,9 +46,7 @@ flatpak
 flite
 fwupd
 fzf
-gallery-dl
 git-delta
-git-extras
 glances
 gparted
 grc
@@ -76,7 +70,6 @@ linux-firmware-amdgpu
 linux-firmware-intel
 linux-firmware-realtek
 linux-headers
-linux-preserve-modules
 logrotate
 lxappearance
 lynx
@@ -85,9 +78,6 @@ man-pages
 mariadb
 mpd
 mpv
-mullvad-browser-bin
-mullvad-vpn-bin
-mutt-wizard-git
 ncdu
 neovim
 newsboat
@@ -111,13 +101,10 @@ php-mongodb
 php-pgsql
 phpmyadmin
 picom
-pip2pkgbuild
 pipewire-pulse
 plocate
 postgresql
 prismlauncher
-protonup-qt
-python-bgutil-ytdlp-pot-provider
 python-build
 python-installer
 python-mutagen
@@ -163,7 +150,6 @@ unclutter
 unrar
 unzip
 urlscan
-urlview-xdg-git
 virt-manager
 virt-viewer
 vulkan-tools
@@ -190,8 +176,6 @@ xorg-xwayland
 xorg-xwininfo
 xsel
 xwallpaper
-yay
-yay-debug
 ydotool
 yt-dlp
 zathura-pdf-poppler
