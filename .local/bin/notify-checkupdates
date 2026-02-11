@@ -1,14 +1,25 @@
 #!/bin/sh
 
-# Set your preferences
 TERMINAL_EMULATOR=alacritty
+SYNC_PACMAN_CACHE_SERVICE=sync-pacman-cache@tp-x13
+
+# helper function
+spawn_sync_pacman_cache_log() {
+  "$TERMINAL_EMULATOR" -e sh -c "setsid -f journalctl -u $SYNC_PACMAN_CACHE_SERVICE -f" &
+  echo $!
+}
 
 notify_update() {
   action=$(dunstify --action="update,Update packages" --timeout=60000 "📦 Pending updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")
 
-  # Update packages now
   if [ "$action" = "update" ]; then
-    "$TERMINAL_EMULATOR" -e sh -c "sudo pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter'; read"
+    if [ -n "$SYNC_PACMAN_CACHE_SERVICE" ]; then
+      pid=$(spawn_sync_pacman_cache_log)
+      sudo systemctl start "$SYNC_PACMAN_CACHE_SERVICE"
+      kill "$pid"
+    fi
+
+    "$TERMINAL_EMULATOR" -e sh -c "sudo pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
   else
     exit 1
   fi
@@ -17,9 +28,8 @@ notify_update() {
 notify_reboot() {
   action=$(dunstify --action="reboot,Reboot system" --timeout=60000 "🔄 Reboot the system" "Kernel modules get removed by default. Install aur/linux-keep-modules to fix it.\nIf you do, next time you will not need to reboot.")
 
-  # Reboot the system now
   if [ "$action" = "reboot" ]; then
-    sudo reboot
+    systemctl reboot
   fi
 }
 
@@ -36,7 +46,7 @@ contains_kernel() {
     done
 }
 
-# syntactical sugar wrapper
+# cleaner syntax
 linux_keep_modules() {
   pacman -Qqs | grep -q 'linux-keep-modules'
 }
