@@ -1,0 +1,15 @@
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+
+if [ "${grub_platform}" == "efi" ]; then
+    menuentry 'Windows 11' --class windows --class os {
+        insmod part_gpt
+        insmod fat
+        insmod chain
+        search --no-floppy --fs-uuid --set=root 321F-5DFF
+        chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+    }
+fi
