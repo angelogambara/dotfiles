@@ -13,6 +13,7 @@
 .config/xfce4
 
 # Cookies
+.config/dconf
 .config/fcitx
 .config/fcitx5
 .config/go
@@ -23,3 +24,10 @@
 # Generated
 .config/dconf/user
 .config/nvim/lazy-lock.json
+
+.local/share/fonts/**/.uuid
+
+# Temp
+.config/heroic
+.config/pupgui
+.config/htop
