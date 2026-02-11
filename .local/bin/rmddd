@@ -1,0 +1,13 @@
+#!/bin/sh
+# Persistence daemon to counter Firefox's refusal to respect folder removal
+# Cleans up the ~/Downloads directory that FF insists on recreating
+
+DOWNLOADS=${XDG_DOWNLOAD_DIR:-"$HOME"/Downloads}
+
+while true; do
+  # If the directory exists, remove it (prevents accidental data loss)
+  if [ -d "$DOWNLOADS" ]; then
+    rmdir "$DOWNLOADS"
+  fi
+  sleep 60
+done

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+img="$(realpath "$1")"
+[ ! -f "$img" ] || [ ! -r "$img" ] && exit 1
+ln -fs "$img" ~/.cache/wallpaper
+
+if [ -n "$WAYLAND_DISPLAY" ]; then
+  pkill swaybg
+  swaybg -i "$img" -m fill >/dev/null 2>&1 &
+else
+  feh --no-fehbg --bg-fill "$img"
+fi

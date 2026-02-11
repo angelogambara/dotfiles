@@ -1,44 +1,57 @@
-#
-# excludefile - like .gitignore
-#
+# -----------------------------
+# Personal files
+# -----------------------------
 
-# == temp == #
+# Temporary directories and files
+/home/*/.cache/*
+/home/*/.local/state/*
 
-/home/**/66038798
-/home/**/757415
-/home/*/.local/share/PrismLauncher
+# Nothing important to back up here
+/home/*/.local/share/*
 
-# == home == #
+# Exclude high-resolution galleries (containing psd, clip, zip)
+/home/angelo/gallery-dl/fanbox/@uuuuzan
+/home/angelo/gallery-dl/pixiv/users/66038798
+/home/angelo/gallery-dl/pixiv/users/1960050
 
-/home/**/1960050
-/home/**/@uuuuzan
-/home/*/.cache
-/home/*/.local/state
-/home/*/.local/share/Trash
-/home/*/.local/share/Steam
-/home/*/.local/share/cargo
-/home/*/.local/share/go
-/home/*/.local/share/nvim
-/home/*/.local/share/pipx
-/home/*/.local/share/rustup
+# -----------------------------
+# System files (reinstall)
+# -----------------------------
 
-# == root == #
+# Large system directories (installed via pacman)
+/usr/share/doc/*
+/usr/share/fonts/*
+/usr/share/icons/*
+/usr/share/locale/*
 
-# NOTE: mkswap -U clear --size 4G --file /swapfile
-#       pacman -S intellij-idea-community-edition jdk21-openjdk
-
-/swapfile
+# Application binaries (installed via pacman)
+# Firefox
 /usr/lib/firefox
+
+# Go programming language
 /usr/lib/go
-/usr/lib/jvm
-/usr/share/doc
-/usr/share/fonts
-/usr/share/icons
-/usr/share/idea
-/usr/share/locale
-/usr/share/man
-/var/cache
-/var/lib/libvirt/images
+
+# -----------------------------
+# Temporary files
+# -----------------------------
+
+# Swap file (temporary memory storage)
+# Created with: mkswap -U clear --size 4G --file /swapfile
+/swapfile
+
+# System caches
+/var/cache/*
+
+# Exclude the full runtime directory
+/var/lib/docker
+
+# Do not back up flatpaks
+/var/lib/flatpak/repo/*
+
+# Use hypervisor-level snapshots instead
+/var/lib/libvirt
+
+# Typically backed up separately
 /var/lib/mongodb
 /var/lib/mysql
 /var/lib/postgres
