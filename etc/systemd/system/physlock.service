@@ -1,0 +1,11 @@
+[Unit]
+Description=Lock console with physlock on sleep
+Before=sleep.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/physlock -d
+ExecStartPost=/usr/bin/sleep 1
+
+[Install]
+WantedBy=sleep.target
