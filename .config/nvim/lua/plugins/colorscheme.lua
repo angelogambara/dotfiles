@@ -1,27 +1,40 @@
 return {
-  -- Add the Catppuccin plugin
+  -- Add the Gruvbox plugin
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000, -- Ensure it loads before other plugins
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000, -- Make sure to load this before all the other plugins
+    config = true,
     opts = {
-      flavour = "macchiato", -- latte, frappe, macchiato, mocha
-      transparent_background = false,
-      term_colors = true,
-      integrations = {
-        telescope = true,
-        neotree = true,
-        which_key = true,
-        -- Add other integrations as needed
+      terminal_colors = true, -- add neovim terminal colors
+      undercurl = true,
+      underline = true,
+      bold = true,
+      italic = {
+        strings = true,
+        emphasis = true,
+        comments = true,
+        operators = false,
+        folds = true,
       },
+      strikethrough = true,
+      invert_selection = false,
+      invert_signs = false,
+      invert_tabline = false,
+      invert_intend_guides = false,
+      inverse = true, -- invert background for search, highlighting, etc.
+      contrast = "hard", -- can be "hard", "soft" or empty string
+      palette_overrides = {},
+      overrides = {},
+      dim_inactive = false,
+      transparent_mode = false,
     },
   },
 
-  -- Set LazyVim to use Catppuccin as the default colorscheme
+  -- Configure LazyVim to load the colorscheme
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "gruvbox",
     },
   },
 }
