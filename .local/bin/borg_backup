@@ -10,7 +10,7 @@ mkdir -p "${EXCLUDE_FILE%/*}"
 touch "$EXCLUDE_FILE"
 
 # Decrypt passphrase
-export BORG_PASSCOMMAND="gpg --decrypt ~/.config/borg/passphrase.gpg"
+export BORG_PASSCOMMAND="gpg --decrypt ${XDG_CONFIG_HOME:-$HOME/.config}/borg/passphrase.gpg"
 
 # Name of the remote archive (hostname + timestamp)
 ARCHIVE="ssh://backup/borg::{hostname}@{now:%Y-%m-%d_%H-%M}"

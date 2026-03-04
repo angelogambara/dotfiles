@@ -1,0 +1,20 @@
+sudo firewall-cmd --permanent --new-policy libvirt-to-public
+sudo firewall-cmd --permanent --policy libvirt-to-public --add-ingress-zone libvirt
+sudo firewall-cmd --permanent --policy libvirt-to-public --add-egress-zone public
+sudo firewall-cmd --permanent --policy libvirt-to-public --set-target ACCEPT
+
+sudo firewall-cmd --permanent --new-policy public-to-libvirt
+sudo firewall-cmd --permanent --policy public-to-libvirt --add-ingress-zone public
+sudo firewall-cmd --permanent --policy public-to-libvirt --add-egress-zone libvirt
+sudo firewall-cmd --permanent --policy public-to-libvirt --set-target ACCEPT
+
+sudo firewall-cmd --zone=public --add-masquerade --permanent
+sudo firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i virbr0 -j ACCEPT
+sudo firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -o virbr0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+sudo firewall-cmd --reload
+
+ethtool -K virbr0 tx off
+
+virsh net-destroy default
+virsh net-start   default

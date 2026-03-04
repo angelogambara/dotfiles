@@ -12,8 +12,11 @@
 .config/QtProject.conf
 .config/nvim/lazy-lock.json
 .local/share/fonts/**/.uuid
+.local/share/icons/hicolor/
 
 # Irrelevant
+.config/gtk-3.0
+.config/gtk-4.0
 .config/bat
 .config/htop
 .config/npm
@@ -30,3 +33,4 @@
 # Symlinks
 .config/chromium
 .config/heroic
+.config/mozilla

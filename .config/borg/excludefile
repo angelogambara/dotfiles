@@ -3,11 +3,11 @@
 # -----------------------------
 
 # Temporary directories and files
-/home/angelo/.cache
-/home/angelo/.local/state
+/home/*/.cache/*
+/home/*/.local/state/*
 
 # Nothing important to back up here
-/home/angelo/.local/share
+/home/*/.local/share/*
 
 # Exclude high-resolution galleries (containing psd, clip, zip)
 /home/angelo/gallery-dl/fanbox/@uuuuzan
@@ -19,10 +19,10 @@
 # -----------------------------
 
 # Large system directories (installed via pacman)
-/usr/share/doc
-/usr/share/fonts
-/usr/share/icons
-/usr/share/locale
+/usr/share/doc/*
+/usr/share/fonts/*
+/usr/share/icons/*
+/usr/share/locale/*
 
 # Application binaries (installed via pacman)
 # Firefox
@@ -40,13 +40,13 @@
 /swapfile
 
 # System caches
-/var/cache
+/var/cache/*
 
 # Exclude the full runtime directory
 /var/lib/docker
 
 # Do not back up flatpaks
-/var/lib/flatpak/repo
+/var/lib/flatpak/repo/*
 
 # Use hypervisor-level snapshots instead
 /var/lib/libvirt
