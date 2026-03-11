@@ -24,10 +24,30 @@ check_env() {
   [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
 
   # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR grep wpctl wiremix pkill"
+  deps="$TERMINAL $EDITOR grep wpctl pkill"
   for dep in $deps; do
     command_exists "$dep" || die "$dep is not installed"
   done
+}
+
+get_progress() {
+  percent=$1
+
+  if [ "$percent" -lt 15 ]; then
+    line="[░░░░░]"
+  elif [ "$percent" -lt 30 ]; then
+    line="[█░░░░]"
+  elif [ "$percent" -lt 50 ]; then
+    line="[██░░░]"
+  elif [ "$percent" -lt 70 ]; then
+    line="[███░░]"
+  elif [ "$percent" -lt 85 ]; then
+    line="[████░]"
+  else
+    line="[█████]"
+  fi
+
+  echo "$line"
 }
 
 get_volume() {
@@ -56,8 +76,11 @@ get_volume() {
     icon="" # 40-100
   fi
 
+  # Load up the progress bar
+  progress=$(get_progress "$volume")
+
   # Display with theme
-  echo "$theme $icon ${volume}% $reset"
+  echo "$theme $icon ${volume}% $progress $reset"
 }
 
 # ########
@@ -70,7 +93,8 @@ check_env
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
 1) # Left click
-  "$TERMINAL" -e wiremix
+  command_exists wiremix &&
+    "$TERMINAL" -e wiremix
   ;;
 2) # Middle click
   wpctl set-mute @DEFAULT_SINK@ toggle

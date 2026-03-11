@@ -80,6 +80,7 @@ get_progress() {
 
 get_batteries() {
   for battery in /sys/class/power_supply/BAT?*; do
+    [ -e "$battery" ] || continue
     status="$(cat "$battery"/status 2>&1)"
     capacity="$(cat "$battery"/capacity 2>&1)"
 
@@ -112,15 +113,14 @@ get_batteries() {
     progress=$(get_progress "$capacity")
 
     # Decide how to display everything
-    # NOTE: No trailing spaces when concatenating $line
     if [ -n "$line" ]; then
-      echo "$theme $icon ${capacity}% $progress $reset $line"
+      line="$theme $icon ${capacity}% $progress $reset $line"
     else
-      echo "$theme $icon ${capacity}% $progress $reset"
+      line="$theme $icon ${capacity}% $progress $reset"
     fi
   done
 
-  echo "$line"
+  [ -n "$line" ] && echo "$line"
 }
 
 # ########
@@ -133,13 +133,23 @@ check_env
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
 1) # Left click
-  notify_batteries "$(acpi -b)"
+  command_exists tlp &&
+    notify_batteries "$(super tlp fullcharge)"
   ;;
 2) # Middle click
-  notify_batteries "$(super tlp fullcharge)"
+  command_exists tlp &&
+    notify_batteries "$(super tlp performance)"
   ;;
 3) # Right click
   "$TERMINAL" -e "$EDITOR" "$0"
+  ;;
+8) # Side button
+  command_exists tlp &&
+    notify_batteries "$(super tlp balance)"
+  ;;
+9) # Side button
+  command_exists tlp &&
+    notify_batteries "$(super tlp setcharge 70 90)"
   ;;
 esac
 

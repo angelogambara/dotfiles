@@ -1,2 +1,62 @@
 #!/bin/sh
-echo "CPU: $(mpstat 1 1 | awk '/^Average:/ {print "", 100 - $NF "%"}') $(sensors | awk '/Core 0/ {print "", $3}') $(free -h | awk '/^Mem:/ {print "", $3}B')"
+
+# ########
+# Helper
+# ########
+
+die() {
+  echo >&2 "$1"
+  exit 1
+}
+
+command_exists() {
+  command -v "$1" >/dev/null 2>&1 || return 1
+}
+
+check_env() {
+  # Make zsh behave more like POSIX
+  emulate sh 2>/dev/null
+
+  # Prevent root from running
+  [ "$(id -u)" -eq 0 ] && die "Do not run as root"
+
+  # Ensure environment variables are set
+  [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
+
+  # Add a comment here too because I can
+  deps="$TERMINAL $EDITOR awk sensors"
+  for dep in $deps; do
+    command_exists "$dep" || die "$dep is not installed"
+  done
+}
+
+get_cpu() {
+  if grep -q AMD /proc/cpuinfo; then
+    temp=$(sensors | awk '/Tctl/ {print $2}')
+  else
+    temp=$(sensors | awk '/Package id 0/ {print $4}')
+  fi
+
+  # Source theme
+  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+
+  # Display with theme
+  echo "$theme  $temp $reset"
+}
+
+# ########
+# Main
+# ########
+
+# Always good
+check_env
+
+# Handle mouse clicks for the status bar (statuscmd patch for dwm)
+case "$BLOCK_BUTTON" in
+3) # Right click
+  "$TERMINAL" -e "$EDITOR" "$0"
+  ;;
+esac
+
+# Refresh block
+get_cpu

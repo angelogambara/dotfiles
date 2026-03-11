@@ -8,5 +8,5 @@ if [ -d ~/.config/dwm/autostart.d ]; then
   unset f
 fi
 
-# Replace shell with window manager
-exec dwm 2>&1 >/tmp/dwm.log
+# Replace shell with the compositor
+exec dwl

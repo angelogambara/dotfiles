@@ -1,4 +1,3 @@
-7zip
 acpi
 alacritty
 amdgpu_top
@@ -8,6 +7,7 @@ base-devel
 bash-completion
 bat
 bc
+blueman
 bluez-utils
 borg
 brightnessctl
@@ -20,7 +20,6 @@ cronie
 curlie
 direnv
 dkms
-dmenu
 dmidecode
 dnsmasq
 docker
@@ -33,6 +32,7 @@ exfatprogs
 expac
 eza
 fail2ban
+fastfetch
 fcitx5-configtool
 fcitx5-gtk
 fcitx5-mozc
@@ -144,8 +144,6 @@ trash-cli
 ttf-hack
 tumbler
 unclutter
-unrar
-unzip
 upower
 urlscan
 virt-manager
@@ -157,10 +155,10 @@ wf-recorder
 wget
 wireguard-tools
 wireless-regdb
+wiremix
 wl-clipboard
 wlr-randr
 xarchiver
-xclip
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
 xf86-video-amdgpu

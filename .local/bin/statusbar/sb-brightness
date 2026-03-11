@@ -52,6 +52,10 @@ check_env
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
+1) # Left click
+  command_exists blueman-manager &&
+    "$TERMINAL" -e blueman-manager
+  ;;
 3) # Right click
   "$TERMINAL" -e "$EDITOR" "$0"
   ;;

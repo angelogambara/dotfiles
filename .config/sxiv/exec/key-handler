@@ -12,9 +12,9 @@ dmenucmd() {
   dmenu -m 0 \
     -fn "$dmenufont" \
     -nb "$gray1" \
-    -nf "$gray3" \
+    -nf "$gray4" \
     -sb "$yellow" \
-    -sf "$gray4" \
+    -sf "$gray1" \
     "$@"
 }
 

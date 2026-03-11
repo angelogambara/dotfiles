@@ -24,7 +24,7 @@ check_env() {
   [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
 
   # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR blueman-manager grep notify-send rfkill"
+  deps="$TERMINAL $EDITOR grep notify-send rfkill"
   for dep in $deps; do
     command_exists "$dep" || die "$dep is not installed"
   done
@@ -37,9 +37,9 @@ get_bluetooth() {
   [ -z "$hci0" ] && die "Error: Bluetooth is not working"
 
   if rfkill list "$hci0" | grep -q 'yes'; then
-    icon="" # Signal is blocked
+    icon="" # Signal is blocked
   else
-    icon="" # Signal is working
+    icon="" # Signal is working
   fi
 
   # Source theme
@@ -59,7 +59,8 @@ check_env
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case $BLOCK_BUTTON in
 1) # Left click
-  "$TERMINAL" -e blueman-manager
+  command_exists blueman-manager &&
+    "$TERMINAL" -e blueman-manager
   ;;
 2) # Middle click
   rfkill toggle "$(rfkill list | grep 'hci0' | cut -d':' -f1)"

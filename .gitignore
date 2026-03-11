@@ -1,36 +1,35 @@
-#
-# .gitignore - exclude files
-#
-
-# Cookies
-.config/fcitx
-.config/ibus
-.config/pulse
-.config/go
-
-# Generated
-.config/QtProject.conf
-.config/nvim/lazy-lock.json
-.local/share/fonts/**/.uuid
-.local/share/icons/hicolor/
-
-# Irrelevant
+# [RUNTIME & CLI] - App-specific states and local configs
+.config/bat
+.config/dmenufm
 .config/gtk-3.0
 .config/gtk-4.0
-.config/bat
 .config/htop
+.config/keepassxc
 .config/npm
 .config/wget
-.config/keepassxc
 .config/xarchiver
-.config/qBittorrent
 
-# Data
-.config/dconf
-.config/fcitx5
-.config/mozc
-
-# Symlinks
+# [BROWSER & HEAVY PROFILES] - Large caches and session data
 .config/chromium
 .config/heroic
 .config/mozilla
+.config/qBittorrent
+
+# [SYSTEM & LANGUAGES] - Environment runtimes and input methods
+.config/fcitx
+.config/go
+.config/ibus
+.config/java
+.config/pulse
+
+# [LOCKFILES & AUTO-GENERATED] - Plugin locks and UI state
+.config/nvim/lazy-lock.json
+.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
+
+# [METADATA & CACHE] - System registries and font UUIDs
+.config/QtProject.conf
+.config/dconf
+.config/fcitx5
+.config/mozc
+.local/share/applications/mimeinfo.cache
+.local/share/fonts/**/.uuid

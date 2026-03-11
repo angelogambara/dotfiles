@@ -86,29 +86,23 @@ dwmblocks)
   sb-mail)
     theme="^c${gray1}^^b${green}^"
     ;;
-  sb-record)
-    theme="^c${gray1}^^b${purple}^"
-    ;;
-  sb-mic)
-    theme="^c${gray1}^^b${purple}^"
-    ;;
   sb-bluetooth)
-    theme="^c${gray1}^^b${purple}^"
+    theme="^c${gray1}^^b${green}^"
     ;;
   sb-cpu)
-    theme="^c${gray1}^^b${blue}^"
+    theme="^c${gray1}^^b${orange}^"
     ;;
   sb-gpu)
-    theme="^c${gray1}^^b${blue}^"
+    theme="^c${gray1}^^b${yellow}^"
     ;;
   sb-memory)
-    theme="^c${gray1}^^b${cyan}^"
+    theme="^c${gray1}^^b${green}^"
     ;;
   sb-swap)
-    theme="^c${gray1}^^b${cyan}^"
+    theme="^c${gray1}^^b${purple}^"
     ;;
   sb-disk)
-    theme="^c${gray1}^^b${cyan}^"
+    theme="^c${gray1}^^b${purple}^"
     ;;
   *)
     die "Error: Unknown status bar module"
@@ -141,12 +135,6 @@ somebar)
     ;;
   sb-mail)
     theme="<span background='$green'>"
-    ;;
-  sb-record)
-    theme="<span background='$purple'>"
-    ;;
-  sb-mic)
-    theme="<span background='$purple'>"
     ;;
   sb-bluetooth)
     theme="<span background='$purple'>"

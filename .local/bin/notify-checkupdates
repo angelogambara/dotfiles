@@ -1,59 +1,56 @@
 #!/bin/sh
 
-TERMINAL_EMULATOR=alacritty
-DELIVERY_OPTIMIZATION=delivery-optimization@benq-sw240
+# ########
+# Env
+# ########
 
-# helper function
-delivery_optimization_journal() {
-  nohup "$TERMINAL_EMULATOR" -e journalctl -u "$DELIVERY_OPTIMIZATION" -f >/dev/null 2>&1 &
-  echo $!
-}
+# Mandatory: set your preferences
+LINUX_KERNEL=linux
+SUDO=sudo
 
-notify_update() {
-  action=$(dunstify --action="update,Update packages" --timeout=60000 "📦 Pending updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")
+# ########
+# Helper
+# ########
 
-  if [ "$action" = "update" ]; then
-    if [ -n "$DELIVERY_OPTIMIZATION" ]; then
-      pid=$(delivery_optimization_journal)
-      sudo systemctl start "$DELIVERY_OPTIMIZATION"
-      kill "$pid"
-    fi
-
-    "$TERMINAL_EMULATOR" -e sh -c "sudo pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
-  else
-    exit 1
-  fi
-}
-
-notify_reboot() {
-  action=$(dunstify --action="reboot,Reboot system" --timeout=60000 "🔄 Reboot the system" "Kernel modules get removed by default. Install aur/linux-keep-modules to fix it.\nIf you do, next time you will not need to reboot.")
-
-  if [ "$action" = "reboot" ]; then
-    systemctl reboot
-  fi
-}
-
-# only support the following kernels
+# test if LINUX_KERNEL is in UPDATES
 contains_kernel() {
   echo "$UPDATES" |
-    while read -r line; do
-      case "$line" in
-      'linux') return 0 ;;
-      'linux-lts') return 0 ;;
-      'linux-zen') return 0 ;;
-      *) return 1 ;;
-      esac
+    while read -r package; do
+      if [ "$package" = "$LINUX_KERNEL" ]; then
+        return 0
+      fi
     done
+  return 1
 }
 
-# cleaner syntax
+# test if aur/linux-keep-modules is installed
 linux_keep_modules() {
-  pacman -Qqs | grep -q 'linux-keep-modules'
+  pacman -Qs |
+    grep -q 'linux-keep-modules\|linux-preserve-modules'
 }
 
-# main
+# ########
+# Blocks
+# ########
+
+# If the action is run the system will update
+notify_update() {
+  [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")" = "update" ] || return 1
+  "$TERMINAL" -e sh -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+}
+
+# If the action is run the system will reboot
+notify_reboot() {
+  [ "$(dunstify --action="reboot,Reboot" --timeout=60000 "Reboot the system" "aur/linux-keep-modules is not installed")" = "reboot" ] && reboot
+}
+
+# ########
+# Main
+# ########
+
 if UPDATES="$(checkupdates --nocolor)"; then
-  notify_update
+  notify_update || exit 0
+  # Run only if notify_update returns true
   if contains_kernel && ! linux_keep_modules; then
     notify_reboot
   fi

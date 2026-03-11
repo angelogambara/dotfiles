@@ -1,7 +1,11 @@
 [Default Applications]
 text/plain=userapp-alacritty -e nvim %F-7DCTK3.desktop
+image/png=userapp-sxiv -ro-2IVKL3.desktop
 application/x-shellscript=userapp-alacritty -e nvim %F-7DCTK3.desktop
+application/x-zerosize=userapp-alacritty -e nvim %F-7DCTK3.desktop
 
 [Added Associations]
 text/plain=userapp-alacritty -e nvim %F-7DCTK3.desktop;
+image/png=userapp-sxiv -ro-2IVKL3.desktop;
 application/x-shellscript=userapp-alacritty -e nvim %F-7DCTK3.desktop;
+application/x-zerosize=userapp-alacritty -e nvim %F-7DCTK3.desktop;

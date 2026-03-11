@@ -2,14 +2,9 @@
 # Format Selection
 # =========================
 
-# Prefer:
-# 1) Any format (720p, 30fps)
-# 2) Any format (720p, 60fps)
-# 3) Any format (1080p, 30fps)
-#
-# This keeps files small, avoids high FPS variants,
-# and prefers modern efficient codecs.
---format "(bv*[height=720][fps=30])/(bv*[height=720][fps=60])/(bv*[height=1080][fps=30])"
+# The goal is to keep the size small without too much loss in detail: the sweet
+# spot is 720p@30-60fps.
+--format "(bv*[height=720][fps=30])/(bv*[height=720][fps=60])/(bv*[height=1080][fps=30])/(bv*[height=1080][fps=60])"
 
 
 # =========================

@@ -10,5 +10,17 @@
   <property name="last-window-height" type="int" value="1053"/>
   <property name="last-window-maximized" type="bool" value="false"/>
   <property name="last-window-width" type="int" value="1920"/>
+  <property name="misc-confirm-close-multiple-tabs" type="bool" value="false"/>
   <property name="misc-single-click" type="bool" value="false"/>
+  <property name="misc-middle-click-in-tab" type="bool" value="true"/>
+  <property name="misc-open-new-window-as-tab" type="bool" value="true"/>
+  <property name="misc-full-path-in-tab-title" type="bool" value="false"/>
+  <property name="last-restore-tabs" type="bool" value="true"/>
+  <property name="last-focused-tab-left" type="int" value="0"/>
+  <property name="last-focused-tab-right" type="int" value="0"/>
+  <property name="last-tabs-left" type="array">
+    <value type="string" value="trash:///"/>
+    <value type="string" value="file:///home/angelo"/>
+    <value type="string" value="file:///home/angelo/git/angelogambara/dotfiles"/>
+  </property>
 </channel>
