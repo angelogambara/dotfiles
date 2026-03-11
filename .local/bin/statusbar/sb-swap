@@ -24,33 +24,25 @@ check_env() {
   [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
 
   # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR awk sed"
+  deps="$TERMINAL $EDITOR awk free"
   for dep in $deps; do
     command_exists "$dep" || die "$dep is not installed"
   done
 }
 
-get_disks() {
+get_swapfile() {
   # Source theme
   . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
 
   # Display with theme
-  echo "$1" | while read -r icon path; do
-    if percent_used=$(df -h "$path" | awk '/[0-9]/ {print $5}'); then
-      if [ -n "$line" ]; then
-        line="$theme $icon $percent_used $reset $line"
-      else
-        line="$theme $icon $percent_used $reset"
-      fi
-    fi
-    [ "$path" = '/' ] && echo "$line"
-  done
+  echo "$theme  $(free -h | awk '/Swap:/ {print $3}') $reset"
 }
 
 # ########
 # Main
 # ########
 
+# Always good
 check_env
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
@@ -61,7 +53,4 @@ case $BLOCK_BUTTON in
 esac
 
 # Refresh block
-get_disks "\
- /home
- /boot
- /"
+get_swapfile

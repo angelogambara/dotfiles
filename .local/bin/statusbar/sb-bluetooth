@@ -24,44 +24,50 @@ check_env() {
   [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
 
   # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR awk sed"
+  deps="$TERMINAL $EDITOR blueman-manager grep notify-send rfkill"
   for dep in $deps; do
     command_exists "$dep" || die "$dep is not installed"
   done
 }
 
-get_disks() {
+get_bluetooth() {
+  hci0=$(rfkill list | grep 'hci0' | cut -d':' -f1)
+
+  # Probably, it doesn't exist
+  [ -z "$hci0" ] && die "Error: Bluetooth is not working"
+
+  if rfkill list "$hci0" | grep -q 'yes'; then
+    icon="" # Signal is blocked
+  else
+    icon="" # Signal is working
+  fi
+
   # Source theme
   . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
 
   # Display with theme
-  echo "$1" | while read -r icon path; do
-    if percent_used=$(df -h "$path" | awk '/[0-9]/ {print $5}'); then
-      if [ -n "$line" ]; then
-        line="$theme $icon $percent_used $reset $line"
-      else
-        line="$theme $icon $percent_used $reset"
-      fi
-    fi
-    [ "$path" = '/' ] && echo "$line"
-  done
+  echo "$theme $icon $reset"
 }
 
 # ########
 # Main
 # ########
 
+# Always good
 check_env
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case $BLOCK_BUTTON in
+1) # Left click
+  "$TERMINAL" -e blueman-manager
+  ;;
+2) # Middle click
+  rfkill toggle "$(rfkill list | grep 'hci0' | cut -d':' -f1)"
+  ;;
 3) # Right click
   "$TERMINAL" -e "$EDITOR" "$0"
   ;;
 esac
 
 # Refresh block
-get_disks "\
- /home
- /boot
- /"
+get_bluetooth

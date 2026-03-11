@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TERMINAL_EMULATOR=alacritty
-DELIVERY_OPTIMIZATION=delivery-optimization@tp-x13
+DELIVERY_OPTIMIZATION=delivery-optimization@benq-sw240
 
 # helper function
 delivery_optimization_journal() {

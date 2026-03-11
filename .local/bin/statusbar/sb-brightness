@@ -24,40 +24,23 @@ check_env() {
   [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
 
   # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR grep wpctl wiremix pkill"
+  deps="$TERMINAL $EDITOR brightnessctl pkill"
   for dep in $deps; do
     command_exists "$dep" || die "$dep is not installed"
   done
 }
 
-get_volume() {
-  volume_sink=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+get_brightness() {
+  brightness=$(brightnessctl -m | head -1 | cut -d"," -f4)
 
   # Nothing that can be done
-  [ -z "$volume_sink" ] && die "Error: Couldn't get the volume"
+  [ -z "$brightness" ] && die "Error: Couldn't get the brightness"
 
   # Source theme
   . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
 
-  # Display mute state and skip volume
-  if echo "$volume_sink" | grep -q MUTED; then
-    echo "$theme  $reset"
-    exit
-  fi
-
-  volume_frac=$(echo "$volume_sink" | cut -d' ' -f2)
-  volume=$(echo "$volume_frac * 100 / 1" | bc)
-
-  if [ "$volume" -le 15 ]; then
-    icon="" # 0-15
-  elif [ "$volume" -le 40 ]; then
-    icon="" # 15-40
-  else
-    icon="" # 40-100
-  fi
-
   # Display with theme
-  echo "$theme $icon ${volume}% $reset"
+  echo "$theme  $brightness $reset"
 }
 
 # ########
@@ -69,22 +52,16 @@ check_env
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
-1) # Left click
-  "$TERMINAL" -e wiremix
-  ;;
-2) # Middle click
-  wpctl set-mute @DEFAULT_SINK@ toggle
-  ;;
 3) # Right click
   "$TERMINAL" -e "$EDITOR" "$0"
   ;;
 4) # Scroll up
-  wpctl set-volume --limit=1.0 @DEFAULT_SINK@ 5%+
+  brightnessctl set 5%+ >/dev/null
   ;;
 5) # Scroll down
-  wpctl set-volume --limit=1.0 @DEFAULT_SINK@ 5%-
+  brightnessctl set 5%- >/dev/null
   ;;
 esac
 
 # Refresh block
-get_volume
+get_brightness
