@@ -15,6 +15,7 @@
 .local/share/icons/hicolor/
 
 # Irrelevant
+.config/dmenufm
 .config/gtk-3.0
 .config/gtk-4.0
 .config/bat
