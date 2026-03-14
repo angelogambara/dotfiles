@@ -4,15 +4,15 @@
 
 # Cookies
 .config/fcitx
-.config/ibus
-.config/pulse
 .config/go
+.config/ibus
+.config/java
+.config/pulse
 
 # Generated
 .config/QtProject.conf
 .config/nvim/lazy-lock.json
 .local/share/fonts/**/.uuid
-.local/share/icons/hicolor/
 
 # Irrelevant
 .config/dmenufm
