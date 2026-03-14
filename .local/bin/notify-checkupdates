@@ -1,60 +1,95 @@
 #!/bin/sh
+# shellcheck disable=SC2329
 
-TERMINAL_EMULATOR=alacritty
-DELIVERY_OPTIMIZATION=delivery-optimization@benq-sw240
+# ########
+# Env
+# ########
 
-# helper function
-delivery_optimization_journal() {
-  nohup "$TERMINAL_EMULATOR" -e journalctl -u "$DELIVERY_OPTIMIZATION" -f >/dev/null 2>&1 &
-  echo $!
+# Optional: as comment by default
+DELIVERY_OPTIMIZATION=delivery-optimization@tp-x13
+
+# Mandatory: set your preferences
+LINUX_KERNEL=linux
+PRIV_ESC_COMMAND=sudo
+
+# ########
+# Helper
+# ########
+
+die() {
+  echo >&2 "$1"
+  exit 1
 }
 
-notify_update() {
-  action=$(dunstify --action="update,Update packages" --timeout=60000 "📦 Pending updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")
-
-  if [ "$action" = "update" ]; then
-    if [ -n "$DELIVERY_OPTIMIZATION" ]; then
-      pid=$(delivery_optimization_journal)
-      sudo systemctl start "$DELIVERY_OPTIMIZATION"
-      kill "$pid"
-    fi
-
-    "$TERMINAL_EMULATOR" -e sh -c "sudo pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
-  else
-    exit 1
-  fi
+die_notif() {
+  notify-send --urgency=critical "$1" "$2"
+  exit 1
 }
 
-notify_reboot() {
-  action=$(dunstify --action="reboot,Reboot system" --timeout=60000 "🔄 Reboot the system" "Kernel modules get removed by default. Install aur/linux-keep-modules to fix it.\nIf you do, next time you will not need to reboot.")
-
-  if [ "$action" = "reboot" ]; then
-    systemctl reboot
-  fi
+command_exists() {
+  command -v "$1" >/dev/null 2>&1 || return 1
 }
 
-# only support the following kernels
+nohup_wrap() {
+  nohup "$1" >/dev/null 2>&1 &
+}
+
+pgrep_wrap() {
+  pgrep -u "$(id -u)" -x "$1" >/dev/null 2>&1
+}
+
+# test if LINUX_KERNEL is in UPDATES
 contains_kernel() {
   echo "$UPDATES" |
-    while read -r line; do
-      case "$line" in
-      'linux') return 0 ;;
-      'linux-lts') return 0 ;;
-      'linux-zen') return 0 ;;
-      *) return 1 ;;
-      esac
+    while read -r package; do
+      if [ "$package" = "$LINUX_KERNEL" ]; then
+        return 0
+      fi
     done
+  return 1
 }
 
-# cleaner syntax
+# test if aur/linux-keep-modules is installed
 linux_keep_modules() {
-  pacman -Qqs | grep -q 'linux-keep-modules'
+  pacman -Qs |
+    grep -q 'linux-keep-modules\|linux-preserve-modules'
 }
 
-# main
+# ########
+# Blocks
+# ########
+
+# NOTE: this function is a work in progress
+# So, obviously it won't be perfect
+# A new and improved concept can be found on my "garage":
+# https://codeberg.org/angelogambara/scripts/src/branch/main/delivery-optimization.sh
+notify_update() {
+  [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")" = "update" ] || exit 1
+  # If set, run delivery-optimization
+  if [ -n "$DELIVERY_OPTIMIZATION" ]; then
+    nohup "$TERMINAL"  -e journalctl -u "$DELIVERY_OPTIMIZATION" -f >/dev/null 2>&1 &
+    pid=$($!)
+    "$PRIV_ESC_COMMAND" systemctl start "$DELIVERY_OPTIMIZATION"
+    kill "$pid"
+  fi
+
+  # The critical line that updates the system
+  "$TERMINAL" -e sh -c "$PRIV_ESC_COMMAND pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+}
+
+# If the action is run the system will reboot
+notify_reboot() {
+  [ "$(dunstify --action="reboot,Reboot" --timeout=60000 "Reboot the system" "aur/linux-keep-modules is not installed")" = "reboot" ] && reboot
+}
+
+# ########
+# Main
+# ########
+
 if UPDATES="$(checkupdates --nocolor)"; then
-  notify_update
-  if contains_kernel && ! linux_keep_modules; then
-    notify_reboot
+  if notify_update; then
+    if contains_kernel && ! linux_keep_modules; then
+      notify_reboot
+    fi
   fi
 fi

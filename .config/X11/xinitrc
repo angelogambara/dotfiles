@@ -9,4 +9,4 @@ if [ -d ~/.config/dwm/autostart.d ]; then
 fi
 
 # Replace shell with window manager
-exec dwm
+exec dwm 2>&1 >/tmp/dwm.log

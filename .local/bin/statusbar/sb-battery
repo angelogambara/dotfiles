@@ -80,6 +80,7 @@ get_progress() {
 
 get_batteries() {
   for battery in /sys/class/power_supply/BAT?*; do
+    [ -e "$battery" ] || continue
     status="$(cat "$battery"/status 2>&1)"
     capacity="$(cat "$battery"/capacity 2>&1)"
 
@@ -120,7 +121,7 @@ get_batteries() {
     fi
   done
 
-  echo "$line"
+  [ -n "$line" ] && echo "$line"
 }
 
 # ########

@@ -1,10 +1,13 @@
 [Unit]
-Description=Arch Linux delivery optimization service
+Description=Sync pacman cache w/%I
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sh -c 'ssh %i "systemctl start paccache"; comm -23 <(ssh %i "ls -1 /var/cache/pacman/pkg | sort") <(ls -1 /var/cache/pacman/pkg | sort) | parallel -r rsync -a --info=name %i::pacman_cache/{} /var/cache/pacman/pkg/'
-ExecStart=/usr/bin/sh -c 'systemctl start paccache; comm -13 <(ssh %i "ls -1 /var/cache/pacman/pkg | sort") <(ls -1 /var/cache/pacman/pkg | sort) | parallel -r rsync -a --info=name /var/cache/pacman/pkg/{} %i::pacman_cache/'
+ExecStart=/usr/bin/ssh %i "systemctl start paccache"
+ExecStart=/usr/bin/rsync -av %i:/var/cache/pacman/pkg/ /var/cache/pacman/pkg/
+ExecStart=/usr/bin/systemctl start paccache
+ExecStart=/usr/bin/rsync -av /var/cache/pacman/pkg/ %i:/var/cache/pacman/pkg/
+
 Nice=10
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7

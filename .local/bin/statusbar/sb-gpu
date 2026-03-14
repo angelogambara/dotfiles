@@ -30,9 +30,9 @@ check_env() {
   done
 }
 
-get_cpu() {
+get_gpu() {
   # AMD only
-  temperature=$(($(cat /sys/class/drm/card*/device/hwmon/hwmon*/temp1_input) / 1000))°C
+  temperature=$(($(cat /sys/class/drm/card*/device/hwmon/hwmon*/temp1_input | head -1) / 1000))°C
   utilization=$(cat /sys/class/drm/card*/device/gpu_busy_percent)%
 
   # Source theme

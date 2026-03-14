@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# This scirpt is not safe to run because it is unfinished
+exit 1
+
+delivery_optimization_pull() {
+  ssh "$SSH_HOST" "pacman -Sy"
+  ssh "$SSH_HOST" "systemctl start paccache"
+
+  comm -23 \
+    <(ssh "$SSH_HOST" "find /var/cache/pacman/pkg | sort") \
+    <(find /var/cache/pacman/pkg | sort) |
+    parallel -r rsync -a --info=name "$SSH_HOST"::pacman_cache/{} /var/cache/pacman/pkg/
+
+  pacman -Syu --noconfirm
+  sudo -u "$SUDO_USER" yay -Syu --noconfirm
+}
+
+delivery_optimization_push() {
+  pacman -Sy
+  systemctl start paccache
+
+  comm -13 \
+    <(ssh "$SSH_HOST" "find /var/cache/pacman/pkg | sort") \
+    <(find /var/cache/pacman/pkg | sort) |
+    parallel -r rsync -a --info=name /var/cache/pacman/pkg/{} "$SSH_HOST"::pacman_cache/
+
+  ssh "$SSH_HOST" "pacman -Syu" --noconfirm
+  ssh "$SSH_HOST" "sudo -u \$SUDO_USER yay -Syu --noconfirm"
+}

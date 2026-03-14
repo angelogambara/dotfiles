@@ -34,7 +34,7 @@ get_cpu() {
   if grep -q AMD /proc/cpuinfo; then
     temp=$(sensors | awk '/Tctl/ {print $2}')
   else
-    temp=$(sensors | awk '/Package id 0/ {print $3}')
+    temp=$(sensors | awk '/Package id 0/ {print $4}')
   fi
 
   # Source theme
