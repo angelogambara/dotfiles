@@ -8,6 +8,7 @@
 
 # Nothing important to back up here
 /home/*/.local/share/*
+/home/*/.var
 
 # Exclude high-resolution galleries (containing psd, clip, zip)
 /home/angelo/gallery-dl/fanbox/@uuuuzan
