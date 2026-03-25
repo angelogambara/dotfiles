@@ -7,9 +7,6 @@ git-extras
 linux-preserve-modules
 mutt-wizard-git
 physlock
-protonup-qt
-python-inputs
-python-steam
 urlview-xdg-git
 yay
 yay-debug

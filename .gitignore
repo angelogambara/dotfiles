@@ -1,35 +1,27 @@
 # [RUNTIME & CLI] - App-specific states and local configs
 .config/bat
-.config/dmenufm
-.config/gtk-3.0
-.config/gtk-4.0
-.config/htop
-.config/keepassxc
 .config/npm
-.config/wget
+.config/dmenufm
+.config/flameshot
+.config/keepassxc
 .config/xarchiver
 
 # [BROWSER & HEAVY PROFILES] - Large caches and session data
-.config/chromium
-.config/heroic
 .config/mozilla
-.config/qBittorrent
 
-# [SYSTEM & LANGUAGES] - Environment runtimes and input methods
-.config/fcitx
+# [SYSTEM & LANGUAGES] - Environment runtimes
 .config/go
-.config/ibus
 .config/java
-.config/pulse
 
 # [LOCKFILES & AUTO-GENERATED] - Plugin locks and UI state
 .config/nvim/lazy-lock.json
 .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
 
-# [METADATA & CACHE] - System registries and font UUIDs
+# [METADATA & CACHE] - Miscellaneous files
 .config/QtProject.conf
 .config/dconf
+.config/fcitx
 .config/fcitx5
+.config/ibus
 .config/mozc
-.local/share/applications/mimeinfo.cache
-.local/share/fonts/**/.uuid
+.config/pulse

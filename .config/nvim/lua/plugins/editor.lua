@@ -1,26 +1,26 @@
 return {
 
   -- auto-formatting
-  {
-    'stevearc/conform.nvim',
-    lazy = false,
-    priority = 1000,
-    opts = {
-      formatters_by_ft = {
-        lua = { "stylua" },
-        bash = { "shfmt" },
-        c = { "clang-format" }, cpp = { "clang-format" },
-        html = { "prettier" }, css = { "prettier" },
-        javascript = { "prettierd", "prettier", stop_after_first = true },
-        typescript = { "prettierd", "prettier", stop_after_first = true },
-        markdown = { "prettier" },
-        python = { "isort", "black" },
-        go = { "gofmt", "goimports" },
-        sh = { "shfmt" },
-      },
-      format_on_save = { timeout_ms = 500, lsp_fallback = true },
-    },
-  },
+  -- {
+  --   'stevearc/conform.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {
+  --     formatters_by_ft = {
+  --       lua = { "stylua" },
+  --       bash = { "shfmt" },
+  --       c = { "clang-format" }, cpp = { "clang-format" },
+  --       html = { "prettier" }, css = { "prettier" },
+  --       javascript = { "prettierd", "prettier", stop_after_first = true },
+  --       typescript = { "prettierd", "prettier", stop_after_first = true },
+  --       markdown = { "prettier" },
+  --       python = { "isort", "black" },
+  --       go = { "gofmt", "goimports" },
+  --       sh = { "shfmt" },
+  --     },
+  --     format_on_save = { timeout_ms = 500, lsp_fallback = true },
+  --   },
+  -- },
 
   -- search/replace in multiple files
   {

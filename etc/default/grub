@@ -3,7 +3,7 @@
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=1
 GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.key=1a07b728-e297-402e-8b2e-e9a515dd2521=/keys/cryptlvm.key:UUID=d6e2345f-e706-4cc4-b537-b7402e5c258a rd.luks.name=1a07b728-e297-402e-8b2e-e9a515dd2521=cryptlvm rd.luks.options=discard loglevel=3 quiet"
+GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.key=ab6a2453-af47-4dd9-ab3b-cc0fa67d54aa=/.keys/tp-x13.key:UUID=d6e2345f-e706-4cc4-b537-b7402e5c258a backup_uuid=8d94928f-84a6-4471-914d-1ccaa639f04d rd.luks.name=1a07b728-e297-402e-8b2e-e9a515dd2521=cryptlvm rd.luks.options=discard,keyfile-timeout=15s"
 GRUB_CMDLINE_LINUX=""
 
 # Preload both GPT and MBR modules so that they are not missed
