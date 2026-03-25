@@ -4,6 +4,10 @@
 # Run Once
 # =========================
 
+# Set your desktop preferences here
+export BROWSER=firefox
+export TERMINAL=alacritty
+
 # Dynamically set wallpaper with a script
 setbg ~/.cache/wallpaper
 

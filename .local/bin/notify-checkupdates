@@ -23,6 +23,17 @@ contains_kernel() {
   return 1
 }
 
+# Same for your BROWSER
+contains_browser() {
+  echo "$UPDATES" |
+    while read -r package; do
+      if [ "$package" = "$BROWSER" ]; then
+        return 0
+      fi
+    done
+  return 1
+}
+
 # test if aur/linux-keep-modules is installed
 linux_keep_modules() {
   pacman -Qs |
@@ -32,6 +43,12 @@ linux_keep_modules() {
 # ########
 # Blocks
 # ########
+
+notify_remind() {
+  if [ -z "$BROWSER" ] && contains_browser; then
+    notify-send -t 60000 "Update $BROWSER now to avoid N-day exploits"
+  fi
+}
 
 # If the action is run the system will update
 notify_update() {
@@ -49,6 +66,7 @@ notify_reboot() {
 # ########
 
 if UPDATES="$(checkupdates --nocolor)"; then
+  notify_remind
   notify_update || exit 0
   # Run only if notify_update returns true
   if contains_kernel && ! linux_keep_modules; then
