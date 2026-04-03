@@ -45,7 +45,7 @@ linux_keep_modules() {
 # ########
 
 notify_remind() {
-  if [ -z "$BROWSER" ] && contains_browser; then
+  if [ -n "$BROWSER" ] && contains_browser; then
     notify-send -t 60000 "Update $BROWSER now to avoid N-day exploits"
   fi
 }

@@ -4,7 +4,10 @@
 # Autostart Programs
 # =========================
 
+# Set your apps here
 export STATUSBAR=dwmblocks
+export BROWSER=firefox
+export TERMINAL=alacritty
 
 # List of programs to autostart
 AUTOSTART="

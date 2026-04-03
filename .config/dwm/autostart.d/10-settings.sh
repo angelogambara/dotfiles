@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # =========================
-# Run Once
+# Preferences
 # =========================
 
-# Set your desktop preferences here
+# Set your applications here
 export BROWSER=firefox
 export TERMINAL=alacritty
 

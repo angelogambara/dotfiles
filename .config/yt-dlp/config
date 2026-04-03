@@ -4,7 +4,7 @@
 
 # The goal is to keep the size small without too much loss in detail: the sweet
 # spot is 720p@30-60fps.
---format "(bv*[height=720][fps=30])/(bv*[height=720][fps=60])/(bv*[height=1080][fps=30])/(bv*[height=1080][fps=60])"
+--format "(bv*[height=720][fps=30]/bv*[height=720][fps=60]/bv*[height=1080][fps=30]/bv*[height=1080][fps=60])+ba"
 
 
 # =========================
@@ -80,9 +80,6 @@
 
 # Download manually created subtitles if available
 --write-subs
-
-# Also download auto-generated subtitles if needed
---write-auto-subs
 
 # Save subtitles in VTT format
 --sub-format vtt
