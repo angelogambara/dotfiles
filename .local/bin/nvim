@@ -1,0 +1,55 @@
+#!/bin/sh
+
+if [ "$(id -u)" -eq 0 ]; then
+  echo >&2 "Do not run as root"
+  exit 1
+fi
+
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+  echo >&2 "XDG_RUNTIME_DIR is unset"
+  exit 1
+fi
+
+case "$(pwd)" in
+"$HOME"/.config*)    : break ;;
+"$HOME"/.local/bin*) : break ;;
+"$HOME"/diary*)      : break ;;
+"$HOME"/git*)        : break ;;
+*)
+  echo >&2 "Do not run from $(pwd)"
+  exit 1
+  ;;
+esac
+
+WAYLAND_SOCKET="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+
+mkdir -p "$XDG_RUNTIME_DIR/nvim" || exit 1
+
+bwrap \
+  --unshare-all \
+  --die-with-parent \
+  --ro-bind /usr /usr \
+  --ro-bind /bin /bin \
+  --ro-bind /lib /lib \
+  --ro-bind /lib64 /lib64 \
+  --ro-bind /bin /bin \
+  --ro-bind /etc /etc \
+  --dev /dev \
+  --dev-bind /dev/shm /dev/shm \
+  --proc /proc \
+  --tmpfs /tmp \
+  --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
+  --ro-bind "$XAUTHORITY" "$XAUTHORITY" \
+  --ro-bind "$WAYLAND_SOCKET" "$WAYLAND_SOCKET" \
+  --ro-bind "$HOME/.config/nvim" "$HOME/.config/nvim" \
+  --bind "$HOME/.local/share/nvim" "$HOME/.local/share/nvim" \
+  --bind "$HOME/.local/state/nvim" "$HOME/.local/state/nvim" \
+  --bind "$HOME/.cache/nvim" "$HOME/.cache/nvim" \
+  --bind "$XDG_RUNTIME_DIR/nvim" "$XDG_RUNTIME_DIR/nvim" \
+  --bind  "$(pwd)" "$(pwd)" \
+  --chdir "$(pwd)" \
+  --setenv DISPLAY "$DISPLAY" \
+  --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
+  --setenv XAUTHORITY $XAUTHORITY \
+  --setenv XDG_XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
+  /usr/bin/nvim "$@"
