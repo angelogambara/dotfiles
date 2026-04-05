@@ -17,9 +17,12 @@ dmidecode
 dnsmasq
 docker
 docker-compose
+dosfstools
 dunst
 efibootmgr
 ethtool
+exfatprogs
+expac
 eza
 fail2ban
 fd
@@ -38,7 +41,9 @@ gvfs
 htop
 imagemagick
 iwd
+jq
 krita
+lazygit
 libva-utils
 linux
 linux-firmware-amdgpu
@@ -59,6 +64,7 @@ otf-font-awesome
 otf-ipafont
 pacman-contrib
 parcellite
+pass-otp
 picom
 pipewire-pulse
 python-build
@@ -70,6 +76,7 @@ python-secretstorage
 python-setuptools
 qbittorrent
 qemu-desktop
+quota-tools
 reflector
 ripgrep
 rsync
@@ -100,6 +107,8 @@ vulkan-radeon
 vulkan-tools
 wayland-protocols
 wayland-utils
+wf-recorder
+wget
 wireguard-tools
 wireless-regdb
 wiremix
@@ -109,6 +118,7 @@ wlroots0.19
 xarchiver
 xdg-desktop-portal-wlr
 xdg-desktop-portal-xapp
+xdg-user-dirs
 xf86-video-amdgpu
 xfsprogs
 xorg-server
