@@ -10,45 +10,12 @@ die() {
 }
 
 command_exists() {
-  command -v "$1" >/dev/null 2>&1 || return 1
+  command -v "$@" >/dev/null 2>&1 || return 1
 }
 
-check_env() {
-  # Make zsh behave more like POSIX
-  emulate sh 2>/dev/null
-
-  # Prevent root from running
-  [ "$(id -u)" -eq 0 ] && die "Do not run as root"
-
-  # Ensure environment variables are set
-  [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
-
-  # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR grep wpctl pkill"
-  for dep in $deps; do
-    command_exists "$dep" || die "$dep is not installed"
-  done
-}
-
-get_progress() {
-  percent=$1
-
-  if [ "$percent" -lt 15 ]; then
-    line="[░░░░░]"
-  elif [ "$percent" -lt 30 ]; then
-    line="[█░░░░]"
-  elif [ "$percent" -lt 50 ]; then
-    line="[██░░░]"
-  elif [ "$percent" -lt 70 ]; then
-    line="[███░░]"
-  elif [ "$percent" -lt 85 ]; then
-    line="[████░]"
-  else
-    line="[█████]"
-  fi
-
-  echo "$line"
-}
+# ########
+# Blocks
+# ########
 
 get_volume() {
   volume_sink=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
@@ -76,31 +43,22 @@ get_volume() {
     icon="" # 40-100
   fi
 
-  # Load up the progress bar
-  progress=$(get_progress "$volume")
-
   # Display with theme
-  echo "$theme $icon ${volume}% $progress $reset"
+  echo "$theme $icon ${volume}% $reset"
 }
 
 # ########
 # Main
 # ########
 
-# Always good
-check_env
+# Exit if missing
+command_exists wpctl ||
+  die "Error: Command not found: wpctl"
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
-1) # Left click
-  command_exists wiremix &&
-    "$TERMINAL" -e wiremix
-  ;;
 2) # Middle click
   wpctl set-mute @DEFAULT_SINK@ toggle
-  ;;
-3) # Right click
-  "$TERMINAL" -e "$EDITOR" "$0"
   ;;
 4) # Scroll up
   wpctl set-volume --limit=1.0 @DEFAULT_SINK@ 5%+

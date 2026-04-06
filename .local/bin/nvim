@@ -27,6 +27,7 @@ mkdir -p "$XDG_RUNTIME_DIR/nvim" || exit 1
 
 bwrap \
   --unshare-all \
+  --unshare-net \
   --die-with-parent \
   --ro-bind /usr /usr \
   --ro-bind /bin /bin \
@@ -34,6 +35,7 @@ bwrap \
   --ro-bind /lib64 /lib64 \
   --ro-bind /bin /bin \
   --ro-bind /etc /etc \
+  --ro-bind /run/systemd/resolve /run/systemd/resolve \
   --dev /dev \
   --dev-bind /dev/shm /dev/shm \
   --proc /proc \
@@ -51,5 +53,5 @@ bwrap \
   --setenv DISPLAY "$DISPLAY" \
   --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
   --setenv XAUTHORITY $XAUTHORITY \
-  --setenv XDG_XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
+  --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
   /usr/bin/nvim "$@"

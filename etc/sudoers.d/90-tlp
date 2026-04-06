@@ -1,0 +1,4 @@
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/tpl balance
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/tpl fullcharge
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/tpl performance
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/tpl setcharge 70 90

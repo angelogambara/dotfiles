@@ -1,12 +1,35 @@
 #!/bin/sh
 
-img="$(realpath "$1")"
-[ ! -f "$img" ] || [ ! -r "$img" ] && exit 1
-ln -fs "$img" ~/.cache/wallpaper
+# Set wallpaper (Wayland: swaybg, X11: feh)
 
-if [ -n "$WAYLAND_DISPLAY" ]; then
-  pkill swaybg
-  swaybg -i "$img" -m fill >/dev/null 2>&1 &
+set -u
+
+# Ensure argument is provided
+[ $# -eq 1 ] || {
+    printf "Usage: %s <image>\n" "$0" >&2
+    exit 1
+}
+
+# Resolve absolute path
+img="$(realpath "$1")" || exit 1
+
+# Validate file
+[ -f "$img" ] && [ -r "$img" ] || {
+    printf "Error: file not readable: %s\n" "$img" >&2
+    exit 1
+}
+
+# Cache symlink
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper"
+ln -fs "$img" "$cache"
+
+# Set wallpaper
+if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    # Kill existing swaybg
+    pkill -x swaybg 2>/dev/null
+
+    # Start new background
+    swaybg -i "$img" -m fill >/dev/null 2>&1 &
 else
-  feh --no-fehbg --bg-fill "$img"
+    feh --no-fehbg --bg-fill "$img"
 fi

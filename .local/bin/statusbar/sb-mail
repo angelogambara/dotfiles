@@ -10,63 +10,34 @@ die() {
 }
 
 command_exists() {
-  command -v "$1" >/dev/null 2>&1 || return 1
-}
-
-check_env() {
-  # Make zsh behave more like POSIX
-  emulate sh 2>/dev/null
-
-  # Prevent root from running
-  [ "$(id -u)" -eq 0 ] && die "Do not run as root"
-
-  # Ensure environment variables are set
-  [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
-
-  # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR pkill"
-  for dep in $deps; do
-    command_exists "$dep" || die "$dep is not installed"
-  done
-}
-
-get_mail() {
-  mail_count=$(find "$MAIL" -path "*/new/*" -type f 2>/dev/null | wc -l)
-
-  # Source theme
-  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
-
-  # Display with theme
-  echo "$theme @ $mail_count $reset"
+  command -v "$@" >/dev/null 2>&1 || return 1
 }
 
 # ########
 # Main
 # ########
 
-# Always good
-check_env
-
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case $BLOCK_BUTTON in
 1) # Left click
-  if command_exists neomutt; then
-    "$TERMINAL" -e neomutt
-  elif command_exists mutt; then
+  [ -n "$TERMINAL" ] && command_exists "$TERMINAL" ||
+    die "Error: TERMINAL is unset or command is not found"
+
+  command_exists neomutt &&
+    "$TERMINAL" -e neomutt ||
+    command_exists mutt &&
     "$TERMINAL" -e mutt
-  else
-    die "Error: Unknown e-mail client"
-  fi
   ;;
 2) # Middle click
-  if command_exists mailsync; then
+  command_exists mailsync &&
     mailsync
-  fi
-  ;;
-3) # Right click
-  "$TERMINAL" -e "$EDITOR" "$0"
   ;;
 esac
 
-# Refresh block
-get_mail
+unread=$(find "$MAIL" -path "*/INBOX/new/*" -type f 2>/dev/null | wc -l)
+
+# Source theme
+. ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+
+# Display with theme
+echo "$theme @ $unread $reset"

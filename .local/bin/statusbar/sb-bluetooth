@@ -10,25 +10,12 @@ die() {
 }
 
 command_exists() {
-  command -v "$1" >/dev/null 2>&1 || return 1
+  command -v "$@" >/dev/null 2>&1 || return 1
 }
 
-check_env() {
-  # Make zsh behave more like POSIX
-  emulate sh 2>/dev/null
-
-  # Prevent root from running
-  [ "$(id -u)" -eq 0 ] && die "Do not run as root"
-
-  # Ensure environment variables are set
-  [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
-
-  # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR grep notify-send rfkill"
-  for dep in $deps; do
-    command_exists "$dep" || die "$dep is not installed"
-  done
-}
+# ########
+# Blocks
+# ########
 
 get_bluetooth() {
   hci0=$(rfkill list | grep 'hci0' | cut -d':' -f1)
@@ -53,20 +40,14 @@ get_bluetooth() {
 # Main
 # ########
 
-# Always good
-check_env
+# Exit if missing
+command_exists rfkill ||
+  die "Error: Command not found: rfkill"
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case $BLOCK_BUTTON in
-1) # Left click
-  command_exists blueman-manager &&
-    "$TERMINAL" -e blueman-manager
-  ;;
 2) # Middle click
   rfkill toggle "$(rfkill list | grep 'hci0' | cut -d':' -f1)"
-  ;;
-3) # Right click
-  "$TERMINAL" -e "$EDITOR" "$0"
   ;;
 esac
 

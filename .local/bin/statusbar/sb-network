@@ -10,27 +10,16 @@ die() {
 }
 
 command_exists() {
-  command -v "$1" >/dev/null 2>&1 || return 1
+  command -v "$@" >/dev/null 2>&1 || return 1
 }
 
-check_env() {
-  # Make zsh behave more like POSIX
-  emulate sh 2>/dev/null
-
-  # Prevent root from running
-  [ "$(id -u)" -eq 0 ] && die "Do not run as root"
-
-  # Ensure environment variables are set
-  [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
-
-  # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR awk iw"
-  for dep in $deps; do
-    command_exists "$dep" || die "$dep is not installed"
-  done
-}
+# ########
+# Blocks
+# ########
 
 get_signal_strength() {
+  command_exists iw || return 1
+
   iw dev wlan0 link | awk '/signal/ {
       d=$2;
       q=2*(d+100);
@@ -45,6 +34,7 @@ get_network() {
   # Try Ethernet
   for e in /sys/class/net/e*; do
     [ -e "$e" ] || continue
+
     operstate=$(cat "$e"/operstate 2>/dev/null)
 
     if [ "$operstate" = 'up' ]; then
@@ -58,6 +48,7 @@ get_network() {
     # Try Wi-Fi
     for w in /sys/class/net/w*; do
       [ -e "$w" ] || continue
+
       operstate=$(cat "$w"/operstate 2>/dev/null)
       flags=$(cat "$w"/flags 2>/dev/null)
 
@@ -80,22 +71,12 @@ get_network() {
   . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
 
   # Display with theme
-  echo "$theme $icon $reset"
+  [ -n "$icon" ] && echo "$theme $icon $reset"
 }
 
 # ########
 # Main
 # ########
-
-# Always good
-check_env
-
-# Handle mouse clicks for the status bar (statuscmd patch for dwm)
-case $BLOCK_BUTTON in
-3) # Right click
-  "$TERMINAL" -e "$EDITOR" "$0"
-  ;;
-esac
 
 # Refresh block
 get_network

@@ -10,7 +10,14 @@ die() {
 }
 
 command_exists() {
-  command -v "$1" >/dev/null 2>&1 || return 1
+  command -v "$@" >/dev/null 2>&1 || return 1
+}
+
+notify() {
+  command_exists notify-send &&
+    notify-send \
+      -h string:x-canonical-private-synchronous:battery \
+      "Battery" "$1"
 }
 
 super() {
@@ -23,30 +30,9 @@ super() {
   fi
 }
 
-check_env() {
-  # Make zsh behave more like POSIX
-  emulate sh 2>/dev/null
-
-  # Prevent root from running
-  [ "$(id -u)" -eq 0 ] && die "Do not run as root"
-
-  # Ensure environment variables are set
-  [ -z "$TERMINAL" ] || [ -z "$EDITOR" ] && die "TERMINAL or EDITOR is unset"
-
-  # Add a comment here too because I can
-  deps="$TERMINAL $EDITOR acpi tlp"
-  for dep in $deps; do
-    command_exists "$dep" || die "$dep is not installed"
-  done
-}
-
-notify_batteries() {
-  notify-send \
-    --icon=battery-good-symbolic \
-    --expire-time=10000 \
-    --hint=string:x-canonical-private-synchronous:battery \
-    "Battery Report" "$1"
-}
+# ########
+# Blocks
+# ########
 
 get_progress() {
   percent=$1
@@ -81,6 +67,7 @@ get_progress() {
 get_batteries() {
   for battery in /sys/class/power_supply/BAT?*; do
     [ -e "$battery" ] || continue
+
     status="$(cat "$battery"/status 2>&1)"
     capacity="$(cat "$battery"/capacity 2>&1)"
 
@@ -127,29 +114,18 @@ get_batteries() {
 # Main
 # ########
 
-# Always good
-check_env
-
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
 1) # Left click
   command_exists tlp &&
-    notify_batteries "$(super tlp fullcharge)"
+    notify "$(super tlp fullcharge)"
   ;;
 2) # Middle click
-  command_exists tlp &&
-    notify_batteries "$(super tlp performance)"
+  command_exists acpi && notify "$(acpi -b)"
   ;;
-3) # Right click
-  "$TERMINAL" -e "$EDITOR" "$0"
-  ;;
-8) # Side button
+3) # Right button
   command_exists tlp &&
-    notify_batteries "$(super tlp balance)"
-  ;;
-9) # Side button
-  command_exists tlp &&
-    notify_batteries "$(super tlp setcharge 70 90)"
+    notify "$(super tlp setcharge 70 90)"
   ;;
 esac
 

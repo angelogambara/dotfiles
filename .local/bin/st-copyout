@@ -1,0 +1,45 @@
+#!/bin/sh
+# Show recent commands via dmenu and copy selected command output to clipboard.
+
+set -eu
+
+# Create temporary file
+tmpfile="$(mktemp /tmp/st-cmd-output.XXXXXX)"
+
+# Ensure cleanup on exit
+cleanup() {
+    rm -f "$tmpfile"
+}
+trap cleanup EXIT INT TERM
+
+# Save stdin to temp file
+sed -n "w $tmpfile"
+
+# Remove null bytes
+tr -d '\0' < "$tmpfile" > "${tmpfile}.clean"
+mv "${tmpfile}.clean" "$tmpfile"
+
+# Extract last prompt (first word of last non-empty line)
+ps1="$(grep -E '\S' "$tmpfile" | tail -n 1 | sed 's/^[[:space:]]*//' | cut -d' ' -f1)"
+
+# Escape for regex
+escape_regex() {
+    printf '%s\n' "$1" | sed 's/[^^]/[&]/g; s/\^/\\^/g'
+}
+
+escaped_ps1="$(escape_regex "$ps1")"
+
+# Get list of previous commands and choose one
+chosen="$(grep -F "$ps1" "$tmpfile" \
+    | sed '$d' \
+    | tac \
+    | dmenu -p "Copy which command's output?" -i -l 10)"
+
+# Escape chosen command
+escaped_chosen="$(escape_regex "$chosen")"
+
+# Extract output between chosen command and next prompt
+awk "/^$escaped_chosen$/{p=1; print; next}
+     p && /$escaped_ps1/{p=0}
+     p" "$tmpfile" \
+    | xclip -selection clipboard
