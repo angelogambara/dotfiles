@@ -81,19 +81,19 @@ dwmblocks)
     theme="^c${gray1}^^b${yellow}^"
     ;;
   sb-brightness)
-    theme="^c${gray1}^^b${orange}^"
+    theme="^c${gray1}^^b${yellow}^"
     ;;
   sb-mail)
     theme="^c${gray1}^^b${green}^"
     ;;
   sb-bluetooth)
-    theme="^c${gray1}^^b${green}^"
+    theme="^c${gray1}^^b${orange}^"
     ;;
   sb-cpu)
     theme="^c${gray1}^^b${orange}^"
     ;;
   sb-gpu)
-    theme="^c${gray1}^^b${yellow}^"
+    theme="^c${gray1}^^b${orange}^"
     ;;
   sb-memory)
     theme="^c${gray1}^^b${green}^"
@@ -146,13 +146,13 @@ somebar)
     theme="<span background='$blue'>"
     ;;
   sb-memory)
-    theme="<span background='$cyan'>"
+    theme="<span background='$aqua'>"
     ;;
   sb-swap)
-    theme="<span background='$cyan'>"
+    theme="<span background='$aqua'>"
     ;;
   sb-disk)
-    theme="<span background='$cyan'>"
+    theme="<span background='$aqua'>"
     ;;
   *)
     die "Error: Unknown status bar module"
