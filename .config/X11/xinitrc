@@ -1,12 +1,64 @@
 #!/bin/sh
 
-if [ -d ~/.config/dwm/autostart.d ]; then
-  for f in ~/.config/dwm/autostart.d/?*.sh; do
-    # shellcheck disable=1090
-    [ -x "$f" ] && . "$f"
-  done
-  unset f
+# =========================
+# Autostart Programs
+# =========================
+
+# Set your apps here
+export BROWSER=com.brave.Browser
+export STATUSBAR=dwmblocks
+export TERMINAL=st
+
+# List of programs to autostart
+AUTOSTART="
+dunst
+dwmblocks
+notify-checkupdates
+picom
+rmddd
+unclutter
+"
+
+log_dir=/tmp/programs
+mkdir -p "$log_dir"
+
+# Launch programs if not already running and redirect output
+set -f
+for program in $AUTOSTART; do
+  pidof -sx "$program" || "$program" >"$log_dir/$program.log" 2>&1 &
+done
+set +f
+
+# =========================
+# Preferences
+# =========================
+
+# Draw the wallpaper
+feh --no-fehbg --bg-fill ~/.cache/wallpaper
+
+# Turn off my other monitor
+xrandr --output DisplayPort-1-2 --off
+
+# Set X11 color scheme to gruvbox-dark
+xrdb -load ~/.config/X11/gruvbox-dark.xresources
+
+# Set keyboard repeat rate (delay 200ms, repeat 40/sec)
+xset r rate 200 40
+
+# Turn off the display after 3 minutes
+xset dpms 0 0 180
+
+# =========================
+# Window Manager
+# =========================
+
+# Import X11 environment in systemd (as user)
+systemctl --user import-environment DISPLAY ${XAUTHORITY+XAUTHORITY}
+
+# Enable X11 environment in dbus (no-systemd)
+if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+    dbus-update-activation-environment DISPLAY XAUTHORITY
 fi
 
 # Replace shell with window manager
-exec dwm 2>&1 >/tmp/dwm.log
+exec dwm >/tmp/dwm.log 2>&1

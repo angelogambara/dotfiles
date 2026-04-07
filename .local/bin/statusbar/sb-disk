@@ -6,14 +6,17 @@
 
 get_disks() {
   # Output will be in reverse order
-  set --  /home  /boot  /
-  LAST_PATH=/
+  PATHS="\
+   /home
+   /boot
+   /"
+  LAST_PATH="/" # Replace this
 
   # Source theme
   . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
 
   # Display with theme
-  echo "$1" | while read -r icon path; do
+  echo "$PATHS" | while read -r icon path; do
     if percent_used=$(df -h "$path" | awk '/[0-9]/ {print $5}'); then
       if [ -n "$line" ]; then
         line="$theme $icon $percent_used $reset $line"
