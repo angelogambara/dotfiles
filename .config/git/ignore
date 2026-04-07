@@ -18,10 +18,10 @@ build/
 *.class
 *.jar
 *.war
+*.ear
 target/
 .gradle/
 build/
-bin/
 
 # Ruby
 *.gem
