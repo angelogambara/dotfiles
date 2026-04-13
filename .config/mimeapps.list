@@ -1,11 +1,13 @@
 [Default Applications]
-text/plain=userapp-alacritty -e nvim %F-7DCTK3.desktop
-image/png=userapp-sxiv -ro-2IVKL3.desktop
-application/x-shellscript=userapp-alacritty -e nvim %F-7DCTK3.desktop
-application/x-zerosize=userapp-alacritty -e nvim %F-7DCTK3.desktop
+application/x-shellscript=userapp-st -e nvim %F-3LXSN3.desktop
+application/x-zerosize=userapp-st -e nvim %F-3LXSN3.desktop
+image/png=userapp-sxiv -ro %F-2IVKL3.desktop
+image/jpeg=userapp-sxiv -ro %F-2IVKL3.desktop
+text/plain=userapp-st -e nvim %F-3LXSN3.desktop
 
 [Added Associations]
-text/plain=userapp-alacritty -e nvim %F-7DCTK3.desktop;
-image/png=userapp-sxiv -ro-2IVKL3.desktop;
-application/x-shellscript=userapp-alacritty -e nvim %F-7DCTK3.desktop;
-application/x-zerosize=userapp-alacritty -e nvim %F-7DCTK3.desktop;
+application/x-shellscript=userapp-st -e nvim %F-3LXSN3.desktop;
+application/x-zerosize=userapp-st -e nvim %F-3LXSN3.desktop;
+image/png=userapp-sxiv -ro %F-2IVKL3.desktop;
+image/jpeg=userapp-sxiv -ro %F-2IVKL3.desktop;
+text/plain=userapp-st -e nvim %F-3LXSN3.desktop;

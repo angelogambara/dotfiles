@@ -1,8 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Version=1.0
-Type=Application
-NoDisplay=true
-Exec=sxiv -ro %f
-Name=sxiv -ro
-Comment=Custom definition for sxiv -ro
