@@ -11,10 +11,14 @@ case "$(pwd)" in
   exit 1 ;;
 esac
 
+[ -e /tmp/known_hosts ] ||
+  ssh-keyscan github.com > /tmp/known_hosts
+
 XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/"$(id -u)"}"
-WAYLAND_SOCKET="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
 
 mkdir -p "$XDG_RUNTIME_DIR/nvim"
+
+WAYLAND_SOCKET="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
 
 exec bwrap \
   --die-with-parent \
@@ -43,6 +47,9 @@ exec bwrap \
   --bind "$XDG_RUNTIME_DIR/nvim" "$XDG_RUNTIME_DIR/nvim" \
   --bind  "$(pwd)" "$(pwd)" \
   --chdir "$(pwd)" \
+  --ro-bind /tmp/known_hosts "$HOME/.ssh/known_hosts" \
+  --dir "$HOME/.ssh" \
+  --setenv GIT_SSH_COMMAND "ssh -F /dev/null" \
   --setenv DISPLAY "$DISPLAY" \
   --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
   --setenv XAUTHORITY "$XAUTHORITY" \
