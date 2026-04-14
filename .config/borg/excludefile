@@ -2,12 +2,11 @@
 # Personal files
 # -----------------------------
 
-# Temporary directories and files
+# User caches
 /home/*/.cache/*
 /home/*/.local/state/*
 
-# Nothing important to back up here
-/home/*/.local/share/*
+# Could lead to data loss (review periodically)
 /home/*/.var
 
 # Exclude high-resolution galleries (containing psd, clip, zip)
@@ -15,22 +14,28 @@
 /home/angelo/gallery-dl/pixiv/users/66038798
 /home/angelo/gallery-dl/pixiv/users/1960050
 
+# Exclude archived videos
+/home/angelo/yt-dlp
+
 # -----------------------------
 # System files (reinstall)
 # -----------------------------
 
-# Large system directories (installed via pacman)
-/usr/share/doc/*
+# Graphical applications (installed via pacman)
 /usr/share/fonts/*
 /usr/share/icons/*
-/usr/share/locale/*
 
-# Application binaries (installed via pacman)
-# Firefox
-/usr/lib/firefox
+# Excluded from pacman.conf
+# NoExtract = /usr/share/doc/* /usr/share/locale/*
 
-# Go programming language
+# Libraries and shared objects (installed via pacman)
+# Installed with: pacman -S clang gcc go llvm
+/usr/lib/clang
+/usr/lib/gcc
 /usr/lib/go
+/usr/lib/llvm*
+/usr/lib/libLLVM.so*
+/usr/lib/libclang*
 
 # -----------------------------
 # Temporary files
@@ -43,16 +48,8 @@
 # System caches
 /var/cache/*
 
-# Exclude the full runtime directory
-/var/lib/docker
-
 # Do not back up flatpaks
-/var/lib/flatpak/repo/*
+/var/lib/flatpak/*
 
-# Use hypervisor-level snapshots instead
-/var/lib/libvirt
-
-# Typically backed up separately
-/var/lib/mongodb
-/var/lib/mysql
-/var/lib/postgres
+# Back up separetely
+/var/lib/libvirt/*
