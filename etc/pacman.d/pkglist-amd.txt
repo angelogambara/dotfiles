@@ -30,11 +30,12 @@ feh
 ffmpegthumbnailer
 firewalld
 flameshot
-flatseal
 fwupd
 fzf
 gdb
 git-delta
+gnome-chess
+gnuchess
 go
 grub
 gvfs
@@ -83,6 +84,7 @@ rsync
 seahorse
 smartmontools
 sof-firmware
+starship
 swaybg
 swayidle
 swaylock
@@ -95,8 +97,8 @@ tinyxxd
 tlp
 trash-cli
 tree-sitter-cli
+ttf-firacode-nerd
 ttf-hack
-ttf-jetbrains-mono-nerd
 ttf-ubuntu-font-family
 tumbler
 unclutter

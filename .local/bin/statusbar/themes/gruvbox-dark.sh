@@ -29,8 +29,7 @@ dwmblocks)
   # The name of the script sourcing this file
   case $(basename "$0") in
   sb-date)
-    theme="^c${gray1}^^b${gray4}^"
-    ;;
+    theme="^c${gray1}^^b${gray4}^" ;;
   sb-battery)
     if [ -n "$capacity" ]; then
       if [ "$capacity" -le 15 ]; then
@@ -43,89 +42,26 @@ dwmblocks)
     fi
     ;;
   sb-volume)
-    theme="^c${gray1}^^b${yellow}^"
-    ;;
+    theme="^c${gray1}^^b${yellow}^" ;;
   sb-brightness)
-    theme="^c${gray1}^^b${yellow}^"
-    ;;
+    theme="^c${gray1}^^b${yellow}^" ;;
   sb-network)
-    theme="^c${gray1}^^b${orange}^"
-    ;;
+    theme="^c${gray1}^^b${orange}^" ;;
   sb-bluetooth)
-    theme="^c${gray1}^^b${orange}^"
-    ;;
+    theme="^c${gray1}^^b${orange}^" ;;
   sb-cpu)
-    theme="^c${gray1}^^b${orange}^"
-    ;;
+    theme="^c${gray1}^^b${orange}^" ;;
   sb-memory)
-    theme="^c${gray1}^^b${green}^"
-    ;;
+    theme="^c${gray1}^^b${green}^" ;;
   sb-mail)
-    theme="^c${gray1}^^b${green}^"
-    ;;
+    theme="^c${gray1}^^b${green}^" ;;
   sb-swap)
-    theme="^c${gray1}^^b${aqua}^"
-    ;;
+    theme="^c${gray1}^^b${aqua}^" ;;
   sb-disk)
-    theme="^c${gray1}^^b${aqua}^"
-    ;;
+    theme="^c${gray1}^^b${aqua}^" ;;
   *)
-    die "Error: Unknown status bar module"
-    ;;
+    die "Error: Unknown status bar module" ;;
   esac
   reset="^b${gray1}^"
-  ;;
-somebar)
-  # The name of the script sourcing this file
-  case $(basename "$0") in
-  sb-date)
-    theme="<span background='$gray4'>"
-    ;;
-  sb-battery)
-    if [ -n "$capacity" ]; then
-      if [ "$capacity" -le 15 ]; then
-        theme="<span background='$red'>"
-      else
-        theme="<span background='$yellow'>"
-      fi
-    else
-      die "Error: capacity is not set"
-    fi
-    ;;
-  sb-volume)
-    theme="<span background='$yellow'>"
-    ;;
-  sb-brightness)
-    theme="<span background='$yellow'>"
-    ;;
-  sb-network)
-    theme="<span background='$orange'>"
-    ;;
-  sb-bluetooth)
-    theme="<span background='$orange'>"
-    ;;
-  sb-cpu)
-    theme="<span background='$orange'>"
-    ;;
-  sb-memory)
-    theme="<span background='$green'>"
-    ;;
-  sb-mail)
-    theme="<span background='$green'>"
-    ;;
-  sb-swap)
-    theme="<span background='$aqua'>"
-    ;;
-  sb-disk)
-    theme="<span background='$aqua'>"
-    ;;
-  *)
-    die "Error: Unknown status bar module"
-    ;;
-  esac
-  reset="</span>"
-  ;;
-*)
-  die "Error: Statusbar not supported"
   ;;
 esac

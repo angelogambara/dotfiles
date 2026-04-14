@@ -7,7 +7,6 @@
 .config/xarchiver
 
 # [BROWSER & HEAVY PROFILES] - Large caches and session data
-.config/melonDS
 .config/mozilla
 .config/qBittorrent
 
@@ -16,7 +15,6 @@
 .config/java
 
 # [LOCKFILES & AUTO-GENERATED] - Plugin locks and UI state
-.config/nvim/lazy-lock.json
 .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
 
 # [METADATA & CACHE] - Miscellaneous files
