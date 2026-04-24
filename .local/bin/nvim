@@ -38,7 +38,6 @@ exec bwrap \
   --ro-bind "$WAYLAND_SOCKET" "$WAYLAND_SOCKET" \
   --bind "$HOME/git" "$HOME/git" \
   --bind "$HOME/.config" "$HOME/.config" \
-  --bind "$HOME/.config/nvim" "$HOME/.config/nvim" \
   --bind "$HOME/.local/bin" "$HOME/.local/bin" \
   --bind "$HOME/.local/share/nvim" "$HOME/.local/share/nvim" \
   --bind "$HOME/.local/share/zsh" "$HOME/.local/share/zsh" \
