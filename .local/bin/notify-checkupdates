@@ -44,12 +44,6 @@ linux_keep_modules() {
 # Blocks
 # ########
 
-notify_remind() {
-  if [ -n "$BROWSER" ] && contains_browser; then
-    notify-send -t 60000 "Update $BROWSER now to avoid N-day exploits"
-  fi
-}
-
 # If the action is run the system will update
 notify_update() {
   [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")" = "update" ] || return 1
@@ -66,10 +60,19 @@ notify_reboot() {
 # ########
 
 if UPDATES="$(checkupdates --nocolor)"; then
-  notify_remind
   notify_update || exit 0
   # Run only if notify_update returns true
   if contains_kernel && ! linux_keep_modules; then
     notify_reboot
+  fi
+fi
+
+if command -v /usr/bin/flatpak >/dev/null; then
+  # Sync with flathub
+  if flatpak update --appstream; then
+    # Update if available
+    if [ -n "$(flatpak remote-ls --updates)" ]; then
+      "$TERMINAL" -e sh -c "flatpak update -y --noninteractive"
+    fi
   fi
 fi
