@@ -1,0 +1,27 @@
+#!/bin/sh
+exec bwrap \
+  --ro-bind /usr /usr \
+  --ro-bind /lib /lib \
+  --ro-bind /lib64 /lib64 \
+  --ro-bind /bin /bin \
+  --ro-bind /etc /etc \
+  --dev /dev \
+  --dev-bind /dev/dri /dev/dri \
+  --proc /proc \
+  --tmpfs /tmp \
+  --ro-bind /run/systemd/resolve /run/systemd/resolve \
+  --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
+  --ro-bind "$XAUTHORITY" "$XAUTHORITY" \
+  --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
+  --ro-bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse" \
+  --setenv DISPLAY "$DISPLAY" \
+  --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
+  --setenv XAUTHORITY "$XAUTHORITY" \
+  --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
+  --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
+  --dir  "$HOME"/.local/share/PrismLauncher \
+  --bind "$HOME"/.local/share/PrismLauncher "$HOME"/.local/share/PrismLauncher \
+  --unshare-all \
+  --share-net \
+  --die-with-parent \
+  /usr/bin/prismlauncher "$@"

@@ -1,56 +1,105 @@
 #!/bin/sh
 
-if [ "$(id -u)" -eq 0 ]; then
+[ "$(whoami)" = 'root' ] && {
   echo >&2 "Error: Do not run as root"
   exit 1
-fi
+}
 
-case "$(pwd)" in
-"$HOME"|"$HOME"/*/)
-  echo >&2 "Error: Do not run from $(pwd)"
-  exit 1 ;;
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+: "${XDG_CACHE_HOME:=$HOME/.cache}"
+
+[ -r "$XDG_RUNTIME_DIR" ] || {
+  echo >&2 "Error: Can't read directory: XDG_RUNTIME_DIR"
+  exit 1
+}
+
+PWD=$(pwd)
+case "$PWD" in
+"$HOME")
+  echo >&2 "Error: Do not run from HOME"
+  exit 1
+  ;;
+"$HOME"/*)
+  case "${PWD#"$HOME"/}" in
+  */*)
+    ;;
+  *)
+    echo >&2 "Error: Do not run from direct child of HOME"
+    exit 1
+    ;;
+  esac
+  ;;
 esac
 
-[ -e /tmp/known_hosts ] ||
-  ssh-keyscan github.com > /tmp/known_hosts
+# Ensure KNOWN_HOSTS exists
+: "${KNOWN_HOSTS:=$HOME/.ssh/bwrap_hosts}"
+mkdir -p "${KNOWN_HOSTS%/*}" \
 
-XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/"$(id -u)"}"
+# Skip if already has github.com
+if ! grep -q github.com "$KNOWN_HOSTS"; then
+  if ! ssh-keyscan github.com >> "$KNOWN_HOSTS"; then
+    echo >&2 "Error: Cannot touch $KNOWN_HOSTS"
+    exit 1
+  fi
+fi
 
-mkdir -p "$XDG_RUNTIME_DIR/nvim"
+GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$KNOWN_HOSTS"
 
-WAYLAND_SOCKET="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+# Ensure source paths exist
+mkdir -p \
+  "$HOME"/git \
+  "$XDG_CONFIG_HOME" \
+  "$HOME"/.local/bin \
+  "$XDG_DATA_HOME"/nvim \
+  "$XDG_DATA_HOME"/zsh \
+  "$XDG_STATE_HOME"/nvim \
+  "$XDG_CACHE_HOME"/nvim \
+  "$XDG_RUNTIME_DIR"/nvim
 
+# Execute the sandbox
 exec bwrap \
-  --die-with-parent \
-  --unshare-all \
-  --share-net \
   --ro-bind /usr /usr \
   --ro-bind /lib /lib \
   --ro-bind /lib64 /lib64 \
   --ro-bind /bin /bin \
   --ro-bind /etc /etc \
-  --proc /proc \
   --dev /dev \
+  --proc /proc \
   --tmpfs /tmp \
   --ro-bind /run/systemd/resolve /run/systemd/resolve \
   --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
   --ro-bind "$XAUTHORITY" "$XAUTHORITY" \
-  --ro-bind "$WAYLAND_SOCKET" "$WAYLAND_SOCKET" \
-  --bind "$HOME/git" "$HOME/git" \
-  --bind "$HOME/.config" "$HOME/.config" \
-  --bind "$HOME/.local/bin" "$HOME/.local/bin" \
-  --bind "$HOME/.local/share/nvim" "$HOME/.local/share/nvim" \
-  --bind "$HOME/.local/share/zsh" "$HOME/.local/share/zsh" \
-  --bind "$HOME/.local/state/nvim" "$HOME/.local/state/nvim" \
-  --bind "$HOME/.cache/nvim" "$HOME/.cache/nvim" \
-  --bind "$XDG_RUNTIME_DIR/nvim" "$XDG_RUNTIME_DIR/nvim" \
-  --bind  "$(pwd)" "$(pwd)" \
-  --chdir "$(pwd)" \
-  --ro-bind /tmp/known_hosts "$HOME/.ssh/known_hosts" \
-  --dir "$HOME/.ssh" \
-  --setenv GIT_SSH_COMMAND "ssh -F /dev/null" \
+  --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
+  --ro-bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse" \
   --setenv DISPLAY "$DISPLAY" \
   --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
   --setenv XAUTHORITY "$XAUTHORITY" \
   --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
+  --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
+  --dir  "$HOME"/git \
+  --bind "$HOME"/git "$HOME"/git \
+  --dir  "$XDG_CONFIG_HOME" \
+  --bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME" \
+  --dir  "$HOME"/.local \
+  --dir  "$HOME"/.local/bin \
+  --bind "$HOME"/.local/bin "$HOME"/.local/bin \
+  --dir  "$XDG_DATA_HOME" \
+  --dir  "$XDG_DATA_HOME"/nvim \
+  --bind "$XDG_DATA_HOME"/nvim "$XDG_DATA_HOME"/nvim \
+  --dir  "$XDG_DATA_HOME"/zsh \
+  --bind "$XDG_DATA_HOME"/zsh "$XDG_DATA_HOME"/zsh \
+  --dir  "$XDG_STATE_HOME" \
+  --dir  "$XDG_STATE_HOME"/nvim \
+  --bind "$XDG_STATE_HOME"/nvim "$XDG_STATE_HOME"/nvim \
+  --dir  "$XDG_CACHE_HOME"/nvim \
+  --bind "$XDG_CACHE_HOME"/nvim "$XDG_CACHE_HOME"/nvim \
+  --dir  "$XDG_RUNTIME_DIR"/nvim \
+  --bind "$XDG_RUNTIME_DIR"/nvim "$XDG_RUNTIME_DIR"/nvim \
+  --setenv GIT_SSH_COMMAND "$GIT_SSH_COMMAND" \
+  --bind "$KNOWN_HOSTS" "$KNOWN_HOSTS" \
+  --unshare-all \
+  --share-net \
+  --die-with-parent \
   /usr/bin/nvim "$@"
