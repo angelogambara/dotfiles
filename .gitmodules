@@ -1,3 +1,6 @@
 [submodule ".config/zsh"]
 	path = .config/zsh
 	url = https://github.com/angelogambara/zeppeli
+[submodule ".config/nvim"]
+	path = .config/nvim
+	url = https://github.com/angelogambara/astroconfig

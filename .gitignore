@@ -1,6 +1,4 @@
 # [RUNTIME & CLI] - App-specific states and local configs
-.config/bat
-.config/npm
 .config/dmenufm
 .config/flameshot
 .config/keepassxc

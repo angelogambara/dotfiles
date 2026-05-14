@@ -1,4 +1,7 @@
 #!/bin/sh
+
+mkdir -p "$HOME"/.local/share/PrismLauncher
+
 exec bwrap \
   --ro-bind /usr /usr \
   --ro-bind /lib /lib \
@@ -21,6 +24,9 @@ exec bwrap \
   --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
   --dir  "$HOME"/.local/share/PrismLauncher \
   --bind "$HOME"/.local/share/PrismLauncher "$HOME"/.local/share/PrismLauncher \
+  --setenv MESA_GLTHREAD true \
+  --setenv __GL_SYNC_TO_VBLANK 1 \
+  --setenv vblank_mode 1 \
   --unshare-all \
   --share-net \
   --die-with-parent \

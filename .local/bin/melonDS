@@ -1,4 +1,7 @@
 #!/bin/sh
+
+mkdir -p "$HOME"/ROMs "$HOME"/.config/melonDS
+
 exec bwrap \
   --ro-bind /usr /usr \
   --ro-bind /lib /lib \
@@ -22,6 +25,9 @@ exec bwrap \
   --bind "$HOME"/.config/melonDS "$HOME"/.config/melonDS \
   --dir  "$HOME"/ROMs \
   --bind "$HOME"/ROMs "$HOME"/ROMs \
+  --setenv MESA_GLTHREAD true \
+  --setenv __GL_SYNC_TO_VBLANK 1 \
+  --setenv vblank_mode 1 \
   --unshare-all \
   --die-with-parent \
-  /urs/bin/melon
+  /usr/bin/melonDS

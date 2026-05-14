@@ -11,6 +11,7 @@ bluez-utils
 borg
 brightnessctl
 chrony
+composer
 direnv
 dkms
 dmidecode
@@ -34,7 +35,6 @@ flameshot
 flatpak
 fwupd
 fzf
-gdb
 git-delta
 gnome-chess
 gnuchess
@@ -42,7 +42,6 @@ go
 grub
 gvfs
 htop
-imagemagick
 iwd
 jq
 krita
@@ -109,6 +108,7 @@ ttf-firacode-nerd
 ttf-hack
 ttf-ubuntu-font-family
 tumbler
+ueberzugpp
 unclutter
 upower
 urlscan
@@ -141,5 +141,7 @@ xorg-xwayland
 xorg-xwininfo
 yt-dlp
 zathura-pdf-poppler
+zbar
+zip
 zoxide
 zsh
