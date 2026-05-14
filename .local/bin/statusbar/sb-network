@@ -20,7 +20,7 @@ command_exists() {
 get_signal_strength() {
   command_exists iw || return 1
 
-  iw dev wlan0 link | awk '/signal/ {
+  iw dev "$ifname" link | awk '/signal/ {
       d=$2;
       q=2*(d+100);
       if(q>100) q=100; if(q<0) q=0;
@@ -52,8 +52,10 @@ get_network() {
       operstate=$(cat "$w"/operstate 2>/dev/null)
       flags=$(cat "$w"/flags 2>/dev/null)
 
+      ifname=${w##*/}
+
       if [ "$operstate" = 'up' ]; then
-        if strngth=$(get_signal_strength); then
+        if strngth=$(get_signal_strength "$ifname"); then
           icon=" $strngth" # Strngth
         else
           icon="" # Alternative icon

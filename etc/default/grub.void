@@ -1,0 +1,21 @@
+#
+# Configuration file for GRUB.
+#
+GRUB_DEFAULT=0
+#GRUB_HIDDEN_TIMEOUT=0
+#GRUB_HIDDEN_TIMEOUT_QUIET=false
+GRUB_TIMEOUT=1
+GRUB_DISTRIBUTOR="Void"
+GRUB_CMDLINE_LINUX_DEFAULT="rd.lvm.vg=vg0 rd.luks.allow-discards rd.luks.backup_key=/.keys/T440p.key:UUID=d6e2345f-e706-4cc4-b537-b7402e5c258a rd.luks.key=/.keys/T440p.key:UUID=8d94928f-84a6-4471-914d-1ccaa639f04d rd.luks.uuid=90adc17a-48f0-4a90-ad13-7cb28d60ba45 rd.luks.name=90adc17a-48f0-4a90-ad13-7cb28d60ba45=cryptlvm loglevel=4"
+# Uncomment to use basic console
+#GRUB_TERMINAL_INPUT="console"
+# Uncomment to disable graphical terminal
+#GRUB_TERMINAL_OUTPUT=console
+#GRUB_BACKGROUND=/usr/share/void-artwork/splash.png
+#GRUB_GFXMODE=1920x1080x32
+#GRUB_DISABLE_LINUX_UUID=true
+#GRUB_DISABLE_RECOVERY=true
+# Uncomment and set to the desired menu colors.  Used by normal and wallpaper
+# modes only.  Entries specified as foreground/background.
+#GRUB_COLOR_NORMAL="light-blue/black"
+#GRUB_COLOR_HIGHLIGHT="light-cyan/blue"

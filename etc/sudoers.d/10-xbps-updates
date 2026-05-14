@@ -1,0 +1,5 @@
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/xbps-install -S
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/xbps-install -Su
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/xbps-install -Syu
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/xbps-install -u
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/xbps-install -yu

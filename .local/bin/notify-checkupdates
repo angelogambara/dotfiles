@@ -12,6 +12,14 @@ SUDO=sudo
 # Helper
 # ########
 
+is_archlinux() {
+  grep -q 'Arch Linux' /etc/os-release || return 1
+}
+
+is_voidlinux() {
+  grep -q 'Void Linux' /etc/os-release || return 1
+}
+
 # test if LINUX_KERNEL is in UPDATES
 contains_kernel() {
   echo "$UPDATES" |
@@ -35,9 +43,8 @@ contains_browser() {
 }
 
 # test if aur/linux-keep-modules is installed
-linux_keep_modules() {
-  pacman -Qs |
-    grep -q 'linux-keep-modules\|linux-preserve-modules'
+not_linux_keep_modules() {
+  ! pacman -Qs | grep -q 'linux-keep-modules\|linux-preserve-modules'
 }
 
 # ########
@@ -46,8 +53,17 @@ linux_keep_modules() {
 
 # If the action is run the system will update
 notify_update() {
-  [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $(echo "$UPDATES" | wc -l)" "$UPDATES")" = "update" ] || return 1
-  "$TERMINAL" -e sh -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+  [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $UPDATES_COUNT" "$UPDATES")" = "update" ] || return 1
+
+  if is_archlinux; then
+    "$TERMINAL" -e sh -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+    return
+  fi
+
+  if is_voidlinux; then
+    "$TERMINAL" -e sh -c "$SUDO xbps-install -Syu; echo -n ':: Press enter to quit'; read"
+    return
+  fi
 }
 
 # If the action is run the system will reboot
@@ -59,19 +75,28 @@ notify_reboot() {
 # Main
 # ########
 
-if UPDATES="$(checkupdates --nocolor)"; then
+if is_archlinux; then
+  UPDATES="$(checkupdates --nocolor)"
+elif is_voidlinux; then
+  UPDATES="$(xbps-install -Mun | sed 's/-[0-9_]*$//')"
+fi
+
+UPDATES_COUNT=$(printf "%s" "$UPDATES" | wc -l)
+
+if [ "$UPDATES_COUNT" -gt 0 ]; then
   notify_update || exit 0
   # Run only if notify_update returns true
-  if contains_kernel && ! linux_keep_modules; then
+  if is_archlinux && contains_kernel && not_linux_keep_modules; then
     notify_reboot
   fi
 fi
 
+# FIXME: $SUDO prompt is not displayed. Xorg becomes unresponsive
 if command -v /usr/bin/flatpak >/dev/null; then
   # Sync with flathub
-  if flatpak update --appstream; then
+  if flatpak update --appstream >/dev/null 2>&1; then
     # Update if available
-    if [ -n "$(flatpak remote-ls --updates)" ]; then
+    if [ -n "$(flatpak remote-ls --updates 2>/dev/null)" ]; then
       "$TERMINAL" -e sh -c "flatpak update -y --noninteractive"
     fi
   fi

@@ -1,0 +1,10 @@
+dosfstools
+exfatprogs
+jq
+lf
+newsboat
+pass-otp
+quota-tools
+ueberzugpp
+zathura-pdf-poppler
+zbar

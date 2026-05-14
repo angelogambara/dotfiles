@@ -39,7 +39,7 @@ fi
 sleep 1
 
 # Replace with your suspend command
-systemctl suspend
-if [ "$DESTROY_X11_SESSION" -eq 1 ]; then
+grep -q 'Void Linux' /etc/os-release && sudo zzz || systemctl suspend
+if [ "${DESTROY_X11_SESSION:-0}" -eq 1 ]; then
   killall Xorg
 fi

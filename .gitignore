@@ -5,6 +5,7 @@
 .config/xarchiver
 
 # [BROWSER & HEAVY PROFILES] - Large caches and session data
+.config/melonDS
 .config/mozilla
 .config/qBittorrent
 

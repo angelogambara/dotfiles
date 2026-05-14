@@ -17,17 +17,14 @@ exec bwrap \
   --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
   --ro-bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse" \
   --setenv DISPLAY "$DISPLAY" \
+  --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
   --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
   --setenv XAUTHORITY "$XAUTHORITY" \
   --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
-  --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
-  --dir  "$HOME"/.config/melonDS \
+  --dir "$HOME"/.config/melonDS \
   --bind "$HOME"/.config/melonDS "$HOME"/.config/melonDS \
-  --dir  "$HOME"/ROMs \
+  --dir "$HOME"/ROMs \
   --bind "$HOME"/ROMs "$HOME"/ROMs \
-  --setenv MESA_GLTHREAD true \
-  --setenv __GL_SYNC_TO_VBLANK 1 \
-  --setenv vblank_mode 1 \
   --unshare-all \
   --die-with-parent \
   /usr/bin/melonDS

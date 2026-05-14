@@ -1,7 +1,3 @@
-adwaita-qt5
-adwaita-qt6
-bridge-utils
-dmenufm-git
 gallery-dl
 git-extras
 linux-preserve-modules
