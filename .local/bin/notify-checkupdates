@@ -6,44 +6,58 @@
 
 # Mandatory: set your preferences
 LINUX_KERNEL=linux
-SUDO=sudo
+SUDO="sudo -n"
 
 # ########
 # Helper
 # ########
 
+# Check if distribution is Arch Linux
 is_archlinux() {
   grep -q 'Arch Linux' /etc/os-release || return 1
 }
 
+# Check if distribution is Void Linux
 is_voidlinux() {
   grep -q 'Void Linux' /etc/os-release || return 1
 }
 
-# test if LINUX_KERNEL is in UPDATES
-contains_kernel() {
+# Check if kernel is in UPDATES
+is_kernel_pending() {
+  # Return 0 as soon as kernel is found
   echo "$UPDATES" |
     while read -r package; do
       if [ "$package" = "$LINUX_KERNEL" ]; then
         return 0
       fi
     done
+
+  # No match found
   return 1
 }
 
-# Same for your BROWSER
-contains_browser() {
+# Check if browser is in UPDATES
+is_browser_pending() {
+  browser_name=${BROWSER##*/}
+
+  # Return 0 as soon as browser is found
   echo "$UPDATES" |
     while read -r package; do
-      if [ "$package" = "$BROWSER" ]; then
+      if [ "$package" = "$browser_name" ]; then
         return 0
       fi
     done
+
+  # No match found
   return 1
 }
 
-# test if aur/linux-keep-modules is installed
-not_linux_keep_modules() {
+# Check if aur/linux-keep-modules is not installed
+not_keep_modules() {
+  # Return 1 if not Arch Linux
+  is_archlinux || return 1
+
+  # Return 0 if package is not installed
   ! pacman -Qs | grep -q 'linux-keep-modules\|linux-preserve-modules'
 }
 
@@ -52,52 +66,92 @@ not_linux_keep_modules() {
 # ########
 
 # If the action is run the system will update
-notify_update() {
-  [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $UPDATES_COUNT" "$UPDATES")" = "update" ] || return 1
-
-  if is_archlinux; then
-    "$TERMINAL" -e sh -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
-    return
+update_handler() {
+  # Prompt the user for action
+  if [ "$(dunstify --action="update,Update" --timeout=60000 "Updates: $UPDATES_COUNT" "$UPDATES")" != 'update' ]; then
+    return 1
   fi
 
+  # Update the system
+  update && reboot_handler
+}
+
+# Update the system
+update() {
+  # Update Arch Linux
+  if is_archlinux; then
+    # Spawn a terminal so that user can watch
+    "$TERMINAL" -e sh -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+  fi
+
+  # Update Void Linux
   if is_voidlinux; then
+    # Spawn a terminal so that user can watch
     "$TERMINAL" -e sh -c "$SUDO xbps-install -Syu; echo -n ':: Press enter to quit'; read"
-    return
   fi
 }
 
 # If the action is run the system will reboot
-notify_reboot() {
-  [ "$(dunstify --action="reboot,Reboot" --timeout=60000 "Reboot the system" "aur/linux-keep-modules is not installed")" = "reboot" ] && reboot
+reboot_handler() {
+  # Return if kernel is not pending or linux-keep-modules is installed
+  not_keep_modules && is_kernel_pending || return 1
+
+  # Prompt the user for action
+  if [ "$(dunstify --action="reboot,Reboot" --timeout=60000 "Reboot the system" "aur/linux-keep-modules is not installed")" != 'reboot' ]; then
+    return 1
+  fi
+
+  # Reboot the system
+  reboot
+}
+
+# If the action is run the system will flatup
+flatup_handler() {
+  # Prompt the user for action
+  if [ "$(dunstify --action="flatup,Flatup" --timeout=60000 "Flatpak updates are available" "Update?")" != 'flatup' ]; then
+    return 1
+  fi
+
+  # Exec flatup
+  flatup
+}
+
+# Update flatpak packages
+flatup() {
+  # Spawn a terminal so that user can watch flatpak updating
+  "$TERMINAL" -e sh -c "flatpak update --assumeyes --noninteractive"
 }
 
 # ########
 # Main
 # ########
 
+# Get list of packages to update
 if is_archlinux; then
   UPDATES="$(checkupdates --nocolor)"
 elif is_voidlinux; then
-  UPDATES="$(xbps-install -Mun | sed 's/-[0-9_]*$//')"
+  UPDATES="$(xbps-install -Mun | sed 's/-[0-9].*//')"
 fi
 
-UPDATES_COUNT=$(printf "%s" "$UPDATES" | wc -l)
+# Count lines from packages list
+if [ -n "$UPDATES" ]; then
+  UPDATES_COUNT=$(printf "%s" "$UPDATES" | wc -l)
+else
+  UPDATES_COUNT=0
+fi
 
+# Update if any
 if [ "$UPDATES_COUNT" -gt 0 ]; then
-  notify_update || exit 0
-  # Run only if notify_update returns true
-  if is_archlinux && contains_kernel && not_linux_keep_modules; then
-    notify_reboot
-  fi
+  update_handler
 fi
 
-# FIXME: $SUDO prompt is not displayed. Xorg becomes unresponsive
-if command -v /usr/bin/flatpak >/dev/null; then
-  # Sync with flathub
-  if flatpak update --appstream >/dev/null 2>&1; then
-    # Update if available
-    if [ -n "$(flatpak remote-ls --updates 2>/dev/null)" ]; then
-      "$TERMINAL" -e sh -c "flatpak update -y --noninteractive"
+# Do not run if flatpak is not installed
+if command -v /usr/bin/flatpak >/dev/null 2>&1; then
+  # Fetch updates from flathub
+  if $SUDO flatpak update --appstream 2>/dev/null; then
+    # Update only if there are updates
+    if [ -n "$(flatpak remote-ls --updates)" ]; then
+      flatup_handler
     fi
   fi
 fi
