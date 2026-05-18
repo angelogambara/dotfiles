@@ -5,7 +5,7 @@
 # =========================
 
 # Set your apps here
-export BROWSER=com.brave.Browser
+export BROWSER=firefox
 export STATUSBAR=dwmblocks
 export TERMINAL=st
 
