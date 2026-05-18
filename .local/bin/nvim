@@ -11,8 +11,7 @@ git_ssh_prepare() {
 	for website in "$@"; do
 		# Skip if website is known
 		if ! grep -q "$website" "$KNOWN_HOSTS"; then
-			# Get the key
-			if ! ssh-keyscan "$website" >>"$KNOWN_HOSTS"; then
+			if ! ssh-keyscan "$website" >> "$KNOWN_HOSTS"; then
 				echo >&2 "Error: Cannot touch $KNOWN_HOSTS"
 				exit 1
 			fi
@@ -75,30 +74,29 @@ exec bwrap \
 	--ro-bind /etc /etc \
 	--dev /dev \
 	--proc /proc \
-	--tmpfs /tmp \
-	--ro-bind /run/systemd/resolve /run/systemd/resolve \
-	--ro-bind /tmp/.X11-unix /tmp/.X11-unix \
 	--ro-bind "$XAUTHORITY" "$XAUTHORITY" \
 	--ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
-	--setenv DISPLAY "$DISPLAY" \
-	--setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
-	--setenv XAUTHORITY "$XAUTHORITY" \
-	--setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
+	--ro-bind /run/systemd/resolve /run/systemd/resolve \
+	--bind /tmp /tmp \
 	--bind "$HOME"/vimwiki "$HOME"/vimwiki \
 	--bind "$HOME"/git "$HOME"/git \
 	--bind "$HOME"/.local/bin "$HOME"/.local/bin \
+	--bind "$KNOWN_HOSTS" "$KNOWN_HOSTS" \
 	--bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME" \
 	--bind "$XDG_DATA_HOME"/nvim "$XDG_DATA_HOME"/nvim \
 	--bind "$XDG_DATA_HOME"/zsh "$XDG_DATA_HOME"/zsh \
-	--bind "$XDG_STATE_HOME"/nvim "$XDG_STATE_HOME"/nvim \
 	--bind "$XDG_CACHE_HOME"/nvim "$XDG_CACHE_HOME"/nvim \
 	--bind "$XDG_CACHE_HOME"/zsh "$XDG_CACHE_HOME"/zsh \
 	--bind "$XDG_CACHE_HOME"/antidote "$XDG_CACHE_HOME"/antidote \
 	--bind "$XDG_RUNTIME_DIR"/nvim "$XDG_RUNTIME_DIR"/nvim \
 	--bind "$XDG_RUNTIME_DIR"/zsh "$XDG_RUNTIME_DIR"/zsh \
 	--bind "$XDG_RUNTIME_DIR"/dconf "$XDG_RUNTIME_DIR"/dconf \
+	--bind "$XDG_STATE_HOME"/nvim "$XDG_STATE_HOME"/nvim \
 	--setenv GIT_SSH_COMMAND "$GIT_SSH_COMMAND" \
-	--bind "$KNOWN_HOSTS" "$KNOWN_HOSTS" \
+	--setenv DISPLAY "$DISPLAY" \
+	--setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
+	--setenv XAUTHORITY "$XAUTHORITY" \
+	--setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
 	--unshare-all \
 	--share-net \
 	--die-with-parent \
