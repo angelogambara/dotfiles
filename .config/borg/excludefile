@@ -1,35 +1,59 @@
-# -----------------------------
-# Personal files
-# -----------------------------
+# ##################
+# Your Workflow
+# ##################
 
-# User caches
-/home/*/.cache/*
-/home/*/.local/state/*
-
-# Could lead to data loss (review periodically)
-/home/*/.var
-
-# Exclude high-resolution galleries (containing psd, clip, zip)
+# --- GALLERY ---
 /home/angelo/gallery-dl/fanbox/@uuuuzan
 /home/angelo/gallery-dl/pixiv/users/66038798
 /home/angelo/gallery-dl/pixiv/users/1960050
 
-# Exclude archived videos
+# --- MELONDS ---
+/home/angelo/ROMs
+
+# --- ARCHIVE ---
 /home/angelo/yt-dlp
 
-# -----------------------------
-# System files (reinstall)
-# -----------------------------
+# ##################
+# User Filesystem
+# ##################
 
-# Graphical applications (installed via pacman)
+# --- CACHE & STATE ---
+/home/*/.cache/*
+/home/*/.local/share/Trash/*
+/home/*/.local/state/*
+
+# --- DOWNLOADS & DATA ---
+# TODO: Add your apps downloads as the list keeps growing
+/home/*/.local/share/go/*
+/home/*/.local/share/nvim/*
+/home/*/.local/share/rustup/*
+
+# --- PERSONAL DATA ---
+# NOTE: Do not back up your personal data to a remote server
+# FIXME: Back up your personal data separately
+/home/*/.gnupg/*
+/home/*/.local/share/gnupg/*
+/home/*/.local/share/keyrings/*
+/home/*/.ssh/*
+/home/*/.var/*
+
+# ##################
+# Root Filesystem
+# ##################
+
+# --- SWAP FILE ---
+# Command: mkswap -U clear --size 4G --file /swapfile
+# Link: https://wiki.archlinux.org/title/Swap
+/swapfile
+
+# --- MISCELLANEOUS ---
+/usr/share/doc/*
 /usr/share/fonts/*
 /usr/share/icons/*
+/usr/share/locale/*
 
-# Excluded from pacman.conf
-# NoExtract = /usr/share/doc/* /usr/share/locale/*
-
-# Libraries and shared objects (installed via pacman)
-# Installed with: pacman -S clang gcc go llvm
+# --- COMPILERS & TOOLCHAINS ---
+# Command: pacman -S --needed clang gcc go llvm
 /usr/lib/clang
 /usr/lib/gcc
 /usr/lib/go
@@ -37,19 +61,17 @@
 /usr/lib/libLLVM.so*
 /usr/lib/libclang*
 
-# -----------------------------
-# Temporary files
-# -----------------------------
+# --- LARGE APPLICATION DATA ---
+# Command: pacman -S --needed firefox
+# TODO: Add your applications as the list keeps growing
+# NOTE: Command: du -sh /usr/*/* | sort -h
+/usr/lib/firefox
+/usr/share/krita
+/usr/share/qemu
 
-# Swap file (temporary memory storage)
-# Created with: mkswap -U clear --size 4G --file /swapfile
-/swapfile
-
-# System caches
+# --- CACHE & VIRTUALIZATION ---
+# Command: flatpak install flathub com.discordapp.Discord
+# FIXME: Back up your VMs separately
 /var/cache/*
-
-# Do not back up flatpaks
 /var/lib/flatpak/*
-
-# Back up separetely
 /var/lib/libvirt/*

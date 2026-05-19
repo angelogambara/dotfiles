@@ -1,20 +1,17 @@
-# ==============================
-# Alacritty Configuration
-# ==============================
-
 [general]
-import = [
-  "~/.config/alacritty/gruvbox-dark.toml"
-]
+import = ["~/.config/alacritty/gruvbox-dark.toml"]
 
 [window]
 opacity = 0.85
 
 [font]
 normal = { family = "FiraCode Nerd Font", style = "Regular" }
-size = 10.0
+bold = { family = "FiraCode Nerd Font", style = "Bold" }
+italic = { family = "FiraCode Nerd Font", style = "Italic" }
+size = 9.0
 
 [keyboard]
 bindings = [
-  { key = "N", mods = "Control|Shift", command = { program = "sh", args = ["-c", "WORKDIR_SET=1 alacritty"] } }
+  { key = "N",      mods = "Control|Shift", command = { program = "sh", args = ["-c", "WORKDIR_SET=1 alacritty"] } },
+  { key = "Return", mods = "Control|Shift", command = { program = "sh", args = ["-c", "WORKDIR_SET=1 alacritty"] } },
 ]
