@@ -1,6 +1,7 @@
+ani-cli-git
 gallery-dl
 git-extras
-linux-preserve-modules
+linux-keep-modules
 mutt-wizard-git
 physlock
 urlview-xdg-git

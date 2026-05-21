@@ -3,12 +3,13 @@
 # ##################
 
 # --- GALLERY ---
-/home/angelo/gallery-dl/fanbox/@uuuuzan
-/home/angelo/gallery-dl/pixiv/users/66038798
-/home/angelo/gallery-dl/pixiv/users/1960050
+/home/angelo/gallery-dl
 
 # --- MELONDS ---
 /home/angelo/ROMs
+
+# --- VIMWIKI ---
+/home/angelo/vimwiki
 
 # --- ARCHIVE ---
 /home/angelo/yt-dlp
@@ -31,9 +32,12 @@
 # --- PERSONAL DATA ---
 # NOTE: Do not back up your personal data to a remote server
 # FIXME: Back up your personal data separately
+/home/*/*.kdbx
 /home/*/.gnupg/*
 /home/*/.local/share/gnupg/*
 /home/*/.local/share/keyrings/*
+/home/*/.local/share/pass/*
+/home/*/.pass/*
 /home/*/.ssh/*
 /home/*/.var/*
 

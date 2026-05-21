@@ -29,11 +29,10 @@ fail2ban
 fd
 feh
 ffmpegthumbnailer
-firewalld
+firefox
 flameshot
 flatpak
 fwupd
-fzf
 git-delta
 go
 grub
@@ -52,11 +51,9 @@ linux-headers
 lvm2
 man-db
 man-pages
-mpv
 nasm
 ncdu
 neovim
-newsboat
 notmuch
 noto-fonts-emoji
 npm
@@ -72,14 +69,12 @@ python-mutagen
 python-pipx
 python-pyfuse3
 python-secretstorage
-python-setuptools
 qbittorrent
 qemu-desktop
 quota-tools
 reflector
 ripgrep
 rsync
-rustup
 seahorse
 smartmontools
 sof-firmware
@@ -99,6 +94,7 @@ tumbler
 ueberzugpp
 ufw
 unclutter
+unrar
 upower
 urlscan
 virt-manager
@@ -110,6 +106,7 @@ wireguard-tools
 wireless-regdb
 wiremix
 xarchiver
+xclip
 xdg-user-dirs
 xf86-video-amdgpu
 xfsprogs
