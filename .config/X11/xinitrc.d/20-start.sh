@@ -15,7 +15,6 @@ dunst
 dwmblocks
 notify-checkupdates
 picom
-pipewire
 rmddd
 unclutter
 "

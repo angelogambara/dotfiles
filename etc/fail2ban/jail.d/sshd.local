@@ -1,8 +1,0 @@
-[sshd]
-enabled = true
-logpath = /var/log/sshd-jail.log
-bantime = 30m
-findtime = 5m
-maxretry = 3
-filter = sshd
-port = 22

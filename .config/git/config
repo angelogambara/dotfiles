@@ -1,23 +1,25 @@
-[pull]
-	rebase = false
+[core]
+    autocrlf = input
+    pager = delta
 
-[alias]
-	nicelog = log --all --graph --decorate
+[delta]
+    side-by-side = true
+
+[fetch]
+    prune = true
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
-[url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
+[merge]
+    conflictstyle = zdiff3
 
-[url "ssh://git@github.com/"]
-	insteadOf = git://github.com/
+[pull]
+    rebase = true
 
-[url "ssh://git@gitlab.com/"]
-	insteadOf = https://gitlab.com/
+[push]
+    autoSetupRemote = true
 
-[include]
-	path = ./aliases.inc
-	path = ./delta.inc
-	path = ./machine.inc # Machine-specific gitignored config.
-	path = ./rbw.inc
+[user]
+	email = angelo@angelogambara.dev
+	name = Angelo Gambara

@@ -1,11 +1,12 @@
 #!/bin/sh
 
-# Skip user confirmation
+# Configuration
 # undefined = inform the user and ask directly
-# 0 = keep the session, I know what I am doing
+# 0 = just lock the screen, skip confirmation notification
 # 1 = immediately quit X11, no warnings (not recommended)
 DESTROY_X11_SESSION=
 
+# Lock the screen
 # Bypass if physlock is used
 if ! command -v physlock >/dev/null; then
   # Extend the logic if you run another compositor
@@ -15,31 +16,45 @@ if ! command -v physlock >/dev/null; then
         hyprlock &
       fi
     else
-      notify-send "Cannot lock screen: unknown compositor."
+      notify-send "Error: Cannot lock screen: Unknown compositor"
       exit 1
     fi
   else
-    # Screen locking is not supported on X11
     if [ -z "$DESTROY_X11_SESSION" ]; then
       case "$(dunstify --action="destroy,Destroy X11 session" --timeout=60000 "Suspending on X11" "Screen locking is not supported on X11. They are effectively eye candy. Quit the session instead by middle clicking. You can always ignore this message by dismissing it or letting it expire.\nThe user will be dropped on the tty, so make sure to use a login manager. Or, exit after startx. Remember to save all your progress first.")" in
+      # Remember to destroy X11 later
       "destroy") DESTROY_X11_SESSION=1 ;;
+      # Do nothing if timed out
       1) exit 1 ;;
-      *)
-        # Fallback to slock
-        if ! pgrep -u "$USER" -x slock; then
-          slock &
-        fi
-        ;;
       esac
+    else
+      # The popular way to lock the screen on X11 (insecure)
+      if ! pgrep -u "$USER" -x slock; then
+        slock &
+      fi
     fi
   fi
 fi
 
-# avoid race conditions
+# Avoid race conditions
 sleep 1
 
-# Replace with your suspend command
-grep -q 'Void Linux' /etc/os-release && sudo zzz || systemctl suspend
+# Suspend the system
+# Extend the logic if you run another init system or distribution
+if [ "$(ps -p 1 -o comm=)" != "systemd" ]; then
+  # Support Void Linux w/runit
+  if grep -q 'Void Linux' /etc/os-release; then
+    sudo zzz
+  else
+    notify-send "Error: Cannot suspend to RAM: Unknown suspend mechanism"
+    exit 1
+  fi
+else
+  # Most distros will fall in this logic
+  systemctl suspend
+fi
+
+# Kill Xorg on resume (secure)
 if [ "${DESTROY_X11_SESSION:-0}" -eq 1 ]; then
   killall Xorg
 fi

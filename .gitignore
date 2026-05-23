@@ -1,11 +1,13 @@
 # [RUNTIME & CLI] - App-specific states and local configs
-.config/dmenufm
 .config/flameshot
 .config/keepassxc
+.config/rclone
 .config/xarchiver
 
 # [BROWSER & HEAVY PROFILES] - Large caches and session data
+.config/mgba
 .config/melonDS
+.config/mgba
 .config/mozilla
 .config/qBittorrent
 
@@ -23,4 +25,8 @@
 .config/fcitx5
 .config/ibus
 .config/mozc
+.config/mimeapps.list
 .config/pulse
+
+# [BINARIES & EXECUTABLES] - Installed through pipx
+.local/bin/anki*

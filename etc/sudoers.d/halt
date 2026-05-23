@@ -1,0 +1,5 @@
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/halt
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/reboot
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/poweroff
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/zzz
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/ZZZ

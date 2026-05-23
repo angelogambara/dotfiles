@@ -1,0 +1,34 @@
+diff --git a/etc/pkglist.d/xbps/T440p.txt b/etc/pkglist.d/xbps/T440p.txt
+index 3461096..fb91e73 100644
+--- a/etc/pkglist.d/xbps/T440p.txt
++++ b/etc/pkglist.d/xbps/T440p.txt
+@@ -2,10 +2,12 @@ ImageMagick
+ Thunar
+ acpi
+ alacritty
++aria2
+ base-system
+ bash-completion
+ bat
+ binutils
++bluez
+ borg
+ brightnessctl
+ bubblewrap
+@@ -63,6 +65,8 @@ man-db
+ melonDS
+ mesa-dri
+ mesa-vulkan-intel
++mgba-qt
++minisign
+ mpv
+ nasm
+ ncdu
+@@ -110,6 +114,7 @@ upower
+ urlscan
+ virt-manager
+ vis
++void-release-keys
+ void-repo-nonfree
+ vulkan-loader
+ wireguard-tools

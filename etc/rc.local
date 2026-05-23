@@ -15,17 +15,8 @@ mkdir -p -m 700 /run/user/1000
 chown 1000:1000 /run/user/1000
 
 # ##################
-# Undervolting
-# ##################
-
-# Apply undervolt.
-# if [ "$(hostname)" = 'T440p' ]; then
-#     intel-undervolt apply
-# fi
-
-# ##################
 # Miscs
 # ##################
 
-# Create fake systemd resolve dir
+# Create fake systemd resolve dirirectory
 mkdir -p /run/systemd/resolve

@@ -1,9 +1,0 @@
-ani-cli-git
-gallery-dl
-git-extras
-linux-keep-modules
-mutt-wizard-git
-physlock
-urlview-xdg-git
-yay
-yay-debug

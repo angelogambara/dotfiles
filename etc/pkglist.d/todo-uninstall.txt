@@ -1,4 +1,0 @@
-lf
-newsboat
-rustup
-wget

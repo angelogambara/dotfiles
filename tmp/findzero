@@ -1,0 +1,2 @@
+#!/bin/sh
+find . -type f ! -path '*mozilla*' ! -path '*.git*' -print0 | xargs -0 file | grep 'terminator'
