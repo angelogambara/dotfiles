@@ -1,8 +1,9 @@
 #!/bin/sh
 
-mkdir -p "$HOME"/ROMs "$HOME"/.config/melonDS
+mkdir -p "$HOME"/ROMs "$HOME"/.config/mgba
 
 exec bwrap \
+  --ro-bind /sys /sys \
   --ro-bind /usr /usr \
   --ro-bind /lib /lib \
   --ro-bind /lib64 /lib64 \
@@ -21,8 +22,8 @@ exec bwrap \
   --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
   --setenv XAUTHORITY "$XAUTHORITY" \
   --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
-  --dir "$HOME"/.config/melonDS \
-  --bind "$HOME"/.config/melonDS "$HOME"/.config/melonDS \
+  --dir "$HOME"/.config/mgba \
+  --bind "$HOME"/.config/mgba "$HOME"/.config/mgba \
   --dir "$HOME"/ROMs \
   --bind "$HOME"/ROMs "$HOME"/ROMs \
   --unshare-all \

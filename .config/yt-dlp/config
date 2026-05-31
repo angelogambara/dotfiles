@@ -64,7 +64,7 @@
 # =========================
 
 # Save full metadata JSON per video (useful for preservation)
---write-info-json
+--embed-info-json
 
 # Do NOT write extra playlist-level metadata files
 --no-write-playlist-metafiles
@@ -76,10 +76,10 @@
 
 # Download:
 # - Keep English and Japanese subtitles
---sub-langs "live_chat_replay,en.*,ja"
+--sub-langs "live_chat_replay,ja"
 
 # Download manually created subtitles if available
---write-subs
+--embed-subs
 
 # Save subtitles in VTT format
 --sub-format vtt

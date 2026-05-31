@@ -1,32 +1,20 @@
-# [RUNTIME & CLI] - App-specific states and local configs
-.config/flameshot
-.config/keepassxc
-.config/rclone
-.config/xarchiver
-
-# [BROWSER & HEAVY PROFILES] - Large caches and session data
-.config/mgba
-.config/melonDS
-.config/mgba
-.config/mozilla
-.config/qBittorrent
-
-# [SYSTEM & LANGUAGES] - Environment runtimes
-.config/go
-.config/java
-
-# [LOCKFILES & AUTO-GENERATED] - Plugin locks and UI state
-.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
-
-# [METADATA & CACHE] - Miscellaneous files
 .config/QtProject.conf
 .config/dconf
 .config/fcitx
 .config/fcitx5
+.config/flameshot
+.config/go
+.config/heroic
+.config/htop
 .config/ibus
-.config/mozc
+.config/keepassxc
+.config/melonDS
+.config/mgba
 .config/mimeapps.list
+.config/mozc
+.config/mozilla
 .config/pulse
-
-# [BINARIES & EXECUTABLES] - Installed through pipx
-.local/bin/anki*
+.config/qBittorrent
+.config/rclone
+.config/xarchiver
+.config/xfce4

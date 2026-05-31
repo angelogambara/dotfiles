@@ -3,6 +3,7 @@
 mkdir -p "$HOME"/.local/share/PrismLauncher
 
 exec bwrap \
+  --ro-bind /sys /sys \
   --ro-bind /usr /usr \
   --ro-bind /lib /lib \
   --ro-bind /lib64 /lib64 \
@@ -22,12 +23,13 @@ exec bwrap \
   --setenv XAUTHORITY "$XAUTHORITY" \
   --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
   --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
-  --dir  "$HOME"/.local/share/PrismLauncher \
+  --dir "$HOME"/.local/share/PrismLauncher \
   --bind "$HOME"/.local/share/PrismLauncher "$HOME"/.local/share/PrismLauncher \
   --setenv MESA_GLTHREAD true \
-  --setenv __GL_SYNC_TO_VBLANK 1 \
-  --setenv vblank_mode 1 \
-  --unshare-all \
+  --unshare-user \
+  --unshare-pid \
+  --unshare-uts \
+  --unshare-cgroup \
   --share-net \
   --die-with-parent \
   /usr/bin/prismlauncher "$@"

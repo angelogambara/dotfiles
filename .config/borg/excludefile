@@ -2,36 +2,25 @@
 # Your Workflow
 # ##################
 
-# --- GALLERY ---
-/home/angelo/gallery-dl
-
-# --- MELONDS ---
+# --- DIRECTORIES ---
+/home/angelo/.config/heroic
+/home/angelo/.local/share/PrismLauncher
+/home/angelo/.local/share/Steam
 /home/angelo/ROMs
-
-# --- VIMWIKI ---
-/home/angelo/vimwiki
-
-# --- ARCHIVE ---
+/home/angelo/gallery-dl
 /home/angelo/yt-dlp
 
 # ##################
 # User Filesystem
 # ##################
 
-# --- CACHE & STATE ---
-/home/*/.cache/*
-/home/*/.local/share/Trash/*
-/home/*/.local/state/*
-
-# --- DOWNLOADS & DATA ---
-# TODO: Add your apps downloads as the list keeps growing
-/home/*/.local/share/go/*
-/home/*/.local/share/nvim/*
-/home/*/.local/share/rustup/*
+# --- BROWSERS ---
+/home/**/chromium/*
+/home/**/google-chrome/*
+/home/**/mozilla/*
+/home/**/Brave-Browser/*
 
 # --- PERSONAL DATA ---
-# NOTE: Do not back up your personal data to a remote server
-# FIXME: Back up your personal data separately
 /home/*/*.kdbx
 /home/*/.gnupg/*
 /home/*/.local/share/gnupg/*
@@ -40,6 +29,18 @@
 /home/*/.pass/*
 /home/*/.ssh/*
 /home/*/.var/*
+
+# --- CACHE & STATE ---
+/home/*/.cache/*
+/home/*/.local/share/Trash/*
+/home/*/.local/share/fonts/*
+/home/*/.local/share/icons/*
+/home/*/.local/state/*
+
+# --- DOWNLOADS & DATA ---
+/home/*/.local/share/go/*
+/home/*/.local/share/nvim/*
+/home/*/.local/share/rustup/*
 
 # ##################
 # Root Filesystem
@@ -57,25 +58,23 @@
 /usr/share/locale/*
 
 # --- COMPILERS & TOOLCHAINS ---
-# Command: pacman -S --needed clang gcc go llvm
+# Command: pacman -S --needed clang gcc go llvm openjdk21-jre
 /usr/lib/clang
 /usr/lib/gcc
 /usr/lib/go
+/usr/lib/jvm
 /usr/lib/llvm*
 /usr/lib/libLLVM.so*
 /usr/lib/libclang*
 
 # --- LARGE APPLICATION DATA ---
 # Command: pacman -S --needed firefox
-# TODO: Add your applications as the list keeps growing
-# NOTE: Command: du -sh /usr/*/* | sort -h
 /usr/lib/firefox
 /usr/share/krita
 /usr/share/qemu
 
 # --- CACHE & VIRTUALIZATION ---
 # Command: flatpak install flathub com.discordapp.Discord
-# FIXME: Back up your VMs separately
 /var/cache/*
 /var/lib/flatpak/*
 /var/lib/libvirt/*

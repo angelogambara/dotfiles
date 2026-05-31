@@ -7,7 +7,7 @@ DOWNLOADS=${XDG_DOWNLOAD_DIR:-"$HOME"/Downloads}
 while true; do
   # If the directory exists, remove it (prevents accidental data loss)
   if [ -d "$DOWNLOADS" ]; then
-    rmdir "$DOWNLOADS"
+    rmdir "$DOWNLOADS" >/dev/null 2>&1
   fi
   sleep 60
 done
