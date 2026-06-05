@@ -4,57 +4,65 @@
 # undefined = inform the user and ask directly
 # 0 = just lock the screen, skip confirmation notification
 # 1 = immediately quit X11, no warnings (not recommended)
-DESTROY_X11_SESSION=
+DESTROY_X11_SESSION=0
+
+# ########
+# Blocks
+# ########
 
 # Lock the screen
-# Bypass if physlock is used
-if ! command -v physlock >/dev/null; then
-  # Extend the logic if you run another compositor
-  if [ -n "$WAYLAND_DISPLAY" ]; then
-    if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-      if ! pgrep -u "$USER" -x hyprlock; then
-        hyprlock &
-      fi
+lock_screen() {
+  # Return if physlock is used
+  command -v physlock >/dev/null 2>&1 && return
+
+  # User just wants to lock the screen
+  if [ -n "$DESTROY_X11_SESSION" ]; then
+    # The popular way to lock the screen on X11 (insecure)
+    if ! pgrep -u "$USER" -x slock; then
+      slock &
     else
-      notify-send "Error: Cannot lock screen: Unknown compositor"
+      echo >&2 "Error: slock is already running"
       exit 1
     fi
-  else
-    if [ -z "$DESTROY_X11_SESSION" ]; then
-      case "$(dunstify --action="destroy,Destroy X11 session" --timeout=60000 "Suspending on X11" "Screen locking is not supported on X11. They are effectively eye candy. Quit the session instead by middle clicking. You can always ignore this message by dismissing it or letting it expire.\nThe user will be dropped on the tty, so make sure to use a login manager. Or, exit after startx. Remember to save all your progress first.")" in
-      # Remember to destroy X11 later
-      "destroy") DESTROY_X11_SESSION=1 ;;
-      # Do nothing if timed out
-      1) exit 1 ;;
-      esac
-    else
-      # The popular way to lock the screen on X11 (insecure)
-      if ! pgrep -u "$USER" -x slock; then
-        slock &
-      fi
-    fi
+    return
   fi
-fi
+
+  # No one read anymore nowadays
+  case "$(dunstify --action="destroy,Destroy X11 session" --timeout=60000 "Suspending on X11" "Screen locking is not supported on X11. Use middle click to quit. You can always ignore this message in the config: dismiss it or let it expire.\nMake sure to startx && exit or use a login manager because on resume, you will be dropped on the tty. Remember to save all your progress first.")" in
+  "destroy")
+    # Remember to destroy X11 later
+    DESTROY_X11_SESSION=1
+    ;;
+  1)
+    # Do nothing if dismiss or timed out
+    exit 1
+    ;;
+  esac
+}
+
+# ########
+# Main
+# ########
+
+lock_screen
 
 # Avoid race conditions
 sleep 1
 
-# Suspend the system
-# Extend the logic if you run another init system or distribution
-if [ "$(ps -p 1 -o comm=)" != "systemd" ]; then
-  # Support Void Linux w/runit
-  if grep -q 'Void Linux' /etc/os-release; then
-    sudo zzz
-  else
-    notify-send "Error: Cannot suspend to RAM: Unknown suspend mechanism"
-    exit 1
-  fi
-else
-  # Most distros will fall in this logic
+# Read distro
+. /etc/os-release
+
+# Run suspend command
+case "$ID" in
+"void")
+  sudo zzz
+  ;;
+*)
   systemctl suspend
-fi
+  ;;
+esac
 
 # Kill Xorg on resume (secure)
-if [ "${DESTROY_X11_SESSION:-0}" -eq 1 ]; then
+if [ "$DESTROY_X11_SESSION" -eq 1 ]; then
   killall Xorg
 fi
