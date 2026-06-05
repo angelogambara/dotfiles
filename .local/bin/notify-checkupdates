@@ -5,7 +5,7 @@
 # ########
 
 # Mandatory: set your preferences
-LINUX_KERNEL=linux
+LINUX_KERNEL='linux'
 SUDO="sudo -n"
 
 # ########
@@ -26,40 +26,23 @@ is_kernel_pending() {
   return 1
 }
 
-# Check if browser is in UPDATES
-is_browser_pending() {
-  [ -n "$BROWSER" ] || return 1
-  browser_name=${BROWSER##*/}
-
-  # Return 0 as soon as browser is found
-  echo "$UPDATES" |
-    while read -r package; do
-      if [ "$package" = "$browser_name" ]; then
-        return 0
-      fi
-    done
-
-  # No match found
-  return 1
-}
-
 # Check if aur/linux-keep-modules is not installed
 not_keep_modules() {
   # Return 1 if not Arch Linux
-  [ "$UPDATE_CMD" = 'update_arch' ] || return 1
+  [ "$UPDATE_CMD" = 'update_archlinux' ] || return 1
 
   # Return 0 if package is not installed
   ! pacman -Qs | grep -q 'linux-keep-modules\|linux-preserve-modules'
 }
 
 # Update Arch Linux
-update_arch() {
+update_archlinux() {
   # Spawn a terminal so that user can watch
   "$TERMINAL" -e bash -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
 }
 
 # Update Void Linux
-update_void() {
+update_voidlinux() {
   # Spawn a terminal so that user can watch
   "$TERMINAL" -e bash -c "$SUDO xbps-install -Syu; echo -n ':: Press enter to quit'; read"
 }
@@ -120,11 +103,11 @@ fi
 case "$ID" in
 "arch")
   UPDATES="$(checkupdates --nocolor)"
-  UPDATE_CMD=update_arch
+  UPDATE_CMD='update_archlinux'
   ;;
 "void")
   UPDATES="$(xbps-install -Mun | sed 's/-[0-9].*//')"
-  UPDATE_CMD=update_void
+  UPDATE_CMD='update_voidlinux'
   ;;
 *)
   echo >&2 "Error: Unsupported distro"
