@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # ########
 # Env
@@ -11,16 +11,6 @@ SUDO="sudo -n"
 # ########
 # Helper
 # ########
-
-# Check if distribution is Arch Linux
-is_archlinux() {
-  grep -q 'Arch Linux' /etc/os-release || return 1
-}
-
-# Check if distribution is Void Linux
-is_voidlinux() {
-  grep -q 'Void Linux' /etc/os-release || return 1
-}
 
 # Check if kernel is in UPDATES
 is_kernel_pending() {
@@ -38,6 +28,7 @@ is_kernel_pending() {
 
 # Check if browser is in UPDATES
 is_browser_pending() {
+  [ -n "$BROWSER" ] || return 1
   browser_name=${BROWSER##*/}
 
   # Return 0 as soon as browser is found
@@ -55,10 +46,22 @@ is_browser_pending() {
 # Check if aur/linux-keep-modules is not installed
 not_keep_modules() {
   # Return 1 if not Arch Linux
-  is_archlinux || return 1
+  [ "$UPDATE_CMD" = 'update_arch' ] || return 1
 
   # Return 0 if package is not installed
   ! pacman -Qs | grep -q 'linux-keep-modules\|linux-preserve-modules'
+}
+
+# Update Arch Linux
+update_arch() {
+  # Spawn a terminal so that user can watch
+  "$TERMINAL" -e bash -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
+}
+
+# Update Void Linux
+update_void() {
+  # Spawn a terminal so that user can watch
+  "$TERMINAL" -e bash -c "$SUDO xbps-install -Syu; echo -n ':: Press enter to quit'; read"
 }
 
 # ########
@@ -73,22 +76,7 @@ update_handler() {
   fi
 
   # Update the system
-  update && reboot_handler
-}
-
-# Update the system
-update() {
-  # Update Arch Linux
-  if is_archlinux; then
-    # Spawn a terminal so that user can watch
-    "$TERMINAL" -e sh -c "$SUDO pacman -Syu --noconfirm; yay -Sua --noconfirm; echo -n ':: Press enter to quit'; read"
-  fi
-
-  # Update Void Linux
-  if is_voidlinux; then
-    # Spawn a terminal so that user can watch
-    "$TERMINAL" -e sh -c "$SUDO xbps-install -Syu; echo -n ':: Press enter to quit'; read"
-  fi
+  "$UPDATE_CMD" && reboot_handler
 }
 
 # If the action is run the system will reboot
@@ -102,7 +90,7 @@ reboot_handler() {
   fi
 
   # Reboot the system
-  reboot
+  exec reboot
 }
 
 # If the action is run the system will flatup
@@ -112,33 +100,39 @@ flatup_handler() {
     return 1
   fi
 
-  # Exec flatup
-  flatup
-}
-
-# Update flatpak packages
-flatup() {
-  # Spawn a terminal so that user can watch flatpak updating
-  "$TERMINAL" -e sh -c "flatpak update --assumeyes --noninteractive"
+  # Spawn a terminal so that user can watch
+  "$TERMINAL" -e bash -c "flatpak update --assumeyes --noninteractive"
 }
 
 # ########
 # Main
 # ########
 
-# Get list of packages to update
-if is_archlinux; then
-  UPDATES="$(checkupdates --nocolor)"
-elif is_voidlinux; then
-  UPDATES="$(xbps-install -Mun | sed 's/-[0-9].*//')"
+if ! command -v "$TERMINAL" 'bash' 'dunstify' >/dev/null 2>&1; then
+  echo >&2 "Error: Make sure bash and dunstify are installed. Set TERMINAL to a terminal installed."
+  exit 1
 fi
 
-# Count lines from packages list
-if [ -n "$UPDATES" ]; then
-  UPDATES_COUNT=$(printf "%s" "$UPDATES" | wc -l)
-else
-  UPDATES_COUNT=0
-fi
+# Read distro
+. /etc/os-release
+
+# Fetch updates and set the right command
+case "$ID" in
+"arch")
+  UPDATES="$(checkupdates --nocolor)"
+  UPDATE_CMD=update_arch
+  ;;
+"void")
+  UPDATES="$(xbps-install -Mun | sed 's/-[0-9].*//')"
+  UPDATE_CMD=update_void
+  ;;
+*)
+  echo >&2 "Error: Unsupported distro"
+  exit 1
+  ;;
+esac
+
+UPDATES_COUNT=$(printf "%s" "$UPDATES" | wc -l)
 
 # Update if any
 if [ "$UPDATES_COUNT" -gt 0 ]; then
@@ -148,10 +142,9 @@ fi
 # Do not run if flatpak is not installed
 if command -v /usr/bin/flatpak >/dev/null 2>&1; then
   # Fetch updates from flathub
-  if $SUDO flatpak update --appstream 2>/dev/null; then
-    # Update only if there are updates
-    if [ -n "$(flatpak remote-ls --updates)" ]; then
-      flatup_handler
-    fi
+  $SUDO flatpak update --appstream >/dev/null 2>&1
+  # Update if any
+  if [ -n "$(flatpak remote-ls --updates)" ]; then
+    flatup_handler
   fi
 fi
