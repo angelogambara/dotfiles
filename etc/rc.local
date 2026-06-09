@@ -20,3 +20,6 @@ chown 1000:1000 /run/user/1000
 
 # Create fake systemd resolve dirirectory
 mkdir -p /run/systemd/resolve
+
+# Disable keyboard waking up suspension.
+echo XHCI > /proc/acpi/wakeup
