@@ -32,7 +32,7 @@ KineticScrollingEnabled=true
 KineticScrollingGesture=2
 KineticScrollingHideScrollbar=false
 KineticScrollingSensitivity=75
-KisDlgPreferences/CurrentPage=tablet
+KisDlgPreferences/CurrentPage=shortcuts
 Krita/Ocio/DisplayDevice=sRGB
 Krita/Ocio/DisplayLook=None
 Krita/Ocio/DisplayView=Raw
@@ -283,6 +283,7 @@ zoomSteps=2
 [File Dialogs]
 Choose the resource library to import=/home/angelo/Downloads/deevad-bundle_25.01
 DontUseNativeFileDialog=true
+SaveAs=/home/angelo/krita
 
 [GradientChooser]
 global/itemSize=medium
@@ -294,7 +295,7 @@ splitterState_1row=\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x02\xff\xff\xff\
 splitterState_2row=\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x03\x00\x00\x01\x17\x00\x00\x00*\xff\xff\xff\xff\x01\xff\xff\xff\xff\x01\x00\x00\x00\x01\x00
 
 [KisShortcutsDialog Settings]
-Dialog Size=600,480
+Dialog Size=655,641
 
 [KisToolSelectRectangular]
 roundCornersX=0
@@ -624,6 +625,11 @@ yPosition=16
 
 [OverviewDocker]
 pinControls=false
+
+[RecentFiles]
+File1[$e]=$HOME/krita/ok.kra
+Name1=ok.kra
+maxRecentFileItems=100
 
 [SelectedTags]
 brushes=All
