@@ -3,7 +3,7 @@
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=1
 GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.key=ab6a2453-af47-4dd9-ab3b-cc0fa67d54aa=/keys.d/X13.key:UUID=8d94928f-84a6-4471-914d-1ccaa639f04d rd.luks.name=ab6a2453-af47-4dd9-ab3b-cc0fa67d54aa=cryptlvm rd.luks.options=discard zswap.enabled=1 zswap.compressor=lz4 zswap.max_pool_percent=10"
+GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.key=ab6a2453-af47-4dd9-ab3b-cc0fa67d54aa=/keys.d/X13.key:UUID=D5AA-0F82 rd.luks.name=ab6a2453-af47-4dd9-ab3b-cc0fa67d54aa=cryptlvm rd.luks.options=discard zswap.enabled=0"
 GRUB_CMDLINE_LINUX=""
 
 # Preload both GPT and MBR modules so that they are not missed
