@@ -6,7 +6,7 @@ GRUB_DEFAULT=0
 #GRUB_HIDDEN_TIMEOUT_QUIET=false
 GRUB_TIMEOUT=1
 GRUB_DISTRIBUTOR="Void"
-GRUB_CMDLINE_LINUX_DEFAULT="rd.lvm.vg=vg0 rd.luks.allow-discards rd.luks.key=/keys.d/T440p.key:UUID=D5AA-0F82 rd.luks.uuid=90adc17a-48f0-4a90-ad13-7cb28d60ba45 rd.luks.name=90adc17a-48f0-4a90-ad13-7cb28d60ba45=cryptlvm loglevel=4"
+GRUB_CMDLINE_LINUX_DEFAULT="rd.lvm.vg=vg0 rd.luks.allow-discards rd.luks.key=/keys.d/T440p.key:UUID=D5AA-0F82 rd.luks.uuid=90adc17a-48f0-4a90-ad13-7cb28d60ba45 rd.luks.name=90adc17a-48f0-4a90-ad13-7cb28d60ba45=cryptlvm loglevel=4 zswap.enabled=1 zswap.max_pool_percent=5"
 # Uncomment to use basic console
 #GRUB_TERMINAL_INPUT="console"
 # Uncomment to disable graphical terminal
