@@ -1,10 +1,10 @@
-browser mpv
-
 # #############
 # Newsboat
 # #############
 
-# Keybinds from "voidrice" config https://github.com/morhetz/gruvbox
+browser mpv
+
+# Keys from "voidrice" config https://github.com/LukeSmithxyz/voidrice
 bind-key j down
 bind-key k up
 bind-key j next articlelist
