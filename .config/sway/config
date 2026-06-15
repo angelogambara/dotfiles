@@ -1,0 +1,28 @@
+# ==============================
+# General Settings
+# ==============================
+
+font pango:Noto Sans Bold 10
+
+input type:keyboard {
+  repeat_delay 250
+  repeat_rate 50
+}
+
+output * bg ~/.cache/setbg fill
+
+bar {
+  position top
+  status_command ~/.config/sway/scripts/i3status
+
+  colors {
+    statusline #ffffff
+    background #323232
+    inactive_workspace #323232 #323232 #5c5c5c
+  }
+}
+
+for_window [app_id="thunar" title="Rename"] floating enable
+for_window [app_id="xarchiver"] floating enable
+
+include ~/.config/sway/conf.d/*

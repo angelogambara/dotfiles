@@ -16,5 +16,10 @@ xrdb -load ~/.config/X11/gruvbox-dark.xresources
 # Set keyboard repeat rate (delay 200ms, repeat 40/sec)
 xset r rate 200 40
 
-# Turn off the display after 3 minutes
-xset dpms 0 0 180
+# Turn off the display after 5 minutes
+# xset dpms 0 0 300
+
+# Turn off X11 screensaver and power management
+xset s off
+xset s noblank
+xset -dpms

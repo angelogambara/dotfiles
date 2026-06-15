@@ -8,7 +8,7 @@ opacity = 0.85
 normal = { family = "FiraCode Nerd Font", style = "Regular" }
 bold = { family = "FiraCode Nerd Font", style = "Bold" }
 italic = { family = "FiraCode Nerd Font", style = "Italic" }
-size = 9.0
+size = 16.0
 
 [keyboard]
 bindings = [

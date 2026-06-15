@@ -1,0 +1,2 @@
+#!/bin/sh
+while echo " $(sb-mail) $(sb-memory) $(sb-cpu) $(sb-bluetooth) $(sb-network) $(sb-brightness) $(sb-volume) $(sb-battery) $(sb-date) "; do sleep 3; done
