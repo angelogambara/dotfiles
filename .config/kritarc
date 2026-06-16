@@ -42,10 +42,11 @@ Krita/Ocio/OcioConfigPath=
 Krita/Ocio/OcioLockColorVisualRepresentation=false
 Krita/Ocio/OcioLutPath=
 Krita/Ocio/UseOcio=false
-LastBackGroundColor=<!DOCTYPE LastBackGroundColor>\n<LastBackGroundColor>\n <RGB b="0" space="sRGB-elle-V2-srgbtrc.icc" r="0" g="0"/>\n</LastBackGroundColor>\n
-LastColorHistory=<!DOCTYPE LastColorHistory>\n<colors/>\n
-LastForeGroundColor=<!DOCTYPE LastForeGroundColor>\n<LastForeGroundColor>\n <RGB b="0" space="sRGB-elle-V2-srgbtrc.icc" r="0" g="0"/>\n</LastForeGroundColor>\n
-LastPreset_-1=b) Basic-5 Size Opacity
+LastBackGroundColor=<!DOCTYPE LastBackGroundColor>\n<LastBackGroundColor>\n <RGB g="1" space="sRGB-elle-V2-srgbtrc.icc" b="1" r="1"/>\n</LastBackGroundColor>\n
+LastColorHistory=<!DOCTYPE LastColorHistory>\n<colors>\n <RGB g="0" space="sRGB-elle-V2-srgbtrc.icc" b="0" r="0"/>\n</colors>\n
+LastEraser_0=a) Eraser Circle
+LastForeGroundColor=<!DOCTYPE LastForeGroundColor>\n<LastForeGroundColor>\n <RGB g="0" space="sRGB-elle-V2-srgbtrc.icc" b="0" r="0"/>\n</LastForeGroundColor>\n
+LastPreset_-1=c) Pencil-1 Hard
 LineSmoothingDelayDistance=50
 LineSmoothingDistanceKeepAspectRatio=true
 LineSmoothingDistanceMax=50
@@ -234,7 +235,7 @@ popuppalette/size=385
 popuppalette/useDynamicSlotCount=true
 popuppalette/usevisualcolorselector=false
 presetStripVisible=true
-presethistory=b) Basic-5 Size Opacity
+presethistory=b) Basic-5 Size Opacity,d) Charcoal Rock Soft - deevad 25.01,a) Eraser Circle,c) Pencil-1 Hard
 renameDuplicatedLayers=true
 renameMergedLayers=true
 renamePastedLayers=true
@@ -269,6 +270,8 @@ useBlackPointCompensation=true
 useCreamyAlphaDarken=true
 useCumulativeUndoRedo=false
 useDefaultColorSpace=false
+useEraserBrushOpacity=true
+useEraserBrushSize=true
 useOnDiskAnimationCacheSwapping=true
 useOpenGLTextureBuffer=true
 useRightMiddleTabletButtonWorkaround=false
@@ -283,7 +286,7 @@ zoomSteps=2
 [File Dialogs]
 Choose the resource library to import=/home/angelo/Downloads/deevad-bundle_25.01
 DontUseNativeFileDialog=true
-SaveAs=/home/angelo/krita
+SaveAs=/home/angelo/gallery-dl/.art.d/WIP/Sketchbook
 
 [GradientChooser]
 global/itemSize=medium
@@ -627,8 +630,8 @@ yPosition=16
 pinControls=false
 
 [RecentFiles]
-File1[$e]=$HOME/krita/ok.kra
-Name1=ok.kra
+File1[$e]=$HOME/gallery-dl/.art.d/WIP/Sketchbook/mpv-shot0001.kra
+Name1=mpv-shot0001.kra
 maxRecentFileItems=100
 
 [SelectedTags]
