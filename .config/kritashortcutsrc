@@ -1,2 +1,8 @@
 [Shortcuts]
-reload_preset_action=Ctrl+Alt+Shift+R
+KisToolSelectOutline=Shift+F
+reload_preset_action=Shift+E
+set_simple_brush_smoothing=Shift+D
+set_stabilizer_brush_smoothing=Shift+S
+set_weighted_brush_smoothing=Shift+W
+show_snap_options_popup=none
+wrap_around_mode=none

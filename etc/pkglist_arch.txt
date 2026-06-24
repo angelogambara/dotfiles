@@ -33,6 +33,7 @@ ffmpegthumbnailer
 firefox
 firewalld
 flameshot
+flite
 fwupd
 gallery-dl
 git-delta
@@ -94,6 +95,10 @@ seahorse
 smartmontools
 sof-firmware
 starship
+swappy
+swaybg
+swayidle
+swaylock
 swtpm
 syncthing
 terminus-font
@@ -117,11 +122,19 @@ vulkan-intel
 vulkan-mesa-layers
 vulkan-radeon
 vulkan-tools
+vulkan-validation-layers
+wayland-utils
 wireguard-tools
 wireless-regdb
 wiremix
+wl-clipboard
+wlr-randr
+wlroots0.19
+wlroots0.20
 xarchiver
 xclip
+xdg-desktop-portal-gtk
+xdg-desktop-portal-wlr
 xdg-user-dirs
 xf86-video-amdgpu
 xfsprogs
@@ -131,6 +144,8 @@ xorg-xkill
 xorg-xrandr
 xorg-xset
 xorg-xsetroot
+xorg-xwayland
+xorg-xwininfo
 yay
 yt-dlp
 zathura-pdf-poppler
