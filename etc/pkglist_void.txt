@@ -1,5 +1,4 @@
 ImageMagick
-PrismLauncher
 acpi
 alacritty
 aria2
@@ -62,6 +61,7 @@ lm_sensors
 lvm2
 man-db
 melonDS
+mesa-dri
 mesa-vulkan-intel
 mgba-qt
 minisign
@@ -69,10 +69,11 @@ mpv
 nasm
 ncdu
 neovim
+newsboat
 nodejs
 notmuch
 noto-fonts-emoji
-openjdk21-jre
+parted
 pass-otp
 patch
 physlock
