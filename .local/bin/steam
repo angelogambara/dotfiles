@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# 1. Set Steam home
+STEAM_HOME=~/.cache/steam
+
+# 2. Ensure directory exists
+mkdir -p "$STEAM_HOME"
+
+# 3. Run Steam binary
+HOME=$STEAM_HOME /usr/bin/steam "$@"
