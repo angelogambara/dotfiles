@@ -1,0 +1,9 @@
+# Move custom-hourly.timer and custom-hourly.service in /etc/systemd/system/
+# then, run systemctl daemon-reload and enable the timer.
+
+[Unit]
+Description=My hourly tasks
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rclone bisync ~/keepass gdrive:

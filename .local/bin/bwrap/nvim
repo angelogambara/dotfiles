@@ -78,7 +78,6 @@ exec bwrap \
 	--ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
 	--ro-bind /run/systemd/resolve /run/systemd/resolve \
 	--bind /tmp /tmp \
-	--bind "$HOME"/vimwiki "$HOME"/vimwiki \
 	--bind "$HOME"/git "$HOME"/git \
 	--bind "$HOME"/.local/bin "$HOME"/.local/bin \
 	--bind "$KNOWN_HOSTS" "$KNOWN_HOSTS" \

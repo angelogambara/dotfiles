@@ -1,7 +1,8 @@
+[commit]
+    gpgsign = true
 [core]
     autocrlf = input
     pager = delta
-
 [delta]
     side-by-side = true
 
@@ -21,5 +22,5 @@
     autoSetupRemote = true
 
 [user]
-	email = angelo@angelogambara.dev
+	email = angelogambaradev@noreply.codeberg.org
 	name = Angelo Gambara

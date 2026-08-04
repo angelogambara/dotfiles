@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# constants
+BASE_URL="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio"
+
+# be informative
+usage() {
+  echo "Usage: $(basename "$0") [-d directory]"
+  exit 1
+}
+
+# parse long options and mixed arguments
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+  -d)
+    if [ -z "$2" ]; then
+      echo "Error: Option -d requires one argument" >&2
+      usage # stop the script
+    fi
+    output_dir="$2" # will check later if valid
+    shift
+    shift
+    ;;
+  -h | --help)
+    usage
+    ;;
+  --)
+    shift # discard '--'
+    # collect args separated by colons
+    for arg in "$@"; do
+      args="${args:+"$args":}${arg}"
+    done
+    set -- # clear
+    break
+    ;;
+  -*)
+    # unsupported option
+    echo "Error: Unknown option: $1" >&2
+    usage # stop the script
+    ;;
+  *)
+    # assume to be an argument
+    args="${args:+"$args":}${1}"
+    shift
+    ;;
+  esac
+done
+
+# fallback to /opt/virtio-win
+output_dir="${output_dir:-/opt/virtio-win}"
+
+#
+# sanitize the options
+#
+
+if [ ! -d "$output_dir" ]; then
+  echo "'$output_dir': Not a directory" >&2
+  exit 1
+fi
+
+if [ ! -x "$output_dir" ]; then
+  echo "'$output_dir': No execute permission" >&2
+  exit 1
+fi
+
+if [ ! -w "$output_dir" ]; then
+  echo "'$output_dir': No write permission" >&2
+  exit 1
+fi
+
+# shorten main
+get_latest_iso_name() {
+  curl -fsSL "$BASE_URL" |
+    grep -Eo 'virtio-win-[0-9.]+.iso' |
+    sort -V |
+    tail -n 1
+}
+
+# main
+curl --output-dir "$output_dir" -LOC - "$BASE_URL/$(get_latest_iso_name)"

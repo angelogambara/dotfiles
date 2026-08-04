@@ -25,6 +25,8 @@ dmenuconfirmcmd() {
 PATH=${PATH}:~/.local/bin
 
 case "$1" in
+"c") read -r f && echo "$f" | xclip -sel clip -in ;;
+
 "e") read -r f && setsid -f thunar "$f" ;;
 "w") read -r f && setbg "$f" ;;
 

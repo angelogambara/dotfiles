@@ -1,95 +1,35 @@
-# ##################
-# Your Workflow
-# ##################
+# ########
+# Custom
+# ########
 
-# --- DIRECTORIES ---
-/home/angelo/.config/heroic
-/home/angelo/.local/share/PrismLauncher
-/home/angelo/.local/share/Steam
-/home/angelo/.local/share/umu
-/home/angelo/bin
-/home/angelo/git
-/home/angelo/ISOs
-/home/angelo/ROMs
-/home/angelo/gallery-dl
-/home/angelo/yt-dlp
+# --- DATA ---
+/usr/share/krita
 
-# ##################
-# User Filesystem
-# ##################
+# --- LIBRARIES ---
+/usr/lib/clang
+/usr/lib/gcc
+/usr/lib/go
+/usr/lib/jvm
+/usr/lib/libLLVM.so*
+/usr/lib/libclang*
 
-# --- BROWSERS ---
-/home/**/chromium/*
-/home/**/google-chrome/*
-/home/**/mozilla/*
-/home/**/Brave-Browser/*
+# ########
+# Static
+# ########
 
-# --- PERSONAL DATA ---
-/home/*/*.kdbx
-/home/*/.gnupg/*
-/home/*/.local/share/gnupg/*
-/home/*/.local/share/keyrings/*
-/home/*/.local/share/pass/*
-/home/*/.pass/*
-/home/*/.ssh/*
-/home/*/.var/*
+# --- CACHE ---
+/var/cache/*
 
-# --- CACHE & STATE ---
-/home/*/.cache/*
-/home/*/.local/share/Trash/*
-/home/*/.local/state/*
+# --- LARGE APPLICATIONS ---
+/usr/lib/firefox
+/var/lib/flatpak
+/var/lib/libvirt
 
-# --- DOWNLOADS & DATA ---
-/home/*/.local/share/go/*
-/home/*/.local/share/fonts/*
-/home/*/.local/share/icons/*
-/home/*/.local/share/nvim/*
-/home/*/.local/share/rustup/*
-
-# --- USER DIRECTORIES ---
-/home/*/Desktop
-/home/*/Documents
-/home/*/Downloads
-/home/*/Music
-/home/*/Pictures
-/home/*/Projects
-/home/*/Public
-/home/*/Templates
-/home/*/Videos
-
-# ##################
-# Root Filesystem
-# ##################
-
-# --- SWAP FILE ---
-# Command: mkswap -U clear --size 4G --file /swapfile
-# Link: https://wiki.archlinux.org/title/Swap
-/swapfile
-
-# --- MISCELLANEOUS ---
+# --- FONTS & ICON PACKS ---
 /usr/share/doc/*
 /usr/share/fonts/*
 /usr/share/icons/*
 /usr/share/locale/*
 
-# --- COMPILERS & TOOLCHAINS ---
-# Command: pacman -S --needed clang gcc go llvm openjdk21-jre
-/usr/lib/clang
-/usr/lib/gcc
-/usr/lib/go
-/usr/lib/jvm
-/usr/lib/llvm*
-/usr/lib/libLLVM.so*
-/usr/lib/libclang*
-
-# --- LARGE APPLICATION DATA ---
-# Command: pacman -S --needed firefox
-/usr/lib/firefox
-/usr/share/krita
-/usr/share/qemu
-
-# --- CACHE & VIRTUALIZATION ---
-# Command: flatpak install flathub com.discordapp.Discord
-/var/cache/*
-/var/lib/flatpak/*
-/var/lib/libvirt/*
+# --- SWAP FILE ---
+/swapfile

@@ -1,4 +1,5 @@
 .config/QtProject.conf
+.config/Signal AppImage
 .config/dconf
 .config/fcitx
 .config/fcitx5
