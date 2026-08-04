@@ -7,6 +7,9 @@
 /home/angelo/.local/share/PrismLauncher
 /home/angelo/.local/share/Steam
 /home/angelo/.local/share/umu
+/home/angelo/bin
+/home/angelo/git
+/home/angelo/ISOs
 /home/angelo/ROMs
 /home/angelo/gallery-dl
 /home/angelo/yt-dlp
@@ -34,14 +37,25 @@
 # --- CACHE & STATE ---
 /home/*/.cache/*
 /home/*/.local/share/Trash/*
-/home/*/.local/share/fonts/*
-/home/*/.local/share/icons/*
 /home/*/.local/state/*
 
 # --- DOWNLOADS & DATA ---
 /home/*/.local/share/go/*
+/home/*/.local/share/fonts/*
+/home/*/.local/share/icons/*
 /home/*/.local/share/nvim/*
 /home/*/.local/share/rustup/*
+
+# --- USER DIRECTORIES ---
+/home/*/Desktop
+/home/*/Documents
+/home/*/Downloads
+/home/*/Music
+/home/*/Pictures
+/home/*/Projects
+/home/*/Public
+/home/*/Templates
+/home/*/Videos
 
 # ##################
 # Root Filesystem
