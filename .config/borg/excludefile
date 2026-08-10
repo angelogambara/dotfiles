@@ -1,29 +1,59 @@
 # ########
-# Custom
+# Home
 # ########
 
-# --- DATA ---
-/usr/share/krita
+# --- USER DIRECTORIES ---
+/home/*/Downloads
+/home/*/Music
+/home/*/Pictures
+/home/*/Videos
+/home/*/ISOs
+/home/*/ROMs
+/home/*/ani-cli
+/home/*/gallery-dl
+/home/*/yt-dlp
+
+# --- DOWNLOADS & DATA ---
+/home/*/.local/share/PrismLauncher
+/home/*/.local/share/Steam
+/home/*/.local/share/fonts
+/home/*/.local/share/go
+/home/*/.local/share/icons
+/home/*/.local/share/nvim
+/home/*/.local/share/rustup
+/home/*/.local/share/umu
+
+# --- BROWSERS ---
+/home/**/chromium
+/home/**/google-chrome
+/home/**/mozilla
+/home/**/Brave-Browser
+
+# --- FLATPAKS ---
+/home/*/.config/heroic
+/home/*/.var
+
+# --- USER CACHE ---
+/home/*/.cache/*
+/home/*/.local/share/Trash/*
+/home/*/.local/state/*
+
+
+# ########
+# Root
+# ########
+
+# --- SWAP FILE ---
+/swapfile
 
 # --- LIBRARIES ---
 /usr/lib/clang
+/usr/lib/firefox
 /usr/lib/gcc
 /usr/lib/go
 /usr/lib/jvm
 /usr/lib/libLLVM.so*
 /usr/lib/libclang*
-
-# ########
-# Static
-# ########
-
-# --- CACHE ---
-/var/cache/*
-
-# --- LARGE APPLICATIONS ---
-/usr/lib/firefox
-/var/lib/flatpak
-/var/lib/libvirt
 
 # --- FONTS & ICON PACKS ---
 /usr/share/doc/*
@@ -31,5 +61,13 @@
 /usr/share/icons/*
 /usr/share/locale/*
 
-# --- SWAP FILE ---
-/swapfile
+# --- CACHE ---
+/var/cache/*
+
+# --- LARGE APPLICATIONS ---
+/var/lib/docker
+/var/lib/flatpak
+/var/lib/libvirt
+/var/lib/mysql
+/var/lib/pgsql
+/var/lib/postgresql

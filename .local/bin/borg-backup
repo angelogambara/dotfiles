@@ -1,0 +1,45 @@
+#!/bin/sh
+# Backup to remote server with borg
+
+# ########
+# Prep
+# ########
+
+# Exit on failure
+set -e
+
+# Set targets
+set -- / /boot /home
+
+# Quickly log errors
+die() {
+  echo >&2 "$1"
+  exit 1
+}
+
+# ########
+# Config
+# ########
+
+# Avoid passing the path to the repo and archive name. Set up host config for
+# backup-server inside /root/.ssh/config.
+# Tip: use a backup user to track remote logins cleanly. If using this setup,
+# remember to include /root/.ssh/id_ed25519_borg into
+# /home/backup/.ssh/authorized_keys
+REPO="backup-server:/var/backups/borg/angelo" # Change with your username
+ARCHIVE="{hostname}-{user}-{now:%Y-%m-%d_%H:%M:%S}"
+
+# If you've downloaded this script separately, you can get a copy of my exclude
+# file at Codeberg -> dotfiles/.config
+EXCLUDE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/borg/excludefile"
+
+# ########
+# Backup
+# ########
+
+# Exit if exclude file doesn't have the right permissions
+[ -r "$EXCLUDE_FILE" ] || die "Error: '$EXCLUDE_FILE': Cannot read file"
+
+# Create backup with borg
+borg create -x --exclude-from "$EXCLUDE_FILE" \
+  -- "$REPO::$ARCHIVE" "$@"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # 1. Set Steam home
-STEAM_HOME=~/.cache/steam
+STEAM_HOME=~/.cache/steam_home
 
 # 2. Ensure directory exists
 mkdir -p "$STEAM_HOME"

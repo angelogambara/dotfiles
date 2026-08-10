@@ -1,8 +1,13 @@
+[alias]
+    gpglg = log --all --graph --decorate --show-signature
+
 [commit]
     gpgsign = true
+
 [core]
     autocrlf = input
     pager = delta
+
 [delta]
     side-by-side = true
 
@@ -22,5 +27,5 @@
     autoSetupRemote = true
 
 [user]
-	email = angelogambaradev@noreply.codeberg.org
-	name = Angelo Gambara
+    email = angelogambaradev@noreply.codeberg.org
+    name = Angelo Gambara

@@ -25,18 +25,21 @@ dmenuconfirmcmd() {
 PATH=${PATH}:~/.local/bin
 
 case "$1" in
-"c") read -r f && echo "$f" | xclip -sel clip -in ;;
-
 "e") read -r f && setsid -f thunar "$f" ;;
 "w") read -r f && setbg "$f" ;;
 
-"r") read -r f && convert -rotate +90 "$f" "$f" ;;
 "R") read -r f && convert -rotate -90 "$f" "$f" ;;
-"f") read -r f && convert -flop "$f" "$f" ;;
+"r") read -r f && convert -rotate +90 "$f" "$f" ;;
+
 "F") read -r f && convert -flip "$f" "$f" ;;
+"f") read -r f && convert -flop "$f" "$f" ;;
+
+"a") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$9); gsub(/_.*$/,"",$9); printf("https://www.pixiv.net/artworks/%s\n", $9)}'; done | uniq | xargs firefox ;;
+"u") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$7); printf("https://www.pixiv.net/users/%s\n", $7)}'; done | uniq | xargs firefox ;;
 
 "0") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
 "d") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
-"a") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$9); gsub(/_.*$/,"",$9); printf("https://www.pixiv.net/artworks/%s\n", $9)}'; done | uniq | xargs firefox ;;
-"u") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$7); printf("https://www.pixiv.net/users/%s\n", $7)}'; done | uniq | xargs firefox ;;
+
+"C") while read -r f; do echo "$f"; done | xclip -sel clip -in ;;
+"c") read -r f && echo "$f" | xclip -sel clip -in ;;
 esac
