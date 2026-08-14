@@ -21,6 +21,11 @@ die() {
 # Config
 # ########
 
+# Command use by borg create get the passphrase used to decrypt the remote
+# repository. Generate a new passphrase from /dev/urandom with this command:
+# (umask 0077; head -c 32 /dev/urandom | base64 -w 0 > ~/.borg_passphrase)
+export BORG_PASSCOMMAND="cat ~/.borg_passphrase"
+
 # Avoid passing the path to the repo and archive name. Set up host config for
 # backup-server inside /root/.ssh/config.
 # Tip: use a backup user to track remote logins cleanly. If using this setup,
@@ -43,3 +48,11 @@ EXCLUDE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/borg/excludefile"
 # Create backup with borg
 borg create -x --exclude-from "$EXCLUDE_FILE" \
   -- "$REPO::$ARCHIVE" "$@"
+
+# Define prune policy (runs after every backup)
+borg prune --list --glob-archives='{hostname}-{user}-*' \
+  --keep-daily=7 --keep-weekly=4 --keep-monthly=3 \
+  -- "$REPO::$ARCHIVE"
+
+# Free space on disk
+borg compact -- "$REPO::$ARCHIVE"
