@@ -38,8 +38,8 @@ get_network() {
     operstate=$(cat "$e"/operstate 2>/dev/null)
 
     if [ "$operstate" = 'up' ]; then
-      icon=""
-      break # Take the first up
+      icon="" # Connection is up
+      break    # Buona la prima (take the first result)
     fi
   done
 
@@ -52,19 +52,15 @@ get_network() {
       operstate=$(cat "$w"/operstate 2>/dev/null)
       flags=$(cat "$w"/flags 2>/dev/null)
 
-      ifname=${w##*/}
-
       if [ "$operstate" = 'up' ]; then
-        if strngth=$(get_signal_strength "$ifname"); then
+        ifname=${w##*/}
+        if ! ping -c 1 archlinux.org >/dev/null; then
+          icon="!" # Wi-Fi timeout
+        elif strngth=$(get_signal_strength "$ifname"); then
           icon=" $strngth" # Strngth
-        else
-          icon="" # Alternative icon
         fi
-      elif [ "$flags" = '0x1003' ]; then
-        icon="" # Disconnected
-      else
-        icon="" # Wi-Fi = down
       fi
+
       break # Buona la prima (take the first)
     done
   fi
