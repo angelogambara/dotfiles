@@ -1,5 +1,6 @@
 [alias]
     gpglg = log --all --graph --decorate --show-signature
+    resign-repo = rebase --exec 'git commit --amend --no-edit --no-date -S'
 
 [commit]
     gpgsign = true

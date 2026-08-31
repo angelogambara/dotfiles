@@ -3,7 +3,7 @@
 		"base-directory": "~/gallery-dl",
 		"cookies": ["firefox"],
 		"pixiv": {
-			"directory": ["{category}", "{user[id]}"]
+			"directory": ["{category}", "users", "{user[id]}"]
 		},
 		"exhentai": {
 			"directory": ["{category}", "g", "{gid}", "{token}"]
