@@ -4,6 +4,7 @@ alacritty
 amd-ucode
 amdgpu_top
 ani-cli-git
+armips-git
 base
 base-devel
 bash-completion
@@ -23,6 +24,7 @@ docker-compose
 dosfstools
 dunst
 efibootmgr
+enchant
 ethtool
 exfatprogs
 expac
@@ -78,7 +80,6 @@ pass-otp
 physlock
 picom
 pipewire-pulse
-prismlauncher
 python-build
 python-installer
 python-mutagen
@@ -93,11 +94,13 @@ reflector
 ripgrep
 rsync
 rtkit
+rustup
 seahorse
+signal-desktop
 smartmontools
 sof-firmware
 starship
-steam
+stow
 swappy
 swaybg
 swayidle
@@ -121,7 +124,9 @@ urlscan
 urlview-xdg-git
 virt-manager
 vis
+vulkan-intel
 vulkan-mesa-layers
+vulkan-radeon
 vulkan-tools
 wayland-utils
 wget
@@ -135,11 +140,13 @@ wlroots0.20
 xarchiver
 xclip
 xdg-desktop-portal-wlr
+xdg-user-dirs
 xf86-video-amdgpu
 xfsprogs
 xorg-server
 xorg-xinit
 xorg-xkill
+xorg-xrandr
 xorg-xset
 xorg-xsetroot
 xorg-xwayland
