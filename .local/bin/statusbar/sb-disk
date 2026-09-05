@@ -13,7 +13,7 @@ get_disks() {
   LAST_PATH="/" # Replace this
 
   # Source theme
-  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+  . sb-theme
 
   # Display with theme
   echo "$PATHS" | while read -r icon path; do

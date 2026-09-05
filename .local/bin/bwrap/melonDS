@@ -1,31 +1,240 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# Launch MelonDS in a sandboxed
 
-mkdir -p "$HOME"/ROMs "$HOME"/.config/melonDS
+# ########
+# Prep
+# ########
 
-exec bwrap \
-  --ro-bind /sys /sys \
-  --ro-bind /usr /usr \
-  --ro-bind /lib /lib \
-  --ro-bind /lib64 /lib64 \
-  --ro-bind /bin /bin \
-  --ro-bind /etc /etc \
-  --dev /dev \
-  --dev-bind /dev/dri /dev/dri \
-  --proc /proc \
-  --tmpfs /tmp \
-  --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
-  --ro-bind "$XAUTHORITY" "$XAUTHORITY" \
-  --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
-  --ro-bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse" \
-  --setenv DISPLAY "$DISPLAY" \
-  --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
-  --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
-  --setenv XAUTHORITY "$XAUTHORITY" \
-  --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
-  --dir "$HOME"/.config/melonDS \
-  --bind "$HOME"/.config/melonDS "$HOME"/.config/melonDS \
-  --dir "$HOME"/ROMs \
-  --bind "$HOME"/ROMs "$HOME"/ROMs \
-  --unshare-all \
-  --die-with-parent \
-  /usr/bin/melonDS
+# Exit if non-zero status or unset env
+set -euo pipefail
+
+# Only canonical binaries
+PATH="/usr/local/bin:/usr/bin"
+
+# ########
+# Checks
+# ########
+
+# Check for melonDS
+MELONDS_BIN="$(command -v melonDS 2>/dev/null || true)"
+if [ -z "$MELONDS_BIN" ]; then
+    echo "Error: melonDS executable not found in PATH" >&2
+    exit 1
+fi
+
+# Check for bwrap
+BWRAP_BIN="$(command -v bwrap 2>/dev/null || true)"
+if [ -z "$BWRAP_BIN" ]; then
+    echo "Error: bwrap executable not found in PATH" >&2
+    exit 1
+fi
+
+# ########
+# Config
+# ########
+
+# Equivalent of %APPDATA%
+XDG_DATA_FALLBACK="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+# Persistent isolated HOME for MelonDS
+MELONDS_HOME="$XDG_DATA_FALLBACK/bwrap/melonDS"
+
+# Configuration inside sandbox
+MELONDS_CONFIG="$XDG_DATA_FALLBACK/bwrap/melonDS/.config/melonDS"
+
+# Ensure the path is created all the way
+mkdir -p "$MELONDS_CONFIG"
+
+# ########
+# Tempdir
+# ########
+
+# If running multiple instances, copy the config in memory
+PID="$(pgrep -x melonDS 2>/dev/null || true)"
+if [ -n "${PID:-}" ]; then
+    # Create an directory in memory
+    TMP_CONFIG="$(mktemp -d "/tmp/melonDS.XXXXXX")"
+
+    # Schedule it for deletion
+    trap 'rm -rf "$TMP_CONFIG"' EXIT
+
+    # Copy the main config
+    cp -r "$MELONDS_CONFIG"/* "$TMP_CONFIG"
+
+    # Instruct bwrap to use the in-memory config
+    MELONDS_CONFIG="$TMP_CONFIG"
+fi
+
+# ########
+# Bwrap
+# ########
+
+# Start with a basic set of arguments
+BWRAP_ARGS=(
+    # System directories
+    --ro-bind /usr /usr
+    --ro-bind /etc /etc
+    --proc /proc
+    --dev /dev
+    --tmpfs /tmp
+
+    # MelonDS sandbox
+    --bind "$MELONDS_HOME" "$HOME"
+    --setenv HOME "$HOME"
+
+    # MelonDS in-memory config
+    --bind "$MELONDS_CONFIG" "$HOME/.config/melonDS"
+
+    # Process and session isolation
+    --unshare-pid
+    --unshare-uts
+    --unshare-ipc
+    --new-session
+    --die-with-parent
+
+    # Explicitly connect to network
+    --share-net
+)
+
+# Optional: symlinks
+[ -d /lib ] && BWRAP_ARGS+=(--symlink /usr/lib /lib)
+[ -d /lib64 ] && BWRAP_ARGS+=(--symlink /usr/lib64 /lib64)
+[ -d /bin ] && BWRAP_ARGS+=(--symlink /usr/bin /bin)
+
+# ########
+# Wayland/X11
+# ########
+
+# Setup graphical session inside sandbox
+if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -e "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+        --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
+        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+    )
+elif [ -n "${DISPLAY:-}" ]; then
+    BWRAP_ARGS+=(--setenv DISPLAY "$DISPLAY")
+
+    if [ -d /tmp/.X11-unix ]; then
+        BWRAP_ARGS+=(--ro-bind /tmp/.X11-unix /tmp/.X11-unix)
+    else
+        echo "Error: Coulnd't find X11-unix socket" >&2
+        exit 1
+    fi
+
+    if [ -n "${XAUTHORITY:-}" ] && [ -f "$XAUTHORITY" ]; then
+        BWRAP_ARGS+=(
+            --ro-bind "$XAUTHORITY" "$XAUTHORITY"
+            --setenv XAUTHORITY "$XAUTHORITY"
+        )
+    elif [ -f "$HOME/.Xauthority" ]; then
+        BWRAP_ARGS+=(--ro-bind "$HOME/.Xauthority" "$HOME/.Xauthority")
+    else
+        echo "Error: Coulnd't find Xauthority on X11" >&2
+        exit 1
+    fi
+else
+    echo "Error: Couldn't find graphical session" >&2
+    exit 1
+fi
+
+# ########
+# DBus
+# ########
+
+# Bind DBus socket
+if [ -e "$XDG_RUNTIME_DIR/bus" ]; then
+    BWRAP_ARGS+=(--setenv DBUS_SESSION_BUS_ADDRESS "$DBUS_SESSION_BUS_ADDRESS")
+
+    BWRAP_ARGS+=(
+        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+        --bind "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR/bus"
+    )
+else
+    echo "Error: Couldn't find session dbus socket" >&2
+    exit 1
+fi
+
+# Optional: System DBus Access
+if [ -e /run/dbus/system_bus_socket ]; then
+    BWRAP_ARGS+=(--ro-bind /run/dbus/system_bus_socket /run/dbus/system_bus_socket)
+else
+    echo "Warning: Couldn't find system bus socket" >&2
+fi
+
+# Also, bind the machine-id
+if [ -f /etc/machine-id ]; then
+    BWRAP_ARGS+=(--ro-bind /etc/machine-id /etc/machine-id)
+else
+    echo "Warning: No /etc/machine-id found" >&2
+fi
+
+# ########
+# Audio
+# ########
+
+# Bind PulseAudio socket if available
+if [ -e "$XDG_RUNTIME_DIR/pulse/native" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/pulse/native" "$XDG_RUNTIME_DIR/pulse/native"
+        --setenv PULSE_SERVER "unix:$XDG_RUNTIME_DIR/pulse/native"
+    )
+else
+    echo "Warning: Couldn't find PulseAudio socket" >&2
+fi
+
+# Bind PipeWire socket if available
+if [ -e "$XDG_RUNTIME_DIR/pipewire-0" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/pipewire-0" "$XDG_RUNTIME_DIR/pipewire-0"
+    )
+else
+    echo "Warning: Couldn't find PipeWire socket" >&2
+fi
+
+# ########
+# Video
+# ########
+
+# Bind GPU device nodes
+[ -d /dev/dri ] && BWRAP_ARGS+=(--dev-bind /dev/dri /dev/dri)
+for nvdev in /dev/nvidia*; do
+    [ -e "$nvdev" ] && BWRAP_ARGS+=(--dev-bind "$nvdev" "$nvdev")
+done
+
+# Bind GPU libraries
+[ -d /usr/share/vulkan ] && BWRAP_ARGS+=(--ro-bind /usr/share/vulkan /usr/share/vulkan)
+[ -d /etc/vulkan ] && BWRAP_ARGS+=(--ro-bind /etc/vulkan /etc/vulkan)
+
+# ########
+# Input
+# ########
+
+# Don't forget to bind the controller(s)
+[ -d /dev/input ] && BWRAP_ARGS+=(--dev-bind /dev/input /dev/input)
+
+# ########
+# ROMs
+# ########
+
+# Bind ROMs directory if exists on the host
+[ -d "$HOME/ROMs" ] && BWRAP_ARGS+=(--bind "$HOME/ROMs" "$HOME/ROMs")
+
+# Bind any parent directory of MelonDS arguments
+for nds in "$@"; do
+    # Skip if it starts with -
+    [[ "$nds" == -* ]] && continue
+
+    # Do the thing
+    PARENT_DIR="$(dirname "$(realpath "$nds")")"
+    if [ -d "$PARENT_DIR" ]; then
+        BWRAP_ARGS+=(--bind "$PARENT_DIR" "$PARENT_DIR")
+    fi
+done
+
+# ########
+# Run
+# ########
+
+# Do not replace using exec
+bwrap "${BWRAP_ARGS[@]}" "$MELONDS_BIN" "$@"

@@ -24,7 +24,7 @@ notify() {
 # ########
 
 # Source theme
-. ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+. sb-theme
 
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case $BLOCK_BUTTON in

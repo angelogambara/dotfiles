@@ -31,7 +31,7 @@ get_cpu() {
   [ -z "$temperature" ] && die "Error: Couldn't get temperature"
 
   # Source theme
-  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+  . sb-theme
 
   # Display with theme
   echo "$theme  $temperature $reset"

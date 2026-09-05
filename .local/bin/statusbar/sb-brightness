@@ -24,7 +24,7 @@ get_brightness() {
   [ -z "$brightness" ] && die "Error: Couldn't get the brightness"
 
   # Source theme
-  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+  . sb-theme
 
   # Display with theme
   echo "$theme  $brightness $reset"

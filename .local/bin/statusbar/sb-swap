@@ -7,7 +7,7 @@
 swap=$(free -h | awk '/Swap: / {print $3}')
 
 # Source theme
-. ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+. sb-theme
 
 # Display with theme
 [ -n "$swap" ] && echo "$theme  $swap $reset"

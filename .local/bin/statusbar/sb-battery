@@ -94,7 +94,7 @@ get_batteries() {
     fi
 
     # Source theme
-    . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+    . sb-theme
 
     # Load up the progress bar
     progress=$(get_progress "$capacity")

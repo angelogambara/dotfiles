@@ -5,7 +5,7 @@
 # ########
 
 # Source theme
-. ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+. sb-theme
 
 # Display with theme
 echo "$theme  $(free -h | awk '/Mem:/ {print $3}') $reset"

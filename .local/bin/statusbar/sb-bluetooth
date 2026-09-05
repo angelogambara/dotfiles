@@ -30,7 +30,7 @@ get_bluetooth() {
   fi
 
   # Source theme
-  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+  . sb-theme
 
   # Display with theme
   echo "$theme $icon $reset"

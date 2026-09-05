@@ -63,7 +63,3 @@ x-scheme-handler/http=firefox.desktop
 x-scheme-handler/https=firefox.desktop
 x-scheme-handler/info=yelp.desktop
 x-scheme-handler/man=yelp.desktop
-application/x-zerosize=st-nvim.desktop
-
-[Added Associations]
-application/x-zerosize=st-nvim.desktop;

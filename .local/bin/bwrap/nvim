@@ -1,18 +1,25 @@
 #!/bin/sh
 
+# Configuration
+PROJECT_ROOT=$HOME/git
+SHELL_ROOT=$HOME/bin
+
 # Generate a read-only list of known hosts, to clone plugins from
 # Parameters: list of FQDNs
 git_ssh_prepare() {
 	# Ensure parent direcotory exists
-	: "${KNOWN_HOSTS:=$HOME/.ssh/bwrap_hosts}"
-	mkdir -p "${KNOWN_HOSTS%/*}"
+	: "${BWRAP_HOSTS:=$HOME/.ssh/bwrap_hosts}"
+	mkdir -p -m 700 "${BWRAP_HOSTS%/*}"
+
+	# Configure SSH line
+	GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$BWRAP_HOSTS"
 
 	# This loop will run only as needed
 	for website in "$@"; do
 		# Skip if website is known
-		if ! grep -q "$website" "$KNOWN_HOSTS"; then
-			if ! ssh-keyscan "$website" >> "$KNOWN_HOSTS"; then
-				echo >&2 "Error: Cannot touch $KNOWN_HOSTS"
+		if ! grep -q "$website" "$BWRAP_HOSTS"; then
+			if ! ssh-keyscan "$website" >>"$BWRAP_HOSTS"; then
+				echo >&2 "Error: Cannot touch $BWRAP_HOSTS"
 				exit 1
 			fi
 		fi
@@ -59,44 +66,52 @@ esac
 # Add sites to clone plugins from
 git_ssh_prepare github.com gitlab.com codeberg.org
 
-# Configure SSH line
-GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$KNOWN_HOSTS"
-
 # Ensure source paths exist
-mkdir -p "$XDG_RUNTIME_DIR"/nvim
+mkdir -p "$PROJECT_ROOT" \
+	"$SHELL_ROOT" \
+	"$XDG_CACHE_HOME"/antidote \
+	"$XDG_CACHE_HOME"/nvim \
+	"$XDG_CACHE_HOME"/zsh \
+	"$XDG_CONFIG_HOME" \
+	"$XDG_DATA_HOME"/nvim \
+	"$XDG_DATA_HOME"/zsh \
+	"$XDG_RUNTIME_DIR"/dconf \
+	"$XDG_RUNTIME_DIR"/nvim \
+	"$XDG_RUNTIME_DIR"/zsh \
+	"$XDG_STATE_HOME"/nvim
 
 # Execute the sandbox
 exec bwrap \
 	--ro-bind /usr /usr \
-	--ro-bind /lib /lib \
-	--ro-bind /lib64 /lib64 \
-	--ro-bind /bin /bin \
 	--ro-bind /etc /etc \
-	--dev /dev \
+	--symlink /usr/lib /lib \
+	--symlink /usr/lib64 /lib64 \
+	--symlink /usr/bin /bin \
 	--proc /proc \
-	--ro-bind "$XAUTHORITY" "$XAUTHORITY" \
-	--ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
+	--dev /dev \
+	--tmpfs /tmp \
 	--ro-bind /run/systemd/resolve /run/systemd/resolve \
-	--bind /tmp /tmp \
-	--bind "$HOME"/git "$HOME"/git \
-	--bind "$HOME"/.local/bin "$HOME"/.local/bin \
-	--bind "$KNOWN_HOSTS" "$KNOWN_HOSTS" \
+	--ro-bind /tmp/.X11-unix /tmp/.X11-unix \
+	--ro-bind "$XDG_RUNTIME_DIR/${WAYLAND_DISPLAY:-bus}" "$XDG_RUNTIME_DIR/${WAYLAND_DISPLAY:-bus}" \
+	--ro-bind "$XAUTHORITY" "$XAUTHORITY" \
+	--bind "$BWRAP_HOSTS" "$BWRAP_HOSTS" \
+	--bind "$PROJECT_ROOT" "$PROJECT_ROOT" \
+	--bind "$SHELL_ROOT" "$SHELL_ROOT" \
+	--bind "$XDG_CACHE_HOME"/antidote "$XDG_CACHE_HOME"/antidote \
+	--bind "$XDG_CACHE_HOME"/nvim "$XDG_CACHE_HOME"/nvim \
+	--bind "$XDG_CACHE_HOME"/zsh "$XDG_CACHE_HOME"/zsh \
 	--bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME" \
 	--bind "$XDG_DATA_HOME"/nvim "$XDG_DATA_HOME"/nvim \
 	--bind "$XDG_DATA_HOME"/zsh "$XDG_DATA_HOME"/zsh \
-	--bind "$XDG_CACHE_HOME"/nvim "$XDG_CACHE_HOME"/nvim \
-	--bind "$XDG_CACHE_HOME"/zsh "$XDG_CACHE_HOME"/zsh \
-	--bind "$XDG_CACHE_HOME"/antidote "$XDG_CACHE_HOME"/antidote \
 	--bind "$XDG_RUNTIME_DIR"/nvim "$XDG_RUNTIME_DIR"/nvim \
 	--bind "$XDG_RUNTIME_DIR"/zsh "$XDG_RUNTIME_DIR"/zsh \
-	--bind "$XDG_RUNTIME_DIR"/dconf "$XDG_RUNTIME_DIR"/dconf \
 	--bind "$XDG_STATE_HOME"/nvim "$XDG_STATE_HOME"/nvim \
 	--setenv GIT_SSH_COMMAND "$GIT_SSH_COMMAND" \
-	--setenv DISPLAY "$DISPLAY" \
-	--setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
-	--setenv XAUTHORITY "$XAUTHORITY" \
 	--setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
+	--setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
+	--setenv DISPLAY "$DISPLAY" \
+	--setenv XAUTHORITY "$XAUTHORITY" \
 	--unshare-all \
 	--share-net \
 	--die-with-parent \
-	/usr/bin/nvim "$@"
+	-- /usr/bin/nvim "$@"

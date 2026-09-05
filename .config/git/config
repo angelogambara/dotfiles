@@ -1,6 +1,6 @@
 [alias]
-    gpglg = log --all --graph --decorate --show-signature
-    resign-repo = rebase --exec 'git commit --amend --no-edit --no-date -S'
+    rbau = rebase -i --exec 'git commit --amend --no-edit --reset-author'
+    rbgs = rebase -i --exec 'git commit --amend --no-edit --gpg-sign'
 
 [commit]
     gpgsign = true

@@ -24,7 +24,7 @@ get_volume() {
   [ -z "$volume_sink" ] && die "Error: Couldn't get the volume"
 
   # Source theme
-  . ~/.local/bin/statusbar/themes/gruvbox-dark.sh
+  . sb-theme
 
   # Display mute state and skip volume
   if echo "$volume_sink" | grep -q MUTED; then

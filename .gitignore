@@ -1,6 +1,7 @@
 .config/QtProject.conf
-.config/Signal AppImage
+.config/Signal
 .config/dconf
+.config/dolphin-emu
 .config/fcitx
 .config/fcitx5
 .config/flameshot
@@ -18,3 +19,10 @@
 .config/rclone
 .config/xarchiver
 .config/xfce4
+
+# Currently migrating
+.config/nvim
+.config/zsh
+
+# Temporary
+.config/skytemple
