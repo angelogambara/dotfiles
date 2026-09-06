@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Launch MelonDS in a sandboxed
+# Launch Azahar in a sandboxed
 
 # ########
 # Prep
@@ -15,10 +15,10 @@ PATH="/usr/local/bin:/usr/bin"
 # Checks
 # ########
 
-# Check for melonDS
-MELONDS_BIN="$(command -v melonDS 2>/dev/null || true)"
-if [ -z "$MELONDS_BIN" ]; then
-    echo "Error: melonDS executable not found in PATH" >&2
+# Check for azahar
+AZAHAR_BIN="$(command -v azahar 2>/dev/null || true)"
+if [ -z "$AZAHAR_BIN" ]; then
+    echo "Error: azahar executable not found in PATH" >&2
     exit 1
 fi
 
@@ -36,33 +36,33 @@ fi
 # Equivalent of %APPDATA%
 XDG_DATA_FALLBACK="${XDG_DATA_HOME:-$HOME/.local/share}"
 
-# Persistent isolated HOME for MelonDS
-MELONDS_HOME="$XDG_DATA_FALLBACK/bwrap/melonDS"
+# Persistent isolated HOME for Azahar
+AZAHAR_HOME="$XDG_DATA_FALLBACK/bwrap/azahar"
 
 # Configuration inside sandbox
-MELONDS_CONFIG="$XDG_DATA_FALLBACK/bwrap/melonDS/.config/melonDS"
+AZAHAR_CONFIG="$XDG_DATA_FALLBACK/bwrap/azahar/.config/azahar-emu"
 
 # Ensure the path is created all the way
-mkdir -p "$MELONDS_CONFIG"
+mkdir -p "$AZAHAR_CONFIG"
 
 # ########
 # Tempdir
 # ########
 
 # If running multiple instances, copy the config in memory
-PID="$(pgrep -x melonDS 2>/dev/null || true)"
+PID="$(pgrep -x azahar 2>/dev/null || true)"
 if [ -n "${PID:-}" ]; then
     # Create an directory in memory
-    TMP_CONFIG="$(mktemp -d "/tmp/melonDS.XXXXXX")"
+    TMP_CONFIG="$(mktemp -d "/tmp/azahar.XXXXXX")"
 
     # Schedule it for deletion
     trap 'rm -rf "$TMP_CONFIG"' EXIT
 
     # Copy the main config
-    cp -r "$MELONDS_CONFIG"/* "$TMP_CONFIG"
+    cp -r "$AZAHAR_CONFIG"/* "$TMP_CONFIG"
 
     # Instruct bwrap to use the in-memory config
-    MELONDS_CONFIG="$TMP_CONFIG"
+    AZAHAR_CONFIG="$TMP_CONFIG"
 fi
 
 # ########
@@ -79,12 +79,12 @@ BWRAP_ARGS=(
     --dev /dev
     --tmpfs /tmp
 
-    # MelonDS sandbox
-    --bind "$MELONDS_HOME" "$HOME"
+    # Azahar sandbox
+    --bind "$AZAHAR_HOME" "$HOME"
     --setenv HOME "$HOME"
 
-    # MelonDS in-memory config
-    --bind "$MELONDS_CONFIG" "$HOME/.config/melonDS"
+    # Azahar in-memory config
+    --bind "$AZAHAR_CONFIG" "$HOME/.config/azahar"
 
     # Process and session isolation
     --unshare-pid
@@ -227,7 +227,7 @@ fi
 # Bind ROMs directory if exists on the host
 [ -d "$HOME/ROMs" ] && BWRAP_ARGS+=(--bind "$HOME/ROMs" "$HOME/ROMs")
 
-# Bind any parent directory of MelonDS arguments
+# Bind any parent directory of Azahar arguments
 for nds in "$@"; do
     # Skip if it starts with -
     [[ "$nds" == -* ]] && continue
@@ -244,4 +244,4 @@ done
 # ########
 
 # Keep child process running (exec triggers trap early)
-bwrap "${BWRAP_ARGS[@]}" "$MELONDS_BIN" "$@"
+bwrap "${BWRAP_ARGS[@]}" "$AZAHAR_BIN" "$@"
