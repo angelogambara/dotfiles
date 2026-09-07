@@ -1,35 +1,257 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# Launch Prism Launcher in a sandboxed
 
-mkdir -p "$HOME"/.local/share/PrismLauncher
+# ########
+# Prep
+# ########
 
-exec bwrap \
-  --ro-bind /sys /sys \
-  --ro-bind /usr /usr \
-  --ro-bind /lib /lib \
-  --ro-bind /lib64 /lib64 \
-  --ro-bind /bin /bin \
-  --ro-bind /etc /etc \
-  --dev /dev \
-  --dev-bind /dev/dri /dev/dri \
-  --proc /proc \
-  --tmpfs /tmp \
-  --ro-bind /run/systemd/resolve /run/systemd/resolve \
-  --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
-  --ro-bind "$XAUTHORITY" "$XAUTHORITY" \
-  --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
-  --ro-bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse" \
-  --setenv DISPLAY "$DISPLAY" \
-  --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY" \
-  --setenv XAUTHORITY "$XAUTHORITY" \
-  --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR" \
-  --setenv PULSE_SERVER "unix:/$XDG_RUNTIME_DIR/pulse/native" \
-  --dir "$HOME"/.local/share/PrismLauncher \
-  --bind "$HOME"/.local/share/PrismLauncher "$HOME"/.local/share/PrismLauncher \
-  --setenv MESA_GLTHREAD true \
-  --unshare-user \
-  --unshare-pid \
-  --unshare-uts \
-  --unshare-cgroup \
-  --share-net \
-  --die-with-parent \
-  /usr/bin/prismlauncher "$@"
+# Exit if non-zero status or unset env
+set -euo pipefail
+
+# Only canonical binaries
+PATH="/usr/local/bin:/usr/bin"
+
+# ########
+# Checks
+# ########
+
+# Check for prismlauncher
+PRISMLAUNCHER_BIN="$(command -v prismlauncher 2>/dev/null || true)"
+if [ -z "$PRISMLAUNCHER_BIN" ]; then
+    echo "Error: prismlauncher executable not found in PATH" >&2
+    exit 1
+fi
+
+# Check for bwrap
+BWRAP_BIN="$(command -v bwrap 2>/dev/null || true)"
+if [ -z "$BWRAP_BIN" ]; then
+    echo "Error: bwrap executable not found in PATH" >&2
+    exit 1
+fi
+
+# ########
+# Config
+# ########
+
+# Equivalent of %APPDATA%
+XDG_DATA_FALLBACK="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+# Persistent isolated HOME for Prism Launcher
+PRISMLAUNCHER_HOME="$XDG_DATA_FALLBACK/bwrap/prismlauncher"
+
+# Configuration inside sandbox
+# PRISMLAUNCHER_CONFIG="$XDG_DATA_FALLBACK/bwrap/prismlauncher/.config/prismlauncher"
+
+# Ensure the path is created all the way
+mkdir -p "$PRISMLAUNCHER_HOME"
+
+# ########
+# Tempdir
+# ########
+
+# If running multiple instances, copy the config in memory
+# PID="$(pgrep -x prismlauncher 2>/dev/null || true)"
+# if [ -n "${PID:-}" ]; then
+#     # Create an directory in memory
+#     TMP_CONFIG="$(mktemp -d "/tmp/prismlauncher.XXXXXX")"
+#
+#     # Schedule it for deletion
+#     trap 'rm -rf "$TMP_CONFIG"' EXIT
+#
+#     # Copy the main config
+#     cp -r "$PRISMLAUNCHER_CONFIG"/* "$TMP_CONFIG"
+#
+#     # Instruct bwrap to use the in-memory config
+#     PRISMLAUNCHER_CONFIG="$TMP_CONFIG"
+# fi
+
+# ########
+# Bwrap
+# ########
+
+# Start with a basic set of arguments
+BWRAP_ARGS=(
+    # System directories
+    --ro-bind /usr /usr
+    --ro-bind /sys /sys
+    --ro-bind /etc /etc
+    --proc /proc
+    --dev /dev
+    --bind /tmp /tmp
+
+    # Prism Launcher sandbox
+    --bind "$PRISMLAUNCHER_HOME" "$HOME"
+    --setenv HOME "$HOME"
+
+    # Prism Launcher in-memory config
+    # --bind "$PRISMLAUNCHER_CONFIG" "$HOME/.config/prismlauncher"
+
+    # Process and session isolation
+    --unshare-pid
+    --unshare-uts
+    --unshare-ipc
+    --new-session
+    --die-with-parent
+
+    # Explicitly connect to network
+    --share-net
+)
+
+# Optional: symlinks
+[ -d /lib ] && BWRAP_ARGS+=(--symlink /usr/lib /lib)
+[ -d /lib64 ] && BWRAP_ARGS+=(--symlink /usr/lib64 /lib64)
+[ -d /bin ] && BWRAP_ARGS+=(--symlink /usr/bin /bin)
+
+# ########
+# Wayland/X11
+# ########
+
+# Setup graphical session inside sandbox
+if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -e "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+        --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
+        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+    )
+elif [ -n "${DISPLAY:-}" ]; then
+    BWRAP_ARGS+=(--setenv DISPLAY "$DISPLAY")
+
+    if [ -d /tmp/.X11-unix ]; then
+        BWRAP_ARGS+=(--ro-bind /tmp/.X11-unix /tmp/.X11-unix)
+    else
+        echo "Error: Coulnd't find X11-unix socket" >&2
+        exit 1
+    fi
+
+    if [ -n "${XAUTHORITY:-}" ] && [ -f "$XAUTHORITY" ]; then
+        BWRAP_ARGS+=(
+            --ro-bind "$XAUTHORITY" "$XAUTHORITY"
+            --setenv XAUTHORITY "$XAUTHORITY"
+        )
+    elif [ -f "$HOME/.Xauthority" ]; then
+        BWRAP_ARGS+=(--ro-bind "$HOME/.Xauthority" "$HOME/.Xauthority")
+    else
+        echo "Error: Coulnd't find Xauthority on X11" >&2
+        exit 1
+    fi
+else
+    echo "Error: Couldn't find graphical session" >&2
+    exit 1
+fi
+
+# ########
+# Systemd
+# ########
+
+# Needed by systemd-resolvd stub to make DNS requests
+[ -d /run/systemd/resolve ] && BWRAP_ARGS+=(--ro-bind /run/systemd/resolve /run/systemd/resolve)
+
+# ########
+# DBus
+# ########
+
+# Bind DBus socket
+if [ -e "$XDG_RUNTIME_DIR/bus" ]; then
+    BWRAP_ARGS+=(--setenv DBUS_SESSION_BUS_ADDRESS "$DBUS_SESSION_BUS_ADDRESS")
+
+    BWRAP_ARGS+=(
+        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+        --bind "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR/bus"
+    )
+else
+    echo "Error: Couldn't find session dbus socket" >&2
+    exit 1
+fi
+
+# Optional: System DBus Access
+if [ -e /run/dbus/system_bus_socket ]; then
+    BWRAP_ARGS+=(--ro-bind /run/dbus/system_bus_socket /run/dbus/system_bus_socket)
+else
+    echo "Warning: Couldn't find system bus socket" >&2
+fi
+
+# Also, bind the machine-id
+if [ -f /etc/machine-id ]; then
+    BWRAP_ARGS+=(--ro-bind /etc/machine-id /etc/machine-id)
+else
+    echo "Warning: No /etc/machine-id found" >&2
+fi
+
+# ########
+# Audio
+# ########
+
+# Bind PulseAudio socket if available
+if [ -e "$XDG_RUNTIME_DIR/pulse/native" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/pulse/native" "$XDG_RUNTIME_DIR/pulse/native"
+        --setenv PULSE_SERVER "unix:$XDG_RUNTIME_DIR/pulse/native"
+    )
+else
+    echo "Warning: Couldn't find PulseAudio socket" >&2
+fi
+
+# Bind PipeWire socket if available
+if [ -e "$XDG_RUNTIME_DIR/pipewire-0" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/pipewire-0" "$XDG_RUNTIME_DIR/pipewire-0"
+    )
+else
+    echo "Warning: Couldn't find PipeWire socket" >&2
+fi
+
+# ########
+# Video
+# ########
+
+# Set cache directory
+: "${XDG_CACHE_HOME:-$HOME/.cache}"
+
+# Bind GPU device nodes
+[ -d /dev/dri ] && BWRAP_ARGS+=(--dev-bind /dev/dri /dev/dri)
+for nvdev in /dev/nvidia*; do
+    [ -e "$nvdev" ] && BWRAP_ARGS+=(--dev-bind "$nvdev" "$nvdev")
+done
+
+# Bind Mesa cache directory
+if [ -d "$XDG_CACHE_HOME/mesa_shader_cache" ]; then
+    BWRAP_ARGS+=(--bind "$XDG_CACHE_HOME/mesa_shader_cache" "$XDG_CACHE_HOME/mesa_shader_cache")
+fi
+
+# Bind RADV cache directory
+if [ -d "$XDG_CACHE_HOME/radv_builtin_shaders" ]; then
+    BWRAP_ARGS+=(--bind "$XDG_CACHE_HOME/radv_builtin_shaders" "$XDG_CACHE_HOME/radv_builtin_shaders")
+fi
+
+# ########
+# Input
+# ########
+
+# Don't forget to bind the controller(s)
+[ -d /dev/input ] && BWRAP_ARGS+=(--dev-bind /dev/input /dev/input)
+
+# ########
+# Games
+# ########
+
+# Bind Games directory if exists on the host
+[ -d "$HOME/Games" ] && BWRAP_ARGS+=(--bind "$HOME/Games" "$HOME/Games")
+
+# Bind any parent directory of Prism Launcher arguments
+# for nds in "$@"; do
+#     # Skip if it starts with -
+#     [[ "$nds" == -* ]] && continue
+#
+#     # Do the thing
+#     PARENT_DIR="$(dirname "$(realpath "$nds")")"
+#     if [ -d "$PARENT_DIR" ]; then
+#         BWRAP_ARGS+=(--bind "$PARENT_DIR" "$PARENT_DIR")
+#     fi
+# done
+
+# ########
+# Run
+# ########
+
+# Keep child process running (exec triggers trap early)
+bwrap "${BWRAP_ARGS[@]}" "$PRISMLAUNCHER_BIN" "$@"
