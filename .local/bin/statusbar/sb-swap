@@ -10,4 +10,4 @@ swap=$(free -h | awk '/Swap: / {print $3}')
 . sb-theme
 
 # Display with theme
-[ -n "$swap" ] && echo "$theme  $swap $reset"
+[ -n "$swap" ] && echo "$theme  $swap $reset"

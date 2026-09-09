@@ -55,9 +55,9 @@ get_network() {
       if [ "$operstate" = 'up' ]; then
         ifname=${w##*/}
         if ! ping -c 1 archlinux.org >/dev/null; then
-          icon="!" # Wi-Fi timeout
+          icon=" 0%" # Wi-Fi timeout
         elif strngth=$(get_signal_strength "$ifname"); then
-          icon=" $strngth" # Strngth
+          icon=" $strngth" # Strngth
         fi
       fi
 

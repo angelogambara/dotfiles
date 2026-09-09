@@ -8,8 +8,7 @@ get_disks() {
   # Output will be in reverse order
   PATHS="\
    /home
-   /boot
-   /"
+   /"
   LAST_PATH="/" # Replace this
 
   # Source theme

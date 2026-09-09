@@ -20,16 +20,6 @@ notify() {
       "Battery" "$1"
 }
 
-super() {
-  if command_exists doas; then
-    doas "$@"
-  elif command_exists sudo; then
-    sudo "$@"
-  else
-    die "Error: Unknown escalation tool"
-  fi
-}
-
 # ########
 # Blocks
 # ########
@@ -117,15 +107,7 @@ get_batteries() {
 # Handle mouse clicks for the status bar (statuscmd patch for dwm)
 case "$BLOCK_BUTTON" in
 1) # Left click
-  command_exists tlp &&
-    notify "$(super tlp fullcharge)"
-  ;;
-2) # Middle click
   command_exists acpi && notify "$(acpi -b)"
-  ;;
-3) # Right button
-  command_exists tlp &&
-    notify "$(super tlp setcharge 70 90)"
   ;;
 esac
 
