@@ -197,24 +197,11 @@ fi
 # Video
 # ########
 
-# Set cache directory
-: "${XDG_CACHE_HOME:-$HOME/.cache}"
-
 # Bind GPU device nodes
 [ -d /dev/dri ] && BWRAP_ARGS+=(--dev-bind /dev/dri /dev/dri)
 for nvdev in /dev/nvidia*; do
     [ -e "$nvdev" ] && BWRAP_ARGS+=(--dev-bind "$nvdev" "$nvdev")
 done
-
-# Bind Mesa cache directory
-if [ -d "$XDG_CACHE_HOME/mesa_shader_cache" ]; then
-    BWRAP_ARGS+=(--bind "$XDG_CACHE_HOME/mesa_shader_cache" "$XDG_CACHE_HOME/mesa_shader_cache")
-fi
-
-# Bind RADV cache directory
-if [ -d "$XDG_CACHE_HOME/radv_builtin_shaders" ]; then
-    BWRAP_ARGS+=(--bind "$XDG_CACHE_HOME/radv_builtin_shaders" "$XDG_CACHE_HOME/radv_builtin_shaders")
-fi
 
 # ########
 # Input
@@ -222,6 +209,9 @@ fi
 
 # Don't forget to bind the controller(s)
 [ -d /dev/input ] && BWRAP_ARGS+=(--dev-bind /dev/input /dev/input)
+
+# Stop listening to udev events and poll /dev/input directly
+BWRAP_ARGS+=(--setenv SDL_JOYSTICK_DISABLE_UDEV 1)
 
 # ########
 # ROMs
