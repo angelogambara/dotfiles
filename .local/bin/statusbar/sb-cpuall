@@ -1,0 +1,95 @@
+#!/bin/sh
+
+# ########
+# Helper
+# ########
+
+die() {
+  echo >&2 "$1"
+  exit 1
+}
+
+command_exists() {
+  command -v "$@" >/dev/null 2>&1 || return 1
+}
+
+# ########
+# Blocks
+# ########
+
+get_cpuall() {
+  read -r _ user nice system idle iowait irq softirq steal _ </proc/stat
+
+  util=$((user + nice + system + idle + iowait + irq + softirq + steal))
+  diff_idle=$((idle - prev_idle))
+  diff_util=$((util - prev_util))
+
+  # Utilization (avoid dividing by zero on first run)
+  if [ "$diff_util" -gt 0 ]; then
+    cpu_util=$((100 * (diff_util - diff_idle) / diff_util))%
+  else
+    cpu_util="0%"
+  fi
+
+  if grep -q Intel /proc/cpuinfo; then
+    temp=$(sensors | awk '/Package id 0/ {print $4}')
+  else
+    temp=$(sensors | awk '/Tctl/ {print $2}')
+  fi
+
+  memory=$(free -h | awk '/Mem:/ {print $3}')B
+
+  # Source theme
+  . sb-theme
+
+  # Display with theme
+  echo "$theme  $cpu_util  $memory  $temp $reset"
+
+  # Update count
+  echo "$idle" >"$CPU_IDLE_FILE"
+  echo "$util" >"$CPU_UTIL_FILE"
+}
+
+# ########
+# Main
+# ########
+
+CPU_DETAILS_FILE="/dev/shm/dwmblocks_cpu_details"
+CPU_IDLE_FILE="/dev/shm/dwmblocks_cpu_idle"
+CPU_UTIL_FILE="/dev/shm/dwmblocks_cpu_util"
+
+# Read prev_idle
+if [ -f "$CPU_IDLE_FILE" ]; then
+  prev_idle="$(cat "$CPU_IDLE_FILE")"
+else
+  prev_idle=1
+fi
+# Read prev_util
+if [ -f "$CPU_UTIL_FILE" ]; then
+  prev_util="$(cat "$CPU_UTIL_FILE")"
+else
+  prev_util=1
+fi
+
+# Exit early if dependencies are missing
+command_exists sensors || die "Error: sensors executable not found in PATH"
+
+# Handle mouse clicks for the status bar (statuscmd patch for dwm)
+case $BLOCK_BUTTON in
+1) # Left click
+  command_exists "$TERMINAL" && "$TERMINAL" -e watch -n 1 sensors
+  ;;
+2) # Middle click
+  if [ -f "$CPU_DETAILS_FILE" ]; then
+    rm "$CPU_DETAILS_FILE"
+  else
+    touch "$CPU_DETAILS_FILE"
+  fi
+  ;;
+3) # Left click
+  command_exists "$TERMINAL" && "$TERMINAL" -e btop
+  ;;
+esac
+
+# Refresh block
+get_cpuall

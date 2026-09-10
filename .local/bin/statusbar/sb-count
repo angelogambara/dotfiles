@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# ########
+# Helper
+# ########
+
+count() {
+  # Read count
+  if [ -f "$COUNT_FILE" ]; then
+    COUNT="$(cat "$COUNT_FILE")"
+  else
+    COUNT=1
+  fi
+
+  # Update count
+  echo $((COUNT + STEP)) >"$COUNT_FILE"
+
+  # Source theme
+  . sb-theme
+
+  # Display with theme
+  echo "$theme * $((COUNT + STEP)) $reset"
+}
+
+# ########
+# Main
+# ########
+
+COUNT_FILE="/dev/shm/dwmblocks_count"
+
+# Handle mouse clicks for the status bar (statuscmd patch for dwm)
+case $BLOCK_BUTTON in
+1) # Left click
+  STEP=+1
+  ;;
+2) # Middle click
+  rm "$COUNT_FILE"
+  ;;
+3) # Right click
+  STEP=-1
+  ;;
+4) # Scroll up
+  STEP=+25
+  ;;
+5) # Scroll down
+  STEP=-25
+  ;;
+esac
+
+count "${STEP-0}"

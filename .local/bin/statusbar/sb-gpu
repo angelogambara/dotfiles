@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# ########
+# Helper
+# ########
+
+command_exists() {
+  command -v "$@" >/dev/null 2>&1 || return 1
+}
+
+# ########
+# Blocks
+# ########
+
+get_amdgpu() {
+  for card in /sys/class/drm/card?; do
+    [[ -e "$card/device/mem_info_vis_vram_used" ]] || continue
+
+    util="$(<"$card/device/gpu_busy_percent")%"
+
+    mib=$(($(<"$card/device/mem_info_vis_vram_used") / 1048576))
+    vram_used="$((mib / 1024)).$(((mib % 1024) * 10 / 1024))GiB"
+
+    for hwmon in "$card"/device/hwmon/hwmon*; do
+      if [[ -f "$hwmon/temp1_input" ]]; then
+        milli_t=$(<"$hwmon/temp1_input")
+        temp="$((milli_t / 1000)).$(((milli_t % 1000) / 100))°C"
+      fi
+
+      if [[ -f "$hwmon/in0_input" ]]; then
+        milli_v=$(<"$hwmon/in0_input")
+        volt="$((milli_v / 1000)).$(((milli_v % 1000) / 100))V"
+      fi
+    done
+
+    # Source theme
+    . sb-theme
+
+    # Display with theme
+    if [ -f "$GPU_DETAILS_FILE" ]; then
+      echo "$theme  $util  $vram_used  $temp  $volt $reset"
+    else
+      echo "$theme  $util  $vram_used $reset"
+    fi
+  done
+}
+
+# ########
+# Main
+# ########
+
+GPU_DETAILS_FILE="/dev/shm/dwmblocks_gpu_details"
+
+# Handle mouse clicks for the status bar (statuscmd patch for dwm)
+case $BLOCK_BUTTON in
+1) # Left click
+  command_exists "$TERMINAL" &&
+    "$TERMINAL" -e amdgpu_top
+  ;;
+2) # Middle click
+  if [ -f "$GPU_DETAILS_FILE" ]; then
+    rm "$GPU_DETAILS_FILE"
+  else
+    touch "$GPU_DETAILS_FILE"
+  fi
+  ;;
+esac
+
+# Refresh block
+get_amdgpu

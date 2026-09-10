@@ -18,28 +18,36 @@ command_exists() {
 # ########
 
 get_cpu() {
-  command_exists sensors ||
-    die "Error: Command not found: sensors"
-
+  # Temperature
   if grep -q Intel /proc/cpuinfo; then
-    temperature=$(sensors | awk '/Package id 0/ {print $4}')
+    temp=$(sensors | awk '/Package id 0/ {print $4}')
   else
-    temperature=$(sensors | awk '/Tctl/ {print $2}')
+    temp=$(sensors | awk '/Tctl/ {print $2}')
   fi
-
-  # Fix sensors, then retry
-  [ -z "$temperature" ] && die "Error: Couldn't get temperature"
 
   # Source theme
   . sb-theme
 
   # Display with theme
-  echo "$theme  $temperature $reset"
+  echo "$theme  $temp $reset"
 }
 
 # ########
 # Main
 # ########
+
+# Exit early if dependencies are missing
+command_exists sensors || die "Error: sensors executable not found in PATH"
+
+# Handle mouse clicks for the status bar (statuscmd patch for dwm)
+case $BLOCK_BUTTON in
+1) # Left click
+  command_exists "$TERMINAL" && "$TERMINAL" -e watch -n 1 sensors
+  ;;
+3) # Left click
+  command_exists "$TERMINAL" && "$TERMINAL" -e btop
+  ;;
+esac
 
 # Refresh block
 get_cpu

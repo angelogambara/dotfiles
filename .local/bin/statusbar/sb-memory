@@ -8,4 +8,4 @@
 . sb-theme
 
 # Display with theme
-echo "$theme  $(free -h | awk '/Mem:/ {print $3}') $reset"
+echo "$theme  $(free -h | awk '/Mem:/ {print $3}')B $reset"
