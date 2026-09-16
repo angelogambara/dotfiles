@@ -1,0 +1,57 @@
+#!/bin/sh
+# POSIX script to toggle display on X11/Wayland
+
+# ########
+# Arguments
+# ########
+
+# Exit on failure
+set -e
+
+# Exit if the command to query display is not installed
+command_not_found() {
+  COMMAND_BIN=$(command -v "$1" 2>/dev/null || true)
+
+  # Exit if not installed
+  if [ -z "$COMMAND_BIN" ]; then
+    echo "Error: $COMMAND not found in PATH" >&2
+    exit 1
+  fi
+}
+
+# Exit if no target display
+if [ "$#" -ge 1 ]; then
+  echo "Usage: $0 <target-display> [--left-of|--right-of main-display]" >&2
+  exit 1
+fi
+
+# ########
+# Run
+# ########
+
+# Yes, I'm hard coding display as first argument
+TARGET_SCREEN="$1"
+shift
+
+# Wayland -> wlr-randr
+# X11 -> xrandr
+if [ -n "$WAYLAND_DISPLAY" ]; then
+  COMMAND="wlr-randr"
+  ON_FLAG="--on"
+else
+  COMMAND="xrandr"
+  ON_FLAG="--auto"
+fi
+
+# Keeps the code clean and readable
+command_not_found $COMMAND
+
+# Narrow down the line of target display
+SCREEN_LINE="$($COMMAND | grep -E "^${TARGET_SCREEN} connected ")"
+
+# Toggle behaviour
+if [ -n "$SCREEN_LINE" ]; then
+  $COMMAND --output "$TARGET_SCREEN" --off
+else
+  $COMMAND --output "$TARGET_SCREEN" $ON_FLAG "$@"
+fi

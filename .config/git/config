@@ -1,12 +1,15 @@
 [alias]
-    rbau = rebase -i --exec 'git commit --amend --no-edit --reset-author'
-    rbgs = rebase -i --exec 'git commit --amend --no-edit --gpg-sign'
+    rebase = !git rebase --committer-date-is-author-date
+    reauthor = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign'
+    recommit = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign --date="$(date -R)"'
+    redate   = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --date="$(date -R)"'
 
 [commit]
     gpgsign = true
 
 [core]
     autocrlf = input
+    hooksPath = .githooks
     pager = delta
 
 [delta]

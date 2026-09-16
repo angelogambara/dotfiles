@@ -1,35 +1,50 @@
 #!/bin/sh
-
 # Set wallpaper (Wayland: swaybg, X11: feh)
 
-set -u
+# ########
+# Arguments
+# ########
 
-# Ensure argument is provided
-[ $# -eq 1 ] || {
-    printf "Usage: %s <image>\n" "$0" >&2
+# Exit on failure
+set -e
+
+# Where to store the wallpaper
+WALLPAPER_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
+mkdir -p "$WALLPAPER_DIR"
+
+# The wallpaper location
+WALLPAPER="$WALLPAPER_DIR/wallpaper"
+
+# Fallback to current wallpaper
+IMAGE="$WALLPAPER"
+
+# ########
+# Set
+# ########
+
+# Skip if no image is passed
+if [ "$#" -eq 1 ]; then
+  # Get path image (a.k.a, the new wallpaper)
+  IMAGE="$(realpath "$1")" || exit 1
+  if [ ! -f "$IMAGE" ]; then
+    echo "Error: '$IMAGE': Image link is broken" >&2
     exit 1
-}
+  fi
 
-# Resolve absolute path
-img="$(realpath "$1")" || exit 1
+  # Everything is good, set wallpaper
+  ln -fs "$IMAGE" "$XDG_CACHE_HOME/wallpaper"
+fi
 
-# Validate file
-[ -f "$img" ] && [ -r "$img" ] || {
-    printf "Error: file not readable: %s\n" "$img" >&2
-    exit 1
-}
+# ########
+# Display
+# ########
 
-# Cache symlink
-cache="${XDG_CACHE_HOME:-$HOME/.cache}/wallpaper"
-ln -fs "$img" "$cache"
-
-# Set wallpaper
+# Choose your adventure based on the display proto
 if [ -n "${WAYLAND_DISPLAY:-}" ]; then
-    # Kill existing swaybg
-    pkill -x swaybg 2>/dev/null
-
-    # Start new background
-    swaybg -i "$img" -m fill >/dev/null 2>&1 &
+  # Do this if running Wayland
+  pkill -x swaybg
+  exec swaybg -i "$IMAGE" -m fill >/dev/null 2>&1
 else
-    feh --no-fehbg --bg-fill "$img"
+  # Do this if on X11
+  feh --no-fehbg --bg-fill "$IMAGE"
 fi
