@@ -171,10 +171,8 @@ else
 fi
 
 # Also, bind the machine-id
-if [ -f /etc/machine-id ]; then
-    BWRAP_ARGS+=(--ro-bind /etc/machine-id /etc/machine-id)
-else
-    echo "Warning: No /etc/machine-id found" >&2
+if [ -f /var/lib/dbus/machine-id ]; then
+    BWRAP_ARGS+=(--ro-bind /var/lib/dbus/machine-id /var/lib/dbus/machine-id)
 fi
 
 # ########

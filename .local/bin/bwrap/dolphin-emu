@@ -140,6 +140,13 @@ else
 fi
 
 # ########
+# Systemd
+# ########
+
+# Needed by systemd-resolvd stub to make DNS requests
+[ -d /run/systemd/resolve ] && BWRAP_ARGS+=(--ro-bind /run/systemd/resolve /run/systemd/resolve)
+
+# ########
 # DBus
 # ########
 
@@ -164,10 +171,8 @@ else
 fi
 
 # Also, bind the machine-id
-if [ -f /etc/machine-id ]; then
-    BWRAP_ARGS+=(--ro-bind /etc/machine-id /etc/machine-id)
-else
-    echo "Warning: No /etc/machine-id found" >&2
+if [ -f /var/lib/dbus/machine-id ]; then
+    BWRAP_ARGS+=(--ro-bind /var/lib/dbus/machine-id /var/lib/dbus/machine-id)
 fi
 
 # ########
