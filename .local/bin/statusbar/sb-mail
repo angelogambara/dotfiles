@@ -40,4 +40,4 @@ unread=$(find "$MAIL" -path "*/INBOX/new/*" -type f 2>/dev/null | wc -l)
 . sb-theme
 
 # Display with theme
-echo "$theme @ $unread $reset"
+echo "$theme  $unread $reset"

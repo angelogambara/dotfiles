@@ -24,11 +24,11 @@ get_bluetooth() {
   [ -z "$hci0" ] && die "Error: Bluetooth is not working"
 
   if rfkill list "$hci0" | grep -q 'yes'; then
-    icon="X"  # Signal is blocked
+    icon=""  # Signal is blocked
   elif ! pidof -q bluez; then
-    icon="Bz" # No service
+    icon="" # No service
   else
-    icon="BT" # Signal is working
+    icon="" # Signal is working
   fi
 
   # Source theme
