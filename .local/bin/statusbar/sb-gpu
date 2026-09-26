@@ -37,7 +37,7 @@ get_amdgpu() {
     . sb-theme
 
     # Display with theme
-    if [ -f "$GPU_DETAILS_FILE" ]; then
+    if [ ! -f "$GPU_DETAILS_FILE" ]; then
       echo "$theme  $util  $vram_used  $temp  $volt $reset"
     else
       echo "$theme  $util  $vram_used $reset"
