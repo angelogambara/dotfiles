@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# Store Firefox primary password in GNOME Keyring and unlock automatically.
+
+import keyring
+import pyautogui
+
+import os
+import subprocess
+import sys
+import time
+
+# 1. Get username from env and password from GNOME Keyring
+username = os.getenv("USER")
+password = keyring.get_password("firefox-primary-password", username)
+
+if not password:
+    password = input("Please, enter your Firefox primary password: ")
+    keyring.set_password("firefox-primary-password", username, password)
+
+# 2. Launch Firefox in the background
+# Adjust if using Flatpak
+subprocess.Popen(["/usr/bin/firefox"])
+
+# 3. Wait for Firefox primary password dialog to appear
+# Adjust if you need more time
+time.sleep(3.0)
+
+# 4. Release any modifier keys reserved for keyboard shortcut
+# This depends on X11
+# (Kind of makes PyAutoGUI pointless, but...)
+subprocess.run(["xdotool", "keyup", "Super_L", "Super_R", "Alt_L", "Alt_R", "Control_L", "Control_R", "Shift_L", "Shift_R"])
+
+# 5. Write the password in the focused window with PyAutoGUI
+pyautogui.write(password, interval=0.05)
+pyautogui.press("enter")
