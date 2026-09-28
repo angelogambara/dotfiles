@@ -1,0 +1,197 @@
+#!/bin/sh
+
+# ########
+# Prep
+# ########
+
+# Exit on failure
+set -e
+
+# Arbitrary number to stop loop from running indefinitely
+MAX_INSTANCES=12
+
+# Number of times to loop
+NUMBER=1
+
+# Emulator of choice
+EMULATOR=melonDS
+
+# Prettier error messages
+SCRIPT_BASENAME="$(basename "$0")"
+
+# Optional: backup files and directories
+bak() {
+  if [ "$#" -eq 0 ]; then
+    echo >&2 'Usage: bak [FILE]...'
+    return 1
+  fi
+
+  now=$(date +"%Y%m%d-%H%M%S")
+  for f in "$@"; do
+    f=${f%/}
+    if [ -e "$f" ]; then
+      mv -n "$f" "$f.$now.bak"
+    else
+      echo >&2 "bak: '$f': No such file or directory"
+    fi
+  done
+}
+
+# ########
+# Args
+# ########
+
+# Loop until '--'
+while [ -n "$1" ] && [ "$1" != '--' ]; do
+  # Match the current argument
+  case "$1" in
+  -n | --number)
+    # Next argument is the number
+    shift
+
+    # Get it
+    NUMBER="$1"
+    ;;
+  -e | --emulator)
+    # Next argument is the name of the emulator
+    shift
+
+    # Get it
+    EMULATOR="$1"
+    ;;
+  esac
+
+  # Next argument
+  shift
+done
+
+# Shift '--'
+shift
+
+# ########
+# Validate
+# ########
+
+# Supported emulators
+SAFE_PATTERNS="melonDS|mgba-qt"
+
+# shellcheck disable=SC2254
+case "$EMULATOR" in
+$SAFE_PATTERNS)
+  # Get binary location
+  EMULATOR_BIN="$(which "$EMULATOR" 2> /dev/null)"
+  ;;
+*)
+  echo >&2 "$SCRIPT_BASENAME: '$EMULATOR': Unknown emulator"
+  exit 1
+  ;;
+esac
+
+# Exit if specified emulator is not installed
+if [ -z "$EMULATOR_BIN" ]; then
+  echo >&2 "$SCRIPT_BASENAME: '$EMULATOR': Not found"
+  exit 1
+fi
+
+# ########
+# Loop
+# ########
+
+# Do something different based on emulators
+case "$EMULATOR" in
+melonDS)
+  # Loop until 3rd to last argument
+  while [ -z "$3" ]; do
+    # Save options in a temporary buffer
+    opts="${opts:+$opts }$1"
+
+    # Next argument
+    shift
+  done
+
+  # while [ "$#" -eq 0 ]; do
+  #   :
+  # done
+
+  # Decide what to do with last two arguments
+  case "$1" in
+  -*)
+    case "$2" in
+    -*)
+      opts="${opts:+$opts }$1"
+      ;;
+    *)
+      opts="${opts:+$opts }$1 $2"
+      ;;
+    esac
+    ;;
+  *)
+    [ -z "$ROM" ] && ROM="$1" || GBA="$2"
+    ;;
+  esac
+  ;;
+*)
+  # Loop until 2nd to last argument
+  while [ -z "$2" ]; do
+    # Save options in a temporary buffer
+    opts="${opts:+$opts }$1"
+
+    # Next argument
+    shift
+  done
+
+  # Decide what to do with last argument
+  case "$1" in
+  -*)
+    opts="${opts:+$opts }$1"
+    ;;
+  *)
+    # Get it
+    ROM="$1"
+    ;;
+  esac
+  ;;
+esac
+
+# Clear positional arguments
+set --
+
+# ########
+# Launch
+# ########
+
+# Exit if no rom was passed
+if [ ! -f "$ROM" ]; then
+  echo >&2 "$SCRIPT_BASENAME: '$ROM': No such file or directory"
+  exit 1
+fi
+
+# Name without extension
+basename="$(basename "$ROM" '.nds')"
+SAV="$basename.sav"
+
+cnt=0
+while [ "$cnt" -lt "$NUMBER" ] && [ "$cnt" -le "$MAX_INSTANCES" ]; do
+  # Assign names depending on count
+  if [ "$cnt" -eq 0 ]; then
+    file="$basename.nds"
+    save="$basename.sav"
+  else
+    file="$basename ($cnt).nds"
+    save="$basename ($cnt).sav"
+  fi
+
+  # Save 
+  [ -f "$save" ] && bak "$save"
+
+  #
+  if [ "$file" != "$ROM" ]; then
+    # Create symlink
+    [ ! -L "$file" ] && ln -s "$ROM" "$file"
+    # Overwrite save file
+    [ -f "$SAV" ] && cp -f "$SAV" "$save"
+  fi
+
+  # Launch
+  melonDS "$opts" -- "$file" "$GBA"
+done
