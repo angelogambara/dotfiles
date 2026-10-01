@@ -19,7 +19,7 @@
 [delta]
     features = mellow-barbet
     navigate = true
-    side-by-side = true
+    side-by-side = false
     syntax-theme = gruvbox-dark
 
 [fetch]
