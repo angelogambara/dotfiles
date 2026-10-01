@@ -1,6 +1,7 @@
 .config/QtProject.conf
 .config/Signal
 .config/btop
+.config/composer
 .config/dconf
 .config/dolphin-emu
 .config/fcitx

@@ -1,11 +1,15 @@
+[include]
+    path = ~/.config/delta/themes.gitconfig
+
 [alias]
     rebase = !git rebase --committer-date-is-author-date
-    reauthor = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign'
-    recommit = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign --date="$(date -R)"'
-    redate   = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --date="$(date -R)"'
+    rbauthor = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign'
+    rbcommit = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign --date="$(date -R)"'
+    rbdate   = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --date="$(date -R)"'
 
 [commit]
     gpgsign = true
+    verbose = true
 
 [core]
     autocrlf = input
@@ -13,13 +17,19 @@
     pager = delta
 
 [delta]
+    features = mellow-barbet
+    navigate = true
     side-by-side = true
+    syntax-theme = gruvbox-dark
 
 [fetch]
     prune = true
 
 [init]
     defaultBranch = main
+
+[interactive]
+    diffFilter = delta --color-only
 
 [merge]
     conflictstyle = zdiff3
@@ -29,6 +39,12 @@
 
 [push]
     autoSetupRemote = true
+
+[rerere]
+    enabled = true
+
+[tag]
+    gpgsign = true
 
 [user]
     email = angelogambaradev@noreply.codeberg.org
