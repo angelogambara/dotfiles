@@ -32,13 +32,15 @@ dolphin-emu
 dosfstools
 dunst
 efibootmgr
-enchant
 ethtool
 exfatprogs
 expac
 eza
 fail2ban
 fastfetch
+fcitx5-configtool
+fcitx5-gtk
+fcitx5-mozc
 fd
 feh
 ffmpegthumbnailer
@@ -63,6 +65,7 @@ intel-media-driver
 intel-ucode
 iwd
 jq
+jre21-openjdk
 kdenlive
 krita
 lazygit
@@ -76,6 +79,7 @@ linux-headers
 linux-preserve-modules
 lua-lpeg
 lvm2
+maim
 man-db
 man-pages
 mangowm
@@ -91,6 +95,7 @@ newsboat
 nginx
 notmuch
 npm
+nvtop
 otf-font-awesome
 otf-ipafont
 pacman-contrib
@@ -101,6 +106,7 @@ perl-image-exiftool
 physlock
 picom
 pipewire-pulse
+prismlauncher
 python-build
 python-installer
 python-mutagen
@@ -119,7 +125,6 @@ screencast
 screenkey
 seahorse
 signal-desktop
-slop
 smartmontools
 sof-firmware
 speedtest-cli
@@ -153,6 +158,7 @@ virt-manager
 vis
 vulkan-mesa-layers
 vulkan-tools
+waybar
 wayland-utils
 wf-recorder
 wget
@@ -161,11 +167,11 @@ wireless-regdb
 wiremix
 wl-clipboard
 wlr-randr
-wlroots0.19
 wmenu
 xarchiver
 xclip
 xdg-desktop-portal-wlr
+xdotool
 xf86-video-amdgpu
 xfsprogs
 xorg-server
@@ -178,6 +184,7 @@ yay
 yt-dlp
 zathura-pdf-poppler
 zbar
+zig
 zip
 zoxide
 zsh
