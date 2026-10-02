@@ -1,0 +1,28 @@
+#!/bin/sh
+# For whatever reason, running pacman -Syu resets repeat delay and rate (xset q | grep repeat).
+
+# ########
+# Arguments
+# ########
+
+# Exit on failure
+set -e
+
+# ########
+# Display
+# ########
+
+# Choose your adventure based on the display proto
+if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+  # Sorry, we don't support Wayland
+  echo >&2 "$0: xset: Only works on X11"
+  exit 1
+else
+  # Do this if on X11
+  xset r rate 200 35
+fi
+
+# Notify users running from shortcuts
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send --urgency="low" "Keyboard Updated" "Successfully reset repeat delay and rate."
+fi

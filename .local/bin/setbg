@@ -48,3 +48,8 @@ else
   # Do this if on X11
   feh --no-fehbg --bg-fill "$IMAGE"
 fi
+
+# Notify users running from shortcuts
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send --urgency="low" "Wallpaper Updated" "Successfully refreshed the desktop wallpaper."
+fi

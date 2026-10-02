@@ -1,0 +1,35 @@
+#!/bin/sh
+# Restarts any program immediately.
+
+# ########
+# Arguments
+# ########
+
+# Exit on failure (no unset)
+set -eu
+
+# Exit if argument count is not 1
+if [ $# -ne 1 ]; then
+  echo >&2 "Usage: $0 <running_proc>"
+  exit 1
+fi
+
+# Assign first argument a name
+proc="$1"
+
+# ########
+# Restart
+# ########
+
+# Restart process/program
+pkill -x "$proc" 2>/dev/null || true; sleep 0.2
+setsid -f "$proc" >/dev/null 2>&1
+
+# ########
+# Notify
+# ########
+
+# Notify users running from shortcuts
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send --urgency="low" "Program Restarted" "Successfully restarted $proc."
+fi
