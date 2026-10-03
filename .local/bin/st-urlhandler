@@ -10,7 +10,7 @@ set -eu
 
 # Wrapper for fancy dmenu arguments
 dmenu() {
-  command dmenu -i -l 10 -fn "Hack:size=14:antialias=true:autohint=false" "$@" |
+  command dmenu -i -l 10 -fn "Hack:pixelsize=14:antialias=true:autohint=false" "$@" |
     tr -d '\n' # Trim trailing newline.
 }
 
