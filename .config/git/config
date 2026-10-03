@@ -4,8 +4,8 @@
 [alias]
     rebase = !git rebase --committer-date-is-author-date
     rbauthor = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign'
-    rbcommit = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign --date="$(date -R)"'
-    rbdate   = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --date="$(date -R)"'
+    rbcommit = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --reset-author --gpg-sign --date=\"$(date -R)\"'
+    rbdate   = !git rebase -i --committer-date-is-author-date --exec 'git commit --amend --no-edit --date=\"$(date -R)\"'
 
 [commit]
     gpgsign = true

@@ -1,0 +1,150 @@
+#!/bin/sh
+# Wrap around dmenu and bemenu to provide a unified menu. Also positions the
+# menu on top of the statusbar if no positioning arguments are specified
+# (Made by the creator of dwmblocks-async).
+
+# Toggle alwyas positioning
+APPEND_POSITION=0
+
+# Beautiful, purely mathematical function
+get_parent_rect() {
+  focused_x="${1#+}"
+  focused_x="${focused_x%+*}"
+  focused_y="${1##*+}"
+
+  # I'm dum, I don't really know whats going on
+  # I just read code, he he
+  for geometry in $2; do
+    x="${geometry#*+}"
+    x="${x%+*}"
+    y="${geometry##*+}"
+    width="${geometry%%x*}"
+    height="${geometry%%+*}"
+    height="${height##*x}"
+
+    # Format a bit nicer using double-if
+    if [ "$focused_x" -ge "$x" ] && [ "$focused_x" -le "$((x + width))" ]; then
+      if [ "$focused_y" -ge "$y" ] && [ "$focused_y" -le "$((y + height))" ]; then
+        echo "$geometry"
+      fi
+    fi
+  done
+}
+
+# Done reformatting this function as well
+get_bar_geometry() {
+  if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    case "$XDG_CURRENT_DESKTOP" in
+    Hyprland)
+      active_monitor="$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')"
+      hyprctl layers -j |
+        jq -r --arg mon "$active_monitor" '.[$mon].levels.[].[] | select(.namespace == "waybar") | "\(.w)x\(.h)+\(.x)+\(.y)"'
+      ;;
+    *)
+      echo >&2 "Error: Unknown Wayland compositor"
+      exit 1
+      ;;
+    esac
+  else
+    focused_systray="$(xwininfo -root -tree | grep 'dwmsystray' | head -1 | awk '{ print $NF }')"
+    geometries="$(xwininfo -root -tree | grep '("dwm" "dwm")' | awk '{ print $(NF - 1) }')"
+    get_parent_rect "$focused_systray" "$geometries"
+  fi
+}
+
+if [ $APPEND_POSITION -ne 0 ]; then
+  bar_geometry="$(get_bar_geometry)"
+
+  height="${bar_geometry#*x}"
+  height="${height%%+*}"
+  set -- "$@" -h "$height"
+
+  width="${bar_geometry%x*}"
+  set -- "$@" -W "$width"
+
+  x_offset="${bar_geometry#*+}"
+  x_offset="${x_offset%+*}"
+  set -- "$@" -X "$x_offset"
+
+  y_offset="${bar_geometry##*+}"
+  [ "$y_offset" -lt 0 ] && y_offset="$x_offset"
+  set -- "$@" -Y "$y_offset"
+fi
+
+# Fallback to one of these menus if nothing set
+if [ -z "$MENU" ]; then
+  if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    MENU="wmenu"
+  else
+    MENU="dmenu"
+  fi
+fi
+
+shift_args() {
+  arg="${args%%"$IFS"*}"
+  args="${args#"$arg"}"
+  args="${args#"$IFS"}"
+}
+
+IFS="$(printf '\nx')" && IFS="${IFS%x}"
+args="$*"
+
+set --
+while [ -n "$args" ]; do
+  shift_args
+  case "$arg" in
+  -i)
+    case "$MENU" in
+      dmenu) set -- "$@" -i "$arg" ;;
+      wmenu) set -- "$@" -i "$arg" ;;
+    esac
+    ;;
+  -l)
+    shift_args
+    case "$MENU" in
+    # TODO: Make args dynamically inferred from config.
+      dmenu) set -- "$@" -l "$arg" ;;
+      wmenu) set -- "$@" -l "$arg" ;;
+    esac
+    ;;
+  -p)
+    shift_args
+    case "$MENU" in
+      dmenu) set -- "$@" -p "$arg" ;;
+      wmenu) set -- "$@" -p "$arg" ;;
+    esac
+    ;;
+  -h)
+    shift_args
+    case "$MENU" in
+      dmenu) set -- "$@" -h "$arg" ;;
+      wmenu) ;; # Not supported.
+    esac
+    ;;
+  -W)
+    shift_args
+    case "$MENU" in
+      dmenu) set -- "$@" -W "$arg" ;;
+      wmenu) ;; # Not supported.
+    esac
+    ;;
+  -X)
+    shift_args
+    case "$MENU" in
+      dmenu) set -- "$@" -X "$arg" ;;
+      wmenu) ;; # Not supported.
+    esac
+    ;;
+  -Y)
+    shift_args
+    case "$MENU" in
+      dmenu) set -- "$@" -Y "$arg" ;;
+      wmenu) ;; # Not supported.
+    esac
+    ;;
+  *) set -- "$@" "$arg" ;;
+  esac
+done
+
+# Launch menu application
+exec "$MENU" "$@"

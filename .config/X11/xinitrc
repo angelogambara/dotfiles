@@ -4,6 +4,9 @@
 # Configure
 # =========================
 
+# Needed for some scripts to function correctly
+export XDG_SESSION_TYPE=x11
+
 # Set X11_CONFIG_HOME
 if [ -z "$X11_CONFIG_HOME" ]; then
   # Get directory from XINITRC

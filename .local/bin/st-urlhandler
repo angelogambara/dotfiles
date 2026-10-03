@@ -1,0 +1,53 @@
+#!/bin/sh
+# Other script borrowed from Utkarsh Verma (borrowed from Luke Smith).
+
+# ########
+# Arguments
+# ########
+
+# Exit on failure (no unset)
+set -eu
+
+# Wrapper for fancy dmenu arguments
+dmenu() {
+  command dmenu -i -l 10 -fn "Hack:size=14:antialias=true:autohint=false" "$@" |
+    tr -d '\n' # Trim trailing newline.
+}
+
+# ########
+# URLs
+# ########
+
+# Match anything that is remotely similar to a URL
+urls="$(grep -aEo 'https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/[a-zA-Z0-9~.&/#?=__:%-]*[^[:punct:] ])?' | sort -u)"
+
+# Exit if no URL was found
+if [ -z "$urls" ]; then
+  echo >&2 "$0: Input stream does not contain URLs"
+  exit 1
+fi
+
+# ########
+# Handler
+# ########
+
+# Exit if no operation type
+if [ $# -lt 1 ]; then
+  echo >&2 "Usage: $0 [-c|--copy|-o|--open] < TEXT"
+  exit 1
+fi
+
+case "$1" in
+-c | --copy)
+  echo "$urls" |
+    dmenu -p "Which URL to copy?" |
+    xclip -selection clipboard
+  ;;
+-o | --open)
+  setsid -f xdg-open "$(echo "$urls" | dmenu -p "Which URL to follow?")" >/dev/null 2>&1
+  ;;
+*)
+  echo >&2 "Usage: $0 [-c|--copy|-o|--open] < TEXT"
+  exit 1
+  ;;
+esac

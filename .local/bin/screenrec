@@ -1,0 +1,110 @@
+#!/bin/sh
+# Take screen recordings (inspired by the creator of dwmblocks-async).
+
+# ########
+# Arguments
+# ########
+
+# Exit on failure (no unset)
+set -eu
+
+# Use 60fps for gaming and animations (~150% workload, larger file sizes)
+FPS="30"
+
+# Stores the pid of current recording
+CACHE_FILE="/tmp/screenrecord.pid"
+
+# Handly log file for debug what went wrong
+LOG_FILE="/tmp/screenrecord.log"
+
+# Absolute path to FFmpeg output file
+OUTPUT_FILE="$(date '+%Y-%m-%d_%H-%M-%S').mkv"
+
+# ########
+# Stop
+# ########
+
+# shellcheck disable=1090
+if [ -f "$CACHE_FILE" ]; then
+  pid="$(cat "$CACHE_FILE")"
+
+  # Send ^C from kill
+  kill -INT "$pid"
+
+  # Grab a cup of coffee
+  wait "$pid"
+
+  # Done recording
+  notify-send --urgency="low" "Recording stopped" \
+    "Capture saved as $OUTPUT_FILE"
+
+  # Cleanup without trap
+  rm "$CACHE_FILE"
+
+  # Success
+  exit 0
+fi
+
+# ########
+# Start
+# ########
+
+# Just checking, in case you changed the pattern
+if [ -f "$OUTPUT_FILE" ]; then
+  echo >&2 "$OUTPUT_FILE: Output file exists"
+  exit 1
+fi
+
+# shellcheck disable=SC2046 # word splitting is good
+set -- $(sel-area || echo 0 0 1920 1080)
+
+# Give positional parameters a name
+x_offset="$1"
+y_offset="$2"
+width="$3"
+height="$4"
+
+default_sink="$(pactl get-default-sink)"
+
+# ########
+# Video
+# ########
+
+# NVENC > VAAPI > Software Encoding
+if ffmpeg -loglevel error -f lavfi -i color=black:s=1080x1080 -vframes 1 -an -c:v h264_nvenc -f null - 2>/dev/null; then
+  VIDEO_CODEC="-c:v h264_nvenc -preset p1 -cq 19"
+elif ffmpeg -loglevel error -vaapi_device /dev/dri/renderD128 -f lavfi -i color=black:s=128x128 -vf "format=nv12,hwupload" -vframes 1 -an -c:v h264_vaapi -f null - 2>/dev/null; then
+  VIDEO_CODEC="-vaapi_device /dev/dri/renderD128 -vf format=nv12,hwupload -c:v h264_vaapi -qp 20"
+else
+  VIDEO_CODEC="-c:v libx264 -preset ultrafast -crf 18 -pix_fmt yuv420p"
+fi
+
+# ########
+# Record
+# ########
+
+# shellcheck disable=SC2086 # VIDEO_CODEC needs word splitting
+if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+  wf-recorder -af "$OUTPUT_FILE" >"$LOG_FILE" 2>&1 &
+else
+  ffmpeg \
+    -f x11grab \
+    -thread_queue_size 1024 \
+    -framerate "${FPS}" \
+    -s "${width}x${height}" \
+    -i "${DISPLAY}+${x_offset},${y_offset}" \
+    \
+    -f pulse \
+    -thread_queue_size 1024 \
+    -i "$default_sink.monitor" \
+    \
+    $VIDEO_CODEC \
+    \
+    -c:a libopus \
+    -b:a 160k \
+    \
+    "$OUTPUT_FILE" >"$LOG_FILE" 2>&1 &
+fi
+
+# Save the process id to CACHE_FILE
+echo "$!" >"$CACHE_FILE"

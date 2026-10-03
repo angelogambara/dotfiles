@@ -1,0 +1,56 @@
+#!/bin/sh
+# Wrapper script to unify CLI arguments for frequently used terminal
+# emulators (Made by the creator of dwmblocks-async).
+
+# Strictly use newline as IFS. printf does not output a trailing newline
+# so use this workaround.
+IFS="$(printf '\nx')" && IFS="${IFS%x}"
+
+# Posix shell only provides one array, so cache the input arguments in a
+# string and shift them one by one based on IFS. "$@" will be used to
+# accumulate the translated arguments.
+args="$*$IFS"
+shift_args() {
+  arg="${args%%"$IFS"*}"
+  args="${args#"$arg$IFS"}"
+}
+
+set --
+while [ -n "$args" ]; do
+  shift_args
+  case "$arg" in
+    -n | --name)
+      shift_args
+      case "$TERMINAL" in
+        alacritty) set -- "$@" --class "$arg",Alacritty ;;
+        st) set -- "$@" -n "$arg" ;;
+      esac
+      ;;
+    -d | --dir)
+      export WORKDIR_SET=1
+      shift_args
+      case "$TERMINAL" in
+        alacritty) set -- "$@" --working-directory "$arg" ;;
+        st) set -- "$@" -d "$arg" ;;
+      esac
+      ;;
+    -g)
+      shift_args
+      case "$TERMINAL" in
+        alacritty)
+          columns=${arg%x*}
+          lines=${arg##*x}
+          set -- "$@" "-o" window.dimensions.columns="$columns" \
+            "-o" window.dimensions.lines="$lines"
+          ;;
+        st) set -- "$@" -g "$arg" ;;
+      esac
+      ;;
+    '')
+      # When no args are passed, $args is set to '\n', which should be ignored.
+      ;;
+    *) set -- "$@" "$arg" ;;
+  esac
+done
+
+exec "$TERMINAL" "$@"
