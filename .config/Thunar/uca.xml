@@ -2,6 +2,18 @@
 <actions>
 <action>
 	<icon>utilities-terminal</icon>
+	<name>Open Alacritty Here</name>
+	<submenu></submenu>
+	<unique-id>1791224020618368-1</unique-id>
+	<command>WORKDIR_SET=1 alacritty --working-directory %f</command>
+	<description></description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>utilities-terminal</icon>
 	<name>Open Foot Here</name>
 	<submenu></submenu>
 	<unique-id>1791192698718781-1</unique-id>
