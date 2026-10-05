@@ -1,29 +1,26 @@
 #!/bin/sh
 
 # =========================
-# Configure
+# Preparation
 # =========================
 
-# Needed for some scripts to function correctly
+# Always set to x11
 export XDG_SESSION_TYPE=x11
 
-# Set X11_CONFIG_HOME
-if [ -z "$X11_CONFIG_HOME" ]; then
-  # Get directory from XINITRC
-  if [ -n "$XINITRC" ]; then
-    X11_CONFIG_HOME=$(dirname "$XINITRC")
-  else
-    X11_CONFIG_HOME=$HOME
-  fi
+# Detect XINITRC_HOME
+if [ -n "$XINITRC" ]; then
+  XINITRC_HOME=$(dirname "$XINITRC")
+else
+  XINITRC_HOME=$HOME
 fi
 
 # =========================
-# Run-parts
+# Run Parts
 # =========================
 
 # Source each file in order
-if [ -d "$X11_CONFIG_HOME"/xinitrc.d ]; then
-  for f in "$X11_CONFIG_HOME"/xinitrc.d/?*.sh; do
+if [ -d "$XINITRC_HOME"/xinitrc.d ]; then
+  for f in "$XINITRC_HOME"/xinitrc.d/?*.sh; do
     # shellcheck disable=1090
     [ -x "$f" ] && . "$f"
   done
@@ -33,6 +30,9 @@ fi
 # =========================
 # Window Manager
 # =========================
+
+# Set to the name of your window manager
+export XDG_CURRENT_DESKTOP=dwm
 
 # Replace shell with window manager
 exec dwm >/tmp/dwm.log 2>&1
