@@ -11,7 +11,7 @@ feh --no-fehbg --bg-fill ~/.cache/wallpaper
 xrandr --output DisplayPort-1-2 --off
 
 # Set X11 color scheme to gruvbox-dark
-xrdb -load ~/.config/X11/gruvbox-dark.xresources
+xrdb -load ~/.config/X11/Xresources.d/gruvbox-dark.xresources
 
 # Set keyboard repeat rate (delay 200ms, repeat 40/sec)
 xset r rate 200 40

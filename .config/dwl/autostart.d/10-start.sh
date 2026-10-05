@@ -6,7 +6,7 @@
 
 # Set your apps here
 export BROWSER=firefox
-export TERMINAL=alacritty
+export TERMINAL=foot
 
 # List of programs to autostart
 AUTOSTART="
