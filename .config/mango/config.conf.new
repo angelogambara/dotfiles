@@ -1,5 +1,11 @@
 # More option see https://github.com/DreamMaoMao/mango/wiki/
 
+exec-once = ~/.config/mango/autostart.sh
+
+# waybar & wmenu required
+bind=SUPER,s,spawn,/home/angelo/.config/mango/scripts/snip.sh
+bind=SUPER,b,spawn,/home/angelo/.config/mango/scripts/rebar.sh
+
 # Window effect
 blur=0
 blur_layer=0
@@ -24,6 +30,10 @@ border_radius=6
 no_radius_when_single=0
 focused_opacity=1.0
 unfocused_opacity=1.0
+
+dim_enable=0
+dim_focused_color=0x00000000
+dim_unfocused_color=0x00000055
 
 # Animation Configuration(support type:zoom,slide)
 # tag_animation_direction: 1-horizontal,0-vertical
@@ -54,8 +64,8 @@ animation_curve_opafadein=0.46,1.0,0.29,1
 # Scroller Layout Setting
 scroller_structs=20
 scroller_default_proportion=0.8
-scroller_focus_center=0
-scroller_prefer_center=0
+scroller_focus_center=1
+scroller_prefer_center=1
 edge_scroller_pointer_focus=1
 edge_scroller_focus_allow_speed=0.0
 scroller_default_proportion_single=1.0
@@ -65,6 +75,7 @@ scroller_proportion_preset=0.5,0.8,1.0
 new_is_master=0
 default_mfact=0.55
 default_nmaster=1
+tag_num=9
 smartgaps=0
 
 # Dwindle Layout Setting
@@ -78,22 +89,25 @@ dwindle_preserve_split=0
 # Overview Setting
 hotarea_size=10
 enable_hotarea=0
-ov_tab_mode=1
-ov_no_resize=1
+hotarea_disable_on_fullscreen=1
 overviewgappi=5
 overviewgappo=30
+overcircle_center_ratio=0.5
 
 # Misc
 no_border_when_single=1
 axis_bind_apply_timeout=100
 focus_on_activate=1
 idleinhibit_ignore_visible=0
+idleinhibit_when_fullscreen=0
 sloppyfocus=0
 warpcursor=1
 focus_cross_monitor=0
+focusdir_only_zone_overlap=1
 focus_cross_tag=0
 enable_floating_snap=0
 snap_distance=30
+float_full_to_top=0
 cursor_size=24
 drag_tile_to_tile=1
 drag_tile_small=1
@@ -111,9 +125,9 @@ tap_to_click=1
 tap_and_drag=1
 drag_lock=1
 trackpad_natural_scrolling=0
-disable_while_typing=1
-left_handed=0
-middle_button_emulation=0
+trackpad_disable_while_typing=1
+trackpad_left_handed=0
+trackpad_middle_button_emulation=0
 swipe_min_threshold=1
 
 # mouse
@@ -121,10 +135,10 @@ swipe_min_threshold=1
 mouse_natural_scrolling=0
 
 # Appearance
-gappih=0
-gappiv=0
-gappoh=0
-gappov=0
+gappih=5
+gappiv=5
+gappoh=3
+gappov=3
 scratchpad_width_ratio=0.8
 scratchpad_height_ratio=0.9
 borderpx=4
@@ -161,7 +175,7 @@ bind=SUPER+SHIFT,r,reload_config
 # menu and terminal
 bind=SUPER,r,spawn,rofi -show drun
 bind=SUPER,p,spawn,wmenu-run -l 10
-bind=SUPER,Return,spawn,foot
+bind=SUPER,Return,spawn,footclient
 
 # exit
 bind=SUPER+SHIFT,q,quit
@@ -175,19 +189,20 @@ bind=SUPER,k,focusstack,prev
 bind=SUPER,l,setmfact,+0.05
 
 # swap window
-bind=SUPER+SHIFT,h,exchange_client,right
+bind=CTRL+SUPER,Return,zoom
+bind=SUPER+SHIFT,l,exchange_client,right
 bind=SUPER+SHIFT,j,exchange_client,down
 bind=SUPER+SHIFT,k,exchange_client,up
-bind=SUPER+SHIFT,l,exchange_client,left
+bind=SUPER+SHIFT,h,exchange_client,left
 
 # switch window status
 bind=SUPER,g,toggleglobal,
-bind=ALT,Tab,toggleoverview,
-bind=ALT,backslash,togglefloating,
+bind=ALT,Tab,togglejump,
+bind=SUPER+SHIFT,space,togglefloating,
 bind=ALT,a,togglemaximizescreen,
 bind=ALT,f,togglefullscreen,
 bind=ALT+SHIFT,f,togglefakefullscreen,
-bind=SUPER,i,minimized,
+bind=ALT,i,minimized,
 bind=SUPER,o,toggleoverlay,
 bind=SUPER+SHIFT,I,restore_minimized
 bind=ALT,z,toggle_scratchpad
@@ -209,7 +224,7 @@ bind=SUPER,n,switch_layout
 # set layout
 bind=SUPER,t,setlayout,tile
 bind=SUPER,m,setlayout,monocle
-bind=SUPER,c,setlayout,spiral
+bind=SUPER,c,setlayout,dwindle
 bind=SUPER,v,setlayout,vertical_grid
 bind=SUPER,x,setlayout,scroller
 
@@ -230,16 +245,6 @@ bind=SUPER,6,view,6,0
 bind=SUPER,7,view,7,0
 bind=SUPER,8,view,8,0
 bind=SUPER,9,view,9,0
-
-bind=CTRL+SUPER,1,comboview,1,0
-bind=CTRL+SUPER,2,comboview,2,0
-bind=CTRL+SUPER,3,comboview,3,0
-bind=CTRL+SUPER,4,comboview,4,0
-bind=CTRL+SUPER,5,comboview,5,0
-bind=CTRL+SUPER,6,comboview,6,0
-bind=CTRL+SUPER,7,comboview,7,0
-bind=CTRL+SUPER,8,comboview,8,0
-bind=CTRL+SUPER,9,comboview,9,0
 
 # tag: move client to the tag and focus it
 # tagsilent: move client to the tag and not focus it
@@ -264,11 +269,31 @@ bind=SUPER+SHIFT,7,tagsilent,7,0
 bind=SUPER+SHIFT,8,tagsilent,8,0
 bind=SUPER+SHIFT,9,tagsilent,9,0
 
+bind=CTRL+SUPER,1,toggleview,1,0
+bind=CTRL+SUPER,2,toggleview,2,0
+bind=CTRL+SUPER,3,toggleview,3,0
+bind=CTRL+SUPER,4,toggleview,4,0
+bind=CTRL+SUPER,5,toggleview,5,0
+bind=CTRL+SUPER,6,toggleview,6,0
+bind=CTRL+SUPER,7,toggleview,7,0
+bind=CTRL+SUPER,8,toggleview,8,0
+bind=CTRL+SUPER,9,toggleview,9,0
+
+bind=CTRL+SUPER+SHIFT,1,toggletag,1,0
+bind=CTRL+SUPER+SHIFT,2,toggletag,2,0
+bind=CTRL+SUPER+SHIFT,3,toggletag,3,0
+bind=CTRL+SUPER+SHIFT,4,toggletag,4,0
+bind=CTRL+SUPER+SHIFT,5,toggletag,5,0
+bind=CTRL+SUPER+SHIFT,6,toggletag,6,0
+bind=CTRL+SUPER+SHIFT,7,toggletag,7,0
+bind=CTRL+SUPER+SHIFT,8,toggletag,8,0
+bind=CTRL+SUPER+SHIFT,9,toggletag,9,0
+
 # monitor switch
-bind=ALT+SHIFT,code:60,focusmon,left
-bind=ALT+SHIFT,code:60,focusmon,right
-bind=SUPER+ALT,code:60,tagmon,left
-bind=SUPER+ALT,code:60,tagmon,right
+bind=ALT+SHIFT,Left,focusmon,left
+bind=ALT+SHIFT,Right,focusmon,right
+bind=SUPER+ALT,Left,tagmon,left
+bind=SUPER+ALT,Right,tagmon,right
 
 # gaps
 bind=ALT+SHIFT,X,incgaps,1
@@ -291,6 +316,12 @@ bind=CTRL+ALT,j,resizewin,+0,+50
 bind=CTRL+ALT,k,resizewin,+0,-50
 bind=CTRL+ALT,l,resizewin,+50,+0
 
+# smartmovewin
+bind=CTRL+ALT+SHIFT,h,smartmovewin,left
+bind=CTRL+ALT+SHIFT,j,smartmovewin,down
+bind=CTRL+ALT+SHIFT,k,smartmovewin,up
+bind=CTRL+ALT+SHIFT,l,smartmovewin,right
+
 # Mouse Button Bindings
 # btn_left and btn_right can't bind none mod key
 mousebind=SUPER,btn_left,moveresize,curmove
@@ -301,6 +332,16 @@ mousebind=SUPER,btn_right,moveresize,curresize
 # Axis Bindings
 axisbind=SUPER,UP,viewtoleft_have_client
 axisbind=SUPER,DOWN,viewtoright_have_client
+
+# Gesture Bindings
+gesturebind=none,left,3,focusdir,left
+gesturebind=none,right,3,focusdir,right
+gesturebind=none,up,3,focusdir,up
+gesturebind=none,down,3,focusdir,down
+gesturebind=none,right,4,viewprev_have_client
+gesturebind=none,left,4,viewnext_have_client
+gesturebind=none,up,4,enteroverview
+gesturebind=none,down,4,leaveoverview
 
 
 # layer rule

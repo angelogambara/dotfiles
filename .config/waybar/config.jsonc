@@ -1,10 +1,10 @@
 {
   "modules-left": [
-    "ext/workspaces",
-    "custom/sep",
-    "dwl/window#layout",
-    "custom/sep",
-    "dwl/window#title"
+    "ext/workspaces"
+    // "custom/sep",
+    // "dwl/window#layout",
+    // "custom/sep",
+    // "dwl/window#title"
   ],
   "modules-right": [
     "custom/sep",

@@ -168,6 +168,9 @@ bind=SUPER+SHIFT,q,quit
 bind=SUPER+SHIFT,c,killclient,
 bind=SUPER,q,killclient,
 
+bind=SUPER,i,incnmaster,+1
+bind=SUPER,d,incnmaster,-1
+
 # switch window focus
 bind=SUPER,h,setmfact,-0.05
 bind=SUPER,j,focusstack,next
@@ -203,15 +206,14 @@ bind=ALT+SUPER+CTRL,l,scroller_stack,right
 #dwindle layout(manual split mode)
 bind=ALT+SHIFT,Return,dwindle_toggle_split_direction
 
-# switch layout
-bind=SUPER,n,switch_layout
-
-# set layout
 bind=SUPER,t,setlayout,tile
 bind=SUPER,m,setlayout,monocle
 bind=SUPER,c,setlayout,spiral
 bind=SUPER,v,setlayout,vertical_grid
 bind=SUPER,x,setlayout,scroller
+
+# switch layout
+bind=SUPER,n,switch_layout
 
 # tag switch
 bind=SUPER+SHIFT,Tab,viewtoleft,0
@@ -274,10 +276,6 @@ bind=SUPER+ALT,code:60,tagmon,right
 bind=ALT+SHIFT,X,incgaps,1
 bind=ALT+SHIFT,Z,incgaps,-1
 bind=ALT+SHIFT,R,togglegaps
-
-# incnmaster
-bind=SUPER,i,incnmaster,+1
-bind=SUPER,d,incnmaster,-1
 
 # movewin
 bind=CTRL+SHIFT,h,movewin,-50,+0

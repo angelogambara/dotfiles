@@ -1,2 +1,13 @@
-waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
-swaybg -i ~/.config/mango/assets/wall.jpg >/dev/null 2>&1 &
+#!/bin/sh
+# =========================
+# Run Parts
+# =========================
+
+# Source each file in order
+if [ -d "$XDG_CONFIG_HOME/mango/autostart.d" ]; then
+  for f in "$XDG_CONFIG_HOME/mango/autostart.d"/?*.sh; do
+    # shellcheck disable=1090
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
+fi
