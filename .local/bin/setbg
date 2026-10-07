@@ -42,8 +42,8 @@ fi
 # Choose your adventure based on the display proto
 if [ -n "${WAYLAND_DISPLAY:-}" ]; then
   # Do this if running Wayland
-  pkill -x swaybg
-  exec swaybg -i "$IMAGE" -m fill >/dev/null 2>&1
+  pkill -x swaybg || true
+  nohup swaybg -i "$IMAGE" -m fill >/dev/null 2>&1 &
 else
   # Do this if on X11
   feh --no-fehbg --bg-fill "$IMAGE"
