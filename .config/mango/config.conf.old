@@ -121,10 +121,10 @@ swipe_min_threshold=1
 mouse_natural_scrolling=0
 
 # Appearance
-gappih=0
-gappiv=0
-gappoh=0
-gappov=0
+gappih=5
+gappiv=5
+gappoh=3
+gappov=3
 scratchpad_width_ratio=0.8
 scratchpad_height_ratio=0.9
 borderpx=4
@@ -175,21 +175,22 @@ bind=SUPER,k,focusstack,prev
 bind=SUPER,l,setmfact,+0.05
 
 # swap window
-bind=SUPER+SHIFT,h,exchange_client,right
+bind=CTRL+SUPER,Return,zoom
+bind=SUPER+SHIFT,h,exchange_client,left
 bind=SUPER+SHIFT,j,exchange_client,down
 bind=SUPER+SHIFT,k,exchange_client,up
-bind=SUPER+SHIFT,l,exchange_client,left
+bind=SUPER+SHIFT,l,exchange_client,right
 
 # switch window status
-bind=SUPER,g,toggleglobal,
+bind=ALT,g,toggleglobal,
 bind=ALT,Tab,toggleoverview,
-bind=ALT,backslash,togglefloating,
+bind=ALT+SHIFT,space,togglefloating,
 bind=ALT,a,togglemaximizescreen,
 bind=ALT,f,togglefullscreen,
 bind=ALT+SHIFT,f,togglefakefullscreen,
-bind=SUPER,i,minimized,
-bind=SUPER,o,toggleoverlay,
-bind=SUPER+SHIFT,I,restore_minimized
+bind=ALT,i,minimized,
+bind=ALT,o,toggleoverlay,
+bind=ALT+SHIFT,I,restore_minimized
 bind=ALT,z,toggle_scratchpad
 
 # scroller layout
@@ -209,15 +210,15 @@ bind=SUPER,n,switch_layout
 # set layout
 bind=SUPER,t,setlayout,tile
 bind=SUPER,m,setlayout,monocle
-bind=SUPER,c,setlayout,spiral
+bind=SUPER,c,setlayout,dwindle
 bind=SUPER,v,setlayout,vertical_grid
 bind=SUPER,x,setlayout,scroller
 
 # tag switch
 bind=SUPER+SHIFT,Tab,viewtoleft,0
-#bind=CTRL,Left,viewtoleft_have_client,0
+bind=CTRL+SHIFT,Tab,viewtoleft_have_client,0
 bind=SUPER,Tab,viewtoright,0
-#bind=CTRL,Right,viewtoright_have_client,0
+bind=CTRL,Tab,viewtoright_have_client,0
 bind=CTRL+SUPER+SHIFT,Tab,tagtoleft,0
 bind=CTRL+SUPER,Tab,tagtoright,0
 
@@ -230,16 +231,6 @@ bind=SUPER,6,view,6,0
 bind=SUPER,7,view,7,0
 bind=SUPER,8,view,8,0
 bind=SUPER,9,view,9,0
-
-bind=CTRL+SUPER,1,comboview,1,0
-bind=CTRL+SUPER,2,comboview,2,0
-bind=CTRL+SUPER,3,comboview,3,0
-bind=CTRL+SUPER,4,comboview,4,0
-bind=CTRL+SUPER,5,comboview,5,0
-bind=CTRL+SUPER,6,comboview,6,0
-bind=CTRL+SUPER,7,comboview,7,0
-bind=CTRL+SUPER,8,comboview,8,0
-bind=CTRL+SUPER,9,comboview,9,0
 
 # tag: move client to the tag and focus it
 # tagsilent: move client to the tag and not focus it
@@ -264,11 +255,31 @@ bind=SUPER+SHIFT,7,tagsilent,7,0
 bind=SUPER+SHIFT,8,tagsilent,8,0
 bind=SUPER+SHIFT,9,tagsilent,9,0
 
+bind=CTRL+SUPER,1,toggleview,1,0
+bind=CTRL+SUPER,2,toggleview,2,0
+bind=CTRL+SUPER,3,toggleview,3,0
+bind=CTRL+SUPER,4,toggleview,4,0
+bind=CTRL+SUPER,5,toggleview,5,0
+bind=CTRL+SUPER,6,toggleview,6,0
+bind=CTRL+SUPER,7,toggleview,7,0
+bind=CTRL+SUPER,8,toggleview,8,0
+bind=CTRL+SUPER,9,toggleview,9,0
+
+bind=CTRL+SUPER+SHIFT,1,toggletag,1,0
+bind=CTRL+SUPER+SHIFT,2,toggletag,2,0
+bind=CTRL+SUPER+SHIFT,3,toggletag,3,0
+bind=CTRL+SUPER+SHIFT,4,toggletag,4,0
+bind=CTRL+SUPER+SHIFT,5,toggletag,5,0
+bind=CTRL+SUPER+SHIFT,6,toggletag,6,0
+bind=CTRL+SUPER+SHIFT,7,toggletag,7,0
+bind=CTRL+SUPER+SHIFT,8,toggletag,8,0
+bind=CTRL+SUPER+SHIFT,9,toggletag,9,0
+
 # monitor switch
-bind=ALT+SHIFT,code:60,focusmon,left
-bind=ALT+SHIFT,code:60,focusmon,right
-bind=SUPER+ALT,code:60,tagmon,left
-bind=SUPER+ALT,code:60,tagmon,right
+bind=ALT+SHIFT,Left,focusmon,left
+bind=ALT+SHIFT,Right,focusmon,right
+bind=SUPER+ALT,Left,tagmon,left
+bind=SUPER+ALT,Right,tagmon,right
 
 # gaps
 bind=ALT+SHIFT,X,incgaps,1
@@ -290,6 +301,12 @@ bind=CTRL+ALT,h,resizewin,-50,+0
 bind=CTRL+ALT,j,resizewin,+0,+50
 bind=CTRL+ALT,k,resizewin,+0,-50
 bind=CTRL+ALT,l,resizewin,+50,+0
+
+# smartmovewin
+bind=CTRL+ALT+SHIFT,h,smartmovewin,left
+bind=CTRL+ALT+SHIFT,j,smartmovewin,down
+bind=CTRL+ALT+SHIFT,k,smartmovewin,up
+bind=CTRL+ALT+SHIFT,l,smartmovewin,right
 
 # Mouse Button Bindings
 # btn_left and btn_right can't bind none mod key

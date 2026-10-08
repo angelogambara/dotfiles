@@ -1,6 +1,6 @@
 # More option see https://github.com/DreamMaoMao/mango/wiki/
 
-exec-once = ~/.config/mango/autostart.sh
+# exec-once = ~/.config/mango/autostart.sh
 
 # waybar & wmenu required
 bind=SUPER,s,spawn,/home/angelo/.config/mango/scripts/snip.sh
@@ -190,21 +190,21 @@ bind=SUPER,l,setmfact,+0.05
 
 # swap window
 bind=CTRL+SUPER,Return,zoom
-bind=SUPER+SHIFT,l,exchange_client,right
+bind=SUPER+SHIFT,h,exchange_client,left
 bind=SUPER+SHIFT,j,exchange_client,down
 bind=SUPER+SHIFT,k,exchange_client,up
-bind=SUPER+SHIFT,h,exchange_client,left
+bind=SUPER+SHIFT,l,exchange_client,right
 
 # switch window status
 bind=SUPER,g,toggleglobal,
 bind=ALT,Tab,togglejump,
-bind=SUPER+SHIFT,space,togglefloating,
+bind=ALT+SHIFT,space,togglefloating,
 bind=ALT,a,togglemaximizescreen,
 bind=ALT,f,togglefullscreen,
 bind=ALT+SHIFT,f,togglefakefullscreen,
 bind=ALT,i,minimized,
-bind=SUPER,o,toggleoverlay,
-bind=SUPER+SHIFT,I,restore_minimized
+bind=ALT,o,toggleoverlay,
+bind=ALT+SHIFT,I,restore_minimized
 bind=ALT,z,toggle_scratchpad
 
 # scroller layout
@@ -230,9 +230,9 @@ bind=SUPER,x,setlayout,scroller
 
 # tag switch
 bind=SUPER+SHIFT,Tab,viewtoleft,0
-#bind=CTRL,Left,viewtoleft_have_client,0
+bind=CTRL+SHIFT,Tab,viewtoleft_have_client,0
 bind=SUPER,Tab,viewtoright,0
-#bind=CTRL,Right,viewtoright_have_client,0
+bind=CTRL,Tab,viewtoright_have_client,0
 bind=CTRL+SUPER+SHIFT,Tab,tagtoleft,0
 bind=CTRL+SUPER,Tab,tagtoright,0
 
