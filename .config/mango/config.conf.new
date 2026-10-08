@@ -229,12 +229,12 @@ bind=SUPER,v,setlayout,vertical_grid
 bind=SUPER,x,setlayout,scroller
 
 # tag switch
-bind=SUPER+SHIFT,Tab,viewtoleft,0
-bind=CTRL+SHIFT,Tab,viewtoleft_have_client,0
-bind=SUPER,Tab,viewtoright,0
-bind=CTRL,Tab,viewtoright_have_client,0
-bind=CTRL+SUPER+SHIFT,Tab,tagtoleft,0
-bind=CTRL+SUPER,Tab,tagtoright,0
+#bind=CTRL+SHIFT,Tab,viewtoleft,0
+bind=SUPER+SHIFT,Tab,viewtoleft_have_client,0
+#bind=CTRL,Tab,viewtoright,0
+bind=SUPER,Tab,viewtoright_have_client,0
+#bind=CTRL+SUPER+SHIFT,Tab,tagtoleft,0
+#bind=CTRL+SUPER,Tab,tagtoright,0
 
 bind=SUPER,1,view,1,0
 bind=SUPER,2,view,2,0
