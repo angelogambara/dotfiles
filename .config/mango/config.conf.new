@@ -1,6 +1,6 @@
 # More option see https://github.com/DreamMaoMao/mango/wiki/
 
-# exec-once = ~/.config/mango/autostart.sh
+exec-once = ~/.config/mango/autostart.sh
 
 # waybar & wmenu required
 bind=SUPER,s,spawn,/home/angelo/.config/mango/scripts/snip.sh
@@ -347,3 +347,5 @@ gesturebind=none,down,4,leaveoverview
 # layer rule
 layerrule=animation_type_open:zoom,layer_name:rofi
 layerrule=animation_type_close:zoom,layer_name:rofi
+
+windowrule=isfloating:1,appid:thunar,title:Rename.*

@@ -1,1 +1,1 @@
-grim -l 0 -g "$(slurp)" - | wl-copy
+grim -l 0 -g "$(slurp)" - | swappy f -
