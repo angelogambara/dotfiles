@@ -37,7 +37,7 @@ git_ssh_prepare() {
 # Checks
 # ########
 
-# Check for nvim
+# Is neovim even installed?
 NEOVIM_BIN="$(command -v nvim || exit 1)"
 
 # Root should not run a heavely modded neovim
@@ -69,6 +69,16 @@ DOTFILES=(
     antidote
 )
 
+# Always shadow any directory in XDG Base Directories
+SHADOWS=(
+    # Set your browser directory here
+    mozilla
+
+    # Other outliers
+    Signal
+    heroic
+)
+
 # Respect user defined XDGs
 : "${XDG_CONFIG_HOME:=$HOME/.config}"
 : "${XDG_DATA_HOME:=$HOME/.local/share}"
@@ -87,13 +97,17 @@ BWRAP_ARGS=(
     --ro-bind /etc /etc
     --proc /proc
     --dev /dev
-    --tmpfs /tmp
+    --bind /tmp /tmp
+
+    # Preconfigured paths
+    --bind "$PROJECT_ROOT" "$PROJECT_ROOT"
+    --bind "$SHELL_ROOT" "$SHELL_ROOT"
 
     # Process and session isolation
     --unshare-pid
     --unshare-uts
     --unshare-ipc
-    --new-session
+    # --new-session
     --die-with-parent
 
     # Explicitly connect to network
@@ -179,7 +193,7 @@ if [ -f /var/lib/dbus/machine-id ]; then
 fi
 
 # ########
-# ROMs
+# Files
 # ########
 
 # Bind the config dir (safe and always writable)
@@ -188,7 +202,7 @@ BWRAP_ARGS+=(--bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME")
 # Bind all other XDG paths for dirs in DOTFILES
 for basedir in "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR" "$XDG_STATE_HOME"; do
     # Bind dotfile directory
-    for dir in "${DOTFILES[@]}"*; do
+    for dir in "${DOTFILES[@]}"; do
         # Do the thing
         if [ -d "$basedir/$dir" ]; then
             BWRAP_ARGS+=(--bind "$basedir/$dir" "$basedir/$dir")
@@ -196,12 +210,15 @@ for basedir in "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR" "$XDG_STATE
     done
 done
 
-# Bind all preconfigured paths
-for dir in "$PROJECT_ROOT" "$SHELL_ROOT"; do
-    # Do the thing
-    if [ -d "$dir" ]; then
-        BWRAP_ARGS+=(--bind "$dir" "$dir")
-    fi
+# Bind a dummy path on top of previous binds to effectively shadow the path
+for basedir in "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR" "$XDG_STATE_HOME"; do
+    # Bind shadows directory
+    for shadow in "${SHADOWS[@]}"; do
+        # Do the thing
+        if [ -d "$basedir/$shadow" ]; then
+            BWRAP_ARGS+=(--bind /dev/null "$basedir/$shadow")
+        fi
+    done
 done
 
 # Bind any parent directory of Neovim arguments
@@ -211,28 +228,13 @@ for f in "$@"; do
 
     # Prevent running from very personal directories
     case "$f" in
-    "$HOME")
-        echo >&2 "$0: bwrap: Refusing to bind $HOME"
+    "$PROJECT_ROOT"/* | "$SHELL_ROOT"/* | "$XDG_CONFIG_HOME"/* | "$XDG_DATA_HOME"/* | "$XDG_CACHE_HOME"/* | "$XDG_RUNTIME_DIR"/*)
+        # Whitelisted
+        ;;
+    "$HOME"/*)
+        echo >&2 "$0: $f: Refusing to bind child of $HOME"
         exit 1
         ;;
-    "$HOME"/.gnupg)
-        echo >&2 "$0: bwrap: Refusing to bind $HOME/.gnupg"
-        exit 1
-        ;;
-    "$HOME"/.ssh)
-        echo >&2 "$0: bwrap: Refusing to bind $HOME/.ssh"
-        exit 1
-        ;;
-    # "$HOME"/*)
-    #     case "${PWD#"$HOME"/}" in
-    #     */*)
-    #         ;;
-    #     *)
-    #         echo >&2 "$0: bwrap: Refusing to bind child directory of HOME"
-    #         exit 1
-    #         ;;
-    #     esac
-    #     ;;
     esac
 
     # Do the thing (Allow binding child of HOME at your own risk)
@@ -245,6 +247,9 @@ done
 # ########
 # Run
 # ########
+
+# Uncomment to see options (hidden verbose flag)
+# printf '%s\n' "${BWRAP_ARGS[@]}"
 
 # Keep child process running (exec triggers trap early)
 bwrap "${BWRAP_ARGS[@]}" "$NEOVIM_BIN" "$@"
