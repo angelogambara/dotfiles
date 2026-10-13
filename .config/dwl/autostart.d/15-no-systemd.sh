@@ -10,6 +10,9 @@ if [ "$(ps -p 1 -o comm=)" != 'systemd' ]; then
   KEYRING_DETECTED="$(pgrep -a 'gnome-keyring' | grep -qv -- '--login')"
   FOOT_DETECTED="$(pgrep -a 'foot' | grep -qv -- '--server')"
 
+  # Start Foot
+  [ -z "$FOOT_DETECTED" ] && foot --server >/tmp/programs/foot.log 2>&1 &
+
   # Manually export D-Bus
   export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 
@@ -20,12 +23,7 @@ if [ "$(ps -p 1 -o comm=)" != 'systemd' ]; then
 
   # Start GNOME Keyring
   if [ -z "$KEYRING_DETECTED" ]; then
-    gnome-keyring-daemon --start --components='secrets' >/dev/null 2>&1
-  fi
-
-  # Start Foot
-  if [ -z "$FOOT_DETECTED" ]; then
-    foot --server=3 >/dev/null 2>&1 &
+    gnome-keyring-daemon --start --components='secrets' >/tmp/programs/gnome-keyring.log 2>&1
   fi
 
   # Start pipewire

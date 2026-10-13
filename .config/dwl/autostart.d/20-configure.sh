@@ -1,10 +1,10 @@
 #!/bin/sh
 # ==============================
-# Preferences
+# Configure
 # ==============================
 
 # Draw the wallpaper
-swaybg -i ~/.cache/wallpaper
+setbg
 
 # Turn off my other monitor
 wlr-randr --output DisplayPort-1-2 --off
