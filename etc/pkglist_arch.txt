@@ -44,13 +44,13 @@ fcitx5-mozc
 fd
 feh
 ffmpegthumbnailer
+figlet
 firefox
 firewalld
 flameshot
 flite
 foot
 fwupd
-gajim
 gallery-dl
 gamemode
 gimp
@@ -86,6 +86,7 @@ mangowm
 melonds
 meson
 mgba-qt
+mplayer
 mumble
 mutt-wizard-git
 nasm
@@ -94,6 +95,7 @@ neovim
 newsboat
 nginx
 notmuch
+noto-fonts-emoji
 npm
 nvtop
 otf-font-awesome
@@ -112,6 +114,7 @@ python-installer
 python-mutagen
 python-pipx
 python-pyfuse3
+python-secretstorage
 python-setuptools
 qbittorrent
 qemu-desktop
@@ -123,7 +126,9 @@ rtkit
 rustup
 screencast
 screenkey
+sd
 seahorse
+shotgun
 signal-desktop
 smartmontools
 sof-firmware
@@ -174,6 +179,7 @@ xdg-desktop-portal-wlr
 xdotool
 xf86-video-amdgpu
 xfsprogs
+xh
 xorg-server
 xorg-xinit
 xorg-xkill
@@ -181,6 +187,7 @@ xorg-xset
 xorg-xsetroot
 xorg-xwininfo
 yay
+ydotool
 yt-dlp
 zathura-pdf-poppler
 zbar
