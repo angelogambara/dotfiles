@@ -1,0 +1,13 @@
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
+
+configuration {
+  show-icons: true;
+  modes: [
+    "calc",
+    // "clipboard",
+    "drun",
+    "emoji",
+    "run",
+    "ssh"
+  ];
+}

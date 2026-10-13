@@ -16,7 +16,7 @@ PATH="/usr/local/bin:/usr/bin"
 # ########
 
 # Check for ppsspp
-PPSSPP_BIN="$(command -v ppsspp 2>/dev/null || true)"
+PPSSPP_BIN="$(command -v PPSSPPSDL 2>/dev/null || true)"
 if [ -z "$PPSSPP_BIN" ]; then
     echo "Error: ppsspp executable not found in PATH" >&2
     exit 1
@@ -221,6 +221,9 @@ BWRAP_ARGS+=(--setenv SDL_JOYSTICK_DISABLE_UDEV 1)
 # ########
 # ROMs
 # ########
+
+# Bind ISOs directory if exists on the host
+[ -d "$HOME/ISOs" ] && BWRAP_ARGS+=(--bind "$HOME/ISOs" "$HOME/ISOs")
 
 # Bind ROMs directory if exists on the host
 [ -d "$HOME/ROMs" ] && BWRAP_ARGS+=(--bind "$HOME/ROMs" "$HOME/ROMs")
