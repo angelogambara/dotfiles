@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 # Launch Neovim in a sandboxed
+#
+# Warning: this script has been tested on Arch/Void Linux. I don't know if
+# it will work on other distros or BSD derivatives.
+#
+# Contributions are welcome!
 
 # ########
 # Prep
@@ -11,48 +16,11 @@ set -euo pipefail
 # Only canonical binaries
 PATH="/usr/local/bin:/usr/bin"
 
-# Generate a read-only list of known hosts, to clone plugins from
-# Parameters: list of FQDNs
-git_ssh_prepare() {
-    # Ensure parent direcotory exists
-    : "${BWRAP_HOSTS:=$HOME/.ssh/bwrap_hosts}"
-    mkdir -p -m 700 "${BWRAP_HOSTS%/*}"
-
-    # Configure SSH line
-    GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$BWRAP_HOSTS"
-
-    # This loop will run only as needed
-    for website in "$@"; do
-        # Skip if website is known
-        if ! grep -q "$website" "$BWRAP_HOSTS"; then
-            if ! ssh-keyscan "$website" >>"$BWRAP_HOSTS"; then
-                echo >&2 "$0: $BWRAP_HOSTS: Write permission denied"
-                exit 1
-            fi
-        fi
-    done
-}
-
-# ########
-# Checks
-# ########
-
-# Is neovim even installed?
+# Get the right nvim (not this script)
 NEOVIM_BIN="$(command -v nvim || exit 1)"
 
 # Root should not run a heavely modded neovim
-[ "$(whoami)" = 'root' ] &&
-    exec "$NEOVIM_BIN" -u NONE "$@"
-
-# Fail if runtime dir is unset
-if [ ! -r "$XDG_RUNTIME_DIR" ]; then
-    echo >&2 "$0: 'XDG_RUNTIME_DIR': Come back when you have it configured"
-    exit 1
-fi
-
-# This may take a while the first time
-# (Add sites to clone plugins from)
-git_ssh_prepare codeberg.org github.com gitlab.com
+[ "$USER" = 'root' ] && exec "$NEOVIM_BIN" -u NONE "$@"
 
 # ########
 # Config
@@ -85,6 +53,29 @@ SHADOWS=(
 : "${XDG_STATE_HOME:=$HOME/.local/state}"
 : "${XDG_CACHE_HOME:=$HOME/.cache}"
 
+# Needed to clone plugins without exposing SSH known hosts
+PLUGIN_ORIGINS=(
+    codeberg.org
+    github.com
+    gitlab.com
+)
+
+# Array of directories to block
+PERSONAL_DIRS=(
+    ~/Desktop
+    ~/Documents
+    ~/Downloads
+    ~/Pictures
+    ~/Videos
+)
+
+# Wrapper array (XDGs and preconfigured paths)
+WHITELISTED_DIRS=(
+    "$PROJECT_ROOT"
+    "$SHELL_ROOT"
+    "${XDG_BASE_DIRS[@]}"
+)
+
 # ########
 # Bwrap
 # ########
@@ -114,47 +105,11 @@ BWRAP_ARGS=(
     --share-net
 )
 
+# FIX: Allow BSDs to bind as actual directories
 # Optional: symlinks
 [ -d /lib ] && BWRAP_ARGS+=(--symlink /usr/lib /lib)
 [ -d /lib64 ] && BWRAP_ARGS+=(--symlink /usr/lib64 /lib64)
 [ -d /bin ] && BWRAP_ARGS+=(--symlink /usr/bin /bin)
-
-# ########
-# Wayland/X11
-# ########
-
-# Setup graphical session inside sandbox
-if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -e "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
-    BWRAP_ARGS+=(
-        --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
-        --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
-        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
-    )
-elif [ -n "${DISPLAY:-}" ]; then
-    BWRAP_ARGS+=(--setenv DISPLAY "$DISPLAY")
-
-    if [ -d /tmp/.X11-unix ]; then
-        BWRAP_ARGS+=(--ro-bind /tmp/.X11-unix /tmp/.X11-unix)
-    else
-        echo "Error: Coulnd't find X11-unix socket" >&2
-        exit 1
-    fi
-
-    if [ -n "${XAUTHORITY:-}" ] && [ -f "$XAUTHORITY" ]; then
-        BWRAP_ARGS+=(
-            --ro-bind "$XAUTHORITY" "$XAUTHORITY"
-            --setenv XAUTHORITY "$XAUTHORITY"
-        )
-    elif [ -f "$HOME/.Xauthority" ]; then
-        BWRAP_ARGS+=(--ro-bind "$HOME/.Xauthority" "$HOME/.Xauthority")
-    else
-        echo "Error: Coulnd't find Xauthority on X11" >&2
-        exit 1
-    fi
-else
-    echo "Error: Couldn't find graphical session" >&2
-    exit 1
-fi
 
 # ########
 # Systemd
@@ -193,14 +148,53 @@ if [ -f /var/lib/dbus/machine-id ]; then
 fi
 
 # ########
-# Files
+# Hosts
 # ########
+
+# Generate a read-only list of known hosts, to clone plugins from
+# Parameters: list of FQDNs
+git_ssh_prepare() {
+    # Ensure parent direcotory exists
+    : "${BWRAP_HOSTS:=$HOME/.ssh/bwrap_hosts}"
+    mkdir -p -m 700 "${BWRAP_HOSTS%/*}"
+
+    # Configure SSH line
+    GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$BWRAP_HOSTS"
+
+    # This loop will run only as needed
+    for website in "$@"; do
+        # Skip if website is known
+        if ! grep -q "$website" "$BWRAP_HOSTS"; then
+            if ! ssh-keyscan "$website" >>"$BWRAP_HOSTS"; then
+                echo >&2 "$0: $BWRAP_HOSTS: Write permission denied"
+                exit 1
+            fi
+        fi
+    done
+}
+
+# This may take a while the first time
+# (Add sites to clone plugins from)
+git_ssh_prepare "${PLUGIN_ORIGINS[@]}"
+
+# ########
+# XDGs
+# ########
+
+# Store in a clean array
+XDG_BASE_DIRS=(
+    "$XDG_CACHE_HOME"
+    "$XDG_CONFIG_HOME"
+    "$XDG_DATA_HOME"
+    "$XDG_RUNTIME_DIR"
+    "$XDG_STATE_HOME"
+)
 
 # Bind the config dir (safe and always writable)
 BWRAP_ARGS+=(--bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME")
 
 # Bind all other XDG paths for dirs in DOTFILES
-for basedir in "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR" "$XDG_STATE_HOME"; do
+for basedir in "${XDG_BASE_DIRS[@]/"$XDG_CONFIG_HOME"/}"; do
     # Bind dotfile directory
     for dir in "${DOTFILES[@]}"; do
         # Do the thing
@@ -211,31 +205,58 @@ for basedir in "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR" "$XDG_STATE
 done
 
 # Bind a dummy path on top of previous binds to effectively shadow the path
-for basedir in "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR" "$XDG_STATE_HOME"; do
+for basedir in "${XDG_BASE_DIRS[@]}"; do
     # Bind shadows directory
     for shadow in "${SHADOWS[@]}"; do
         # Do the thing
         if [ -d "$basedir/$shadow" ]; then
-            BWRAP_ARGS+=(--bind /dev/null "$basedir/$shadow")
+            BWRAP_ARGS+=(--bind /tmp "$basedir/$shadow")
         fi
     done
 done
+
+# ########
+# Files
+# ########
 
 # Bind any parent directory of Neovim arguments
 for f in "$@"; do
     # Skip if it starts with -
     [[ "$f" == -* ]] && continue
 
-    # Prevent running from very personal directories
-    case "$f" in
-    "$PROJECT_ROOT"/* | "$SHELL_ROOT"/* | "$XDG_CONFIG_HOME"/* | "$XDG_DATA_HOME"/* | "$XDG_CACHE_HOME"/* | "$XDG_RUNTIME_DIR"/*)
-        # Whitelisted
-        ;;
-    "$HOME"/*)
-        echo >&2 "$0: $f: Refusing to bind child of $HOME"
-        exit 1
-        ;;
-    esac
+    # Check if it's whitelisted
+    for dir in "${WHITELISTED_DIRS[@]}"; do
+        [[ -z "$dir" ]] && continue
+
+        # Set whitelisted
+        if [[ "$f" == "$dir"/* ]]; then
+            whitelisted=1
+            break
+        fi
+    done
+
+    # Not whitelisted
+    if [ -z "${whitelisted:-}" ]; then
+        # Prevent running from very personal directories
+        for dir in "${PERSONAL_DIRS[@]}"; do
+            [[ -z "$dir" ]] && continue
+
+            # Allow subdirectories of PERSONAL_DIRS
+            if [[ "$f" != "$dir"/*/* && "$f" == "$dir"/* ]]; then
+                echo >&2 "$0: $f: This path exposes personal files. Please, bind a subdirectory."
+                exit 1
+            fi
+        done
+
+        # FIX: Prevent from binding parent of ~/Downloads
+        # Stop obvious blunders
+        case "$f" in
+        / | /home | /home/ | "$HOME" | "$HOME"/)
+            echo >&2 "$0: $f: This path exposes personal files. Please, bind a subdirectory."
+            exit 1
+            ;;
+        esac
+    fi
 
     # Do the thing (Allow binding child of HOME at your own risk)
     PARENT_DIR="$(dirname "$(realpath "$f")")"
@@ -245,11 +266,28 @@ for f in "$@"; do
 done
 
 # ########
+# Arguments
+# ########
+
+# Store absolute paths BEFORE changing directory
+args=()
+for arg in "$@"; do
+    # Leave options alone
+    [[ "$arg" == -* ]] && args+=("$arg")
+
+    # Resolve the absolute path based on cwd
+    args+=("$(realpath -m "$arg")")
+done
+
+# Change directory so that telescope and neo-tree don't get confused
+cd "$PARENT_DIR" >/dev/null 2>&1 || true
+
+# ########
 # Run
 # ########
 
 # Uncomment to see options (hidden verbose flag)
-# printf '%s\n' "${BWRAP_ARGS[@]}"
+printf '%s\n' "${BWRAP_ARGS[@]}"
 
 # Keep child process running (exec triggers trap early)
-bwrap "${BWRAP_ARGS[@]}" "$NEOVIM_BIN" "$@"
+bwrap "${BWRAP_ARGS[@]}" "$NEOVIM_BIN" "${args[@]}"

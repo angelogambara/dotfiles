@@ -50,7 +50,7 @@ mkdir -p "$PPSSPP_CONFIG"
 # ########
 
 # If running multiple instances, copy the config in memory
-PID="$(pgrep -x ppsspp 2>/dev/null || true)"
+PID="$(pgrep -x PPSSPPDSL 2>/dev/null || true)"
 if [ -n "${PID:-}" ]; then
     # Create an directory in memory
     TMP_CONFIG="$(mktemp -d "/tmp/ppsspp.XXXXXX")"
