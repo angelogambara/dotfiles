@@ -1,45 +1,47 @@
 #!/bin/sh
 
-dmenufont="Hack:pixelsize=14:antialias=true:autohint=false"
-
-gray1="#1e2122"
-gray2="#928374"
-gray3="#A89984"
-gray4="#EBDBB2"
-yellow="#D79921"
-
-dmenucmd() {
-  dmenu -m 0 \
-    -fn "$dmenufont" \
-    -nb "$gray1" \
-    -nf "$gray4" \
-    -sb "$yellow" \
-    -sf "$gray1" \
-    "$@"
-}
+# Configuration
+BROWSER="${BROWSER:-firefox}"
+FILE_MANAGER="${FILE_MANAGER:-thunar}"
 
 dmenuconfirmcmd() {
   dmenucmd -p 'Are you sure?' </dev/null
 }
 
-PATH=${PATH}:~/.local/bin
+# PATH=${PATH}:~/.local/bin
 
 case "$1" in
-"e") read -r f && setsid -f thunar "$f" ;;
-"w") read -r f && setbg "$f" ;;
+  "e") read -r f && setsid -f thunar "$f" ;;
+  "w") read -r f && setbg "$f" ;;
 
-"R") read -r f && convert -rotate -90 "$f" "$f" ;;
-"r") read -r f && convert -rotate +90 "$f" "$f" ;;
+  "R") read -r f && convert -rotate -90 "$f" "$f" ;;
+  "r") read -r f && convert -rotate +90 "$f" "$f" ;;
 
-"F") read -r f && convert -flip "$f" "$f" ;;
-"f") read -r f && convert -flop "$f" "$f" ;;
+  "F") read -r f && convert -flip "$f" "$f" ;;
+  "f") read -r f && convert -flop "$f" "$f" ;;
 
-"a") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$9); gsub(/_.*$/,"",$9); printf("https://www.pixiv.net/artworks/%s\n", $9)}'; done | uniq | xargs firefox ;;
-"u") while read -r f; do echo "$f" | awk -F '/' '{gsub(/^0+/,"",$7); printf("https://www.pixiv.net/users/%s\n", $7)}'; done | uniq | xargs firefox ;;
+  "a")
+    while read -r jpeg; do
+      # E.g.: /home/angelo/gallery-dl/pixiv/users/10847637/107843656_p0.png
+      artwork_id="$(echo "$jpeg" | cut -f8 -d/ | sed 's/_.*//')"
+      printf 'https://www.pixiv.net/artworks/%s\n' "$artwork_id"
+    done
 
-"0") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
-"d") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
+    # copy
+    echo "$capture" | uniq | xclip -sel clipboard -in
 
-"C") while read -r f; do echo "$f"; done | xclip -sel clip -in ;;
-"c") read -r f && echo "$f" | xclip -sel clip -in ;;
+    # open
+    echo "$capture" | uniq | xargs "$BROWSER"
+    ;;
+  "u")
+    while read -r jpeg; do
+      user_id="$(echo "$jpeg" | cut -f7 -d'/')"
+      printf 'https://www.pixiv.net/users/%s\n' "$user_id"
+    done | uniq | xargs "$BROWSER" ;;
+
+  "0") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c ':> {}' ;;
+  "d") [ "$(dmenuconfirmcmd)" = 'y' ] && while read -r f; do printf '"%s"\0' "$f"; done | xargs -0 -I '{}' sh -c 'rm {}' ;;
+
+  "C") while read -r f; do echo "$f"; done | xclip -sel clip -in ;;
+  "c") read -r f && echo "$f" | xclip -sel clip -in ;;
 esac

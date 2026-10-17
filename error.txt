@@ -1,0 +1,1 @@
+/home/angelo/bin/bwrap/nvim: line 259: unexpected EOF while looking for matching `"'
