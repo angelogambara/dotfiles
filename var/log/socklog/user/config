@@ -1,0 +1,4 @@
+!syslog-stripdate
+-*
++user.*
+-user.*:*root: ACPI *

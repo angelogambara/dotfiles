@@ -1,0 +1,4 @@
+!syslog-stripdate
+-*
++daemon.*
+-daemon.*:*acpid: *

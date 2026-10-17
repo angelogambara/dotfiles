@@ -9,35 +9,33 @@ Coming soon...
 ```txt
 dotfiles
 ├── .config
-│   ├── alacritty
-│   ├── bat
-│   ├── borg
-│   ├── dunst
-│   ├── dwl
-│   ├── fontconfig
-│   ├── gallery-dl
-│   ├── git
-│   ├── gtk-3.0
-│   ├── kritadisplayrc
-│   ├── kritarc
-│   ├── kritashortcutsrc
-│   ├── mimeapps.list
-│   ├── mpv
-│   ├── mutt
-│   ├── newsboat
-│   ├── npm
-│   ├── nvim
-│   ├── picom.conf
-│   ├── sway
-│   ├── sxiv
-│   ├── systemd
-│   ├── Thunar
-│   ├── X11
-│   ├── xdg-desktop-portal
-│   ├── yay
-│   ├── yt-dlp
-│   ├── zathura
-│   └── zsh
+│   ├── alacritty               Delete
+│   ├── bat                     Add                     Theme-dependent
+│   ├── borg                    Add
+│   ├── dunst                   Add                     Theme-dependent
+│   ├── dwl                     Add
+│   ├── fontconfig              Add
+│   ├── gallery-dl              Exclude
+│   ├── git                     Add
+│   ├── gtk-3.0                 Add
+│   ├── kritadisplayrc          Add - personal
+│   ├── kritarc                 Add - personal
+│   ├── kritashortcutsrc        Add - personal
+│   ├── mimeapps.list           Add
+│   ├── mpv                     Add
+│   ├── mutt                    Add wip
+│   ├── newsboat                Add
+│   ├── npm                     Add
+│   ├── nvim                    Add separately
+│   ├── picom.conf              Add
+│   ├── sxiv                    Add wip
+│   ├── systemd                 Add
+│   ├── Thunar                  Add
+│   ├── X11                     Add
+│   ├── xdg-desktop-portal      Add
+│   ├── yt-dlp                  Add
+│   ├── zathura                 Add                     Theme-dependent
+│   └── zsh                     Add separately
 ├── .gitignore
 ├── .gitmodules
 ├── .local

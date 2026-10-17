@@ -47,20 +47,14 @@ SHADOWS=(
     heroic
 )
 
-# Respect user defined XDGs
-: "${XDG_CONFIG_HOME:=$HOME/.config}"
-: "${XDG_DATA_HOME:=$HOME/.local/share}"
-: "${XDG_STATE_HOME:=$HOME/.local/state}"
-: "${XDG_CACHE_HOME:=$HOME/.cache}"
-
 # Needed to clone plugins without exposing SSH known hosts
-PLUGIN_ORIGINS=(
+ORIGINS=(
     codeberg.org
     github.com
     gitlab.com
 )
 
-# Array of directories to block
+# Array of directories to block (absolute paths)
 PERSONAL_DIRS=(
     ~/Desktop
     ~/Documents
@@ -69,11 +63,35 @@ PERSONAL_DIRS=(
     ~/Videos
 )
 
+# Respect user defined XDGs
+: "${XDG_CACHE_HOME:=$HOME/.cache}"
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+: "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+
+# Store in a clean array
+XDG_BASE_DIRS=(
+    "$XDG_CACHE_HOME"
+    "$XDG_CONFIG_HOME"
+    "$XDG_DATA_HOME"
+    "$XDG_RUNTIME_DIR"
+    "$XDG_STATE_HOME"
+)
+
 # Wrapper array (XDGs and preconfigured paths)
 WHITELISTED_DIRS=(
     "$PROJECT_ROOT"
     "$SHELL_ROOT"
     "${XDG_BASE_DIRS[@]}"
+)
+
+# Real locations of fake /etc/resolv.conf symlinks
+RESOLV_DIRS=(
+    /run/systemd/resolve
+    /run/resolvconf
+    /run/dhcpcd
+    /run/NetworkManager
 )
 
 # ########
@@ -105,90 +123,125 @@ BWRAP_ARGS=(
     --share-net
 )
 
-# FIX: Allow BSDs to bind as actual directories
-# Optional: symlinks
+# Symlink directories inside the sandbox
 [ -d /lib ] && BWRAP_ARGS+=(--symlink /usr/lib /lib)
 [ -d /lib64 ] && BWRAP_ARGS+=(--symlink /usr/lib64 /lib64)
 [ -d /bin ] && BWRAP_ARGS+=(--symlink /usr/bin /bin)
 
 # ########
-# Systemd
+# Display
 # ########
 
-# Needed by systemd-resolvd stub to make DNS requests
-[ -d /run/systemd/resolve ] && BWRAP_ARGS+=(--ro-bind /run/systemd/resolve /run/systemd/resolve)
+# ==============================================================================
+# Warning: Neovim needs the socket for the clipboard. Depending on how many
+# plugins you are running, you may want to comment this section because this
+# will expose:
+#
+#   1. The display server (E.g.: A malicious plugin could escape the sandbox by
+#   passing through other clients.)
+#
+#   2. The clipboard and every key presses (A malicious will steal your
+#   credentials. E.g.: Suppose you are saving a personal API key or logging
+#   into your work account.)
+# ==============================================================================
+
+# if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -e "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+#     # Bind Wayland socket and set required envs
+#     BWRAP_ARGS+=(
+#         --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+#         --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
+#         --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+#     )
+# elif [ -n "${DISPLAY:-}" ]; then
+#     BWRAP_ARGS+=(--setenv DISPLAY "$DISPLAY")
+#
+#     # Bind X11 socket
+#     if [ -d /tmp/.X11-unix ]; then
+#         BWRAP_ARGS+=(--ro-bind /tmp/.X11-unix /tmp/.X11-unix)
+#     else
+#         echo >&2 "$0: '/tmp/.X11-unix': No such file or directory"
+#         exit 1
+#     fi
+#
+#     # Bind Xauthority 
+#     if [ -n "${XAUTHORITY:-}" ] && [ -f "$XAUTHORITY" ]; then
+#         BWRAP_ARGS+=(
+#             --ro-bind "$XAUTHORITY" "$XAUTHORITY"
+#             --setenv XAUTHORITY "$XAUTHORITY"
+#         )
+#     elif [ -f "$HOME/.Xauthority" ]; then
+#         BWRAP_ARGS+=(
+#             --ro-bind "$HOME/.Xauthority" "$HOME/.Xauthority"
+#         )
+#     else
+#         echo >&2 "$0: '$HOME/.Xauthority': No such file or directory"
+#         exit 1
+#     fi
+# else
+#     echo >&2 "$0: No active Wayland or X11 display found"
+#     exit 1
+# fi
 
 # ########
 # DBus
 # ########
 
-# Bind DBus socket
-if [ -e "$XDG_RUNTIME_DIR/bus" ]; then
-    BWRAP_ARGS+=(--setenv DBUS_SESSION_BUS_ADDRESS "$DBUS_SESSION_BUS_ADDRESS")
-
+# Bind the bus socket
+USER_BUS="${DBUS_SESSION_BUS_ADDRESS#*=}"
+if [ -S "$USER_BUS" ]; then
     BWRAP_ARGS+=(
-        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
-        --bind "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR/bus"
+        --setenv DBUS_SESSION_BUS_ADDRESS "$DBUS_SESSION_BUS_ADDRESS"
+        --bind "$USER_BUS" "$USER_BUS"
     )
 else
-    echo "Error: Couldn't find session dbus socket" >&2
+    echo >&2 "$0: '$USER_BUS': No such file or directory"
     exit 1
 fi
 
-# Optional: System DBus Access
-if [ -e /run/dbus/system_bus_socket ]; then
-    BWRAP_ARGS+=(--ro-bind /run/dbus/system_bus_socket /run/dbus/system_bus_socket)
+# Bind the system bus socket
+if [ -S /run/dbus/system_bus_socket ]; then
+    BWRAP_ARGS+=(
+        --ro-bind /run/dbus/system_bus_socket /run/dbus/system_bus_socket
+    )
 else
-    echo "Warning: Couldn't find system bus socket" >&2
+    echo >&2 "$0: '/run/dbus/system_bus_socket': No such file or directory"
+    exit 1
 fi
 
-# Also, bind the machine-id
-if [ -f /var/lib/dbus/machine-id ]; then
-    BWRAP_ARGS+=(--ro-bind /var/lib/dbus/machine-id /var/lib/dbus/machine-id)
-fi
+# /etc/machine-id -> /var/lib/dbus/machine-id
+[ -f /var/lib/dbus/machine-id ] && BWRAP_ARGS+=(--ro-bind /var/lib/dbus/machine-id /var/lib/dbus/machine-id)
+
+# Bind resolver directories
+for dir in "${RESOLV_DIRS[@]}"; do
+    [ -d "$dir" ] && BWRAP_ARGS+=(--ro-bind "$dir" "$dir")
+done
 
 # ########
-# Hosts
+# SSH
 # ########
 
-# Generate a read-only list of known hosts, to clone plugins from
-# Parameters: list of FQDNs
-git_ssh_prepare() {
-    # Ensure parent direcotory exists
-    : "${BWRAP_HOSTS:=$HOME/.ssh/bwrap_hosts}"
-    mkdir -p -m 700 "${BWRAP_HOSTS%/*}"
+# Avoid exposing ~/.ssh/known_hosts
+KNOWN_HOST_FILE="$XDG_STATE_HOME/nvim/known_hosts"
 
-    # Configure SSH line
-    GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$BWRAP_HOSTS"
+mkdir -pm 700 "${KNOWN_HOST_FILE%/*}"
+touch "$KNOWN_HOST_FILE"
+chmod 700 "$KNOWN_HOST_FILE"
 
-    # This loop will run only as needed
-    for website in "$@"; do
-        # Skip if website is known
-        if ! grep -q "$website" "$BWRAP_HOSTS"; then
-            if ! ssh-keyscan "$website" >>"$BWRAP_HOSTS"; then
-                echo >&2 "$0: $BWRAP_HOSTS: Write permission denied"
-                exit 1
-            fi
-        fi
-    done
-}
+# SSH command used to clone plugins (regardless of remote)
+export GIT_SSH_COMMAND="ssh -F /dev/null -o UserKnownHostsFile=$KNOWN_HOST_FILE"
 
-# This may take a while the first time
-# (Add sites to clone plugins from)
-git_ssh_prepare "${PLUGIN_ORIGINS[@]}"
+# This loop will run only the first time
+for origin in "${ORIGINS[@]}"; do
+    # Skip if known
+    if ! grep -q "$origin" "$KNOWN_HOST_FILE"; then
+        # Generate known
+        ssh-keyscan "$origin" >>"$KNOWN_HOST_FILE"
+    fi
+done
 
 # ########
-# XDGs
+# Users
 # ########
-
-# Store in a clean array
-XDG_BASE_DIRS=(
-    "$XDG_CACHE_HOME"
-    "$XDG_CONFIG_HOME"
-    "$XDG_DATA_HOME"
-    "$XDG_RUNTIME_DIR"
-    "$XDG_STATE_HOME"
-)
 
 # Bind the config dir (safe and always writable)
 BWRAP_ARGS+=(--bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME")
@@ -220,7 +273,7 @@ done
 # ########
 
 # Bind any parent directory of Neovim arguments
-for f in "$@"; do
+for f in "${@:-$PWD/README.md}"; do
     # Skip if it starts with -
     [[ "$f" == -* ]] && continue
 
@@ -243,16 +296,25 @@ for f in "$@"; do
 
             # Allow subdirectories of PERSONAL_DIRS
             if [[ "$f" != "$dir"/*/* && "$f" == "$dir"/* ]]; then
-                echo >&2 "$0: $f: This path exposes personal files. Please, bind a subdirectory."
+                echo >&2 "$0: '$f': This path exposes personal files. Bind a subdirectory."
                 exit 1
             fi
         done
 
-        # FIX: Prevent from binding parent of ~/Downloads
-        # Stop obvious blunders
+        # Stop user from binding direct child of HOME
         case "$f" in
-        / | /home | /home/ | "$HOME" | "$HOME"/)
-            echo >&2 "$0: $f: This path exposes personal files. Please, bind a subdirectory."
+        "$HOME"/*)
+            case "${f#"$HOME"/}" in
+            */*)
+                ;;
+            *)
+                echo >&2 "$0: '$f': This path exposes personal files. Bind a subdirectory."
+                exit 1
+                ;;
+            esac
+            ;;
+        / | /home | /home/*)
+            echo >&2 "$0: '$f': This path exposes personal files. Bind a subdirectory."
             exit 1
             ;;
         esac
@@ -287,7 +349,7 @@ cd "$PARENT_DIR" >/dev/null 2>&1 || true
 # ########
 
 # Uncomment to see options (hidden verbose flag)
-printf '%s\n' "${BWRAP_ARGS[@]}"
+# printf '%s\n' "${BWRAP_ARGS[@]}"
 
 # Keep child process running (exec triggers trap early)
 bwrap "${BWRAP_ARGS[@]}" "$NEOVIM_BIN" "${args[@]}"
