@@ -374,7 +374,7 @@ fi
 # ########
 
 # Uncomment to see options (hidden verbose flag)
-printf '%s\n' "${BWRAP_ARGS[@]}"
+# printf '%s\n' "${BWRAP_ARGS[@]}"
 
 # Keep child process running (exec triggers trap early)
 bwrap "${BWRAP_ARGS[@]}" "$NEOVIM_BIN" "${args[@]}"
