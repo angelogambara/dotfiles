@@ -63,6 +63,14 @@ PERSONAL_DIRS=(
     ~/Videos
 )
 
+# Real locations of fake /etc/resolv.conf symlinks
+RESOLV_DIRS=(
+    /run/systemd/resolve
+    /run/resolvconf
+    /run/dhcpcd
+    /run/NetworkManager
+)
+
 # Respect user defined XDGs
 : "${XDG_CACHE_HOME:=$HOME/.cache}"
 : "${XDG_CONFIG_HOME:=$HOME/.config}"
@@ -86,13 +94,8 @@ WHITELISTED_DIRS=(
     "${XDG_BASE_DIRS[@]}"
 )
 
-# Real locations of fake /etc/resolv.conf symlinks
-RESOLV_DIRS=(
-    /run/systemd/resolve
-    /run/resolvconf
-    /run/dhcpcd
-    /run/NetworkManager
-)
+# Binds working directory
+FALLBACK_FILE="$PWD/README.md"
 
 # ########
 # Bwrap
@@ -145,42 +148,45 @@ BWRAP_ARGS=(
 #   into your work account.)
 # ==============================================================================
 
-# if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -e "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
-#     # Bind Wayland socket and set required envs
-#     BWRAP_ARGS+=(
-#         --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
-#         --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
-#         --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
-#     )
-# elif [ -n "${DISPLAY:-}" ]; then
-#     BWRAP_ARGS+=(--setenv DISPLAY "$DISPLAY")
-#
-#     # Bind X11 socket
-#     if [ -d /tmp/.X11-unix ]; then
-#         BWRAP_ARGS+=(--ro-bind /tmp/.X11-unix /tmp/.X11-unix)
-#     else
-#         echo >&2 "$0: '/tmp/.X11-unix': No such file or directory"
-#         exit 1
-#     fi
-#
-#     # Bind Xauthority 
-#     if [ -n "${XAUTHORITY:-}" ] && [ -f "$XAUTHORITY" ]; then
-#         BWRAP_ARGS+=(
-#             --ro-bind "$XAUTHORITY" "$XAUTHORITY"
-#             --setenv XAUTHORITY "$XAUTHORITY"
-#         )
-#     elif [ -f "$HOME/.Xauthority" ]; then
-#         BWRAP_ARGS+=(
-#             --ro-bind "$HOME/.Xauthority" "$HOME/.Xauthority"
-#         )
-#     else
-#         echo >&2 "$0: '$HOME/.Xauthority': No such file or directory"
-#         exit 1
-#     fi
-# else
-#     echo >&2 "$0: No active Wayland or X11 display found"
-#     exit 1
-# fi
+# Check if WAYLAND_DISPLAY is bound and then if the socket exists
+if [ -n "${WAYLAND_DISPLAY:-}" ] \
+    && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+    BWRAP_ARGS+=(
+        --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+        --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
+        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+    )
+elif [ -n "${DISPLAY:-}" ]; then
+    # 1. Set DISPLAY
+    BWRAP_ARGS+=(--setenv DISPLAY "$DISPLAY")
+
+    # 2. Bind .X11-unix socket
+    if [ -d /tmp/.X11-unix ]; then
+        BWRAP_ARGS+=(--ro-bind /tmp/.X11-unix /tmp/.X11-unix)
+    else
+        echo >&2 "$0: '/tmp/.X11-unix': No such blah blah"
+        exit 1
+    fi
+
+    # Defer binding XAUTHORITY
+    if [ -n "${XAUTHORITY:-}" ] && [ -f "$XAUTHORITY" ]; then
+        :
+    elif [ -f "$HOME/.Xauthority" ]; then
+        XAUTHORITY="$HOME/.Xauthority"
+    else
+        echo >&2 "$0: '$HOME/.Xauthority': No such blah blah"
+        exit 1
+    fi
+
+    # 3. Bind XAUTHORITY
+    BWRAP_ARGS+=(
+        --ro-bind "$XAUTHORITY" "$XAUTHORITY"
+        --setenv XAUTHORITY "$XAUTHORITY"
+    )
+else
+    echo >&2 "$0: WAYLAND_DISPLAY|DISPLAY: No such blah blah"
+    exit 1
+fi
 
 # ########
 # DBus
@@ -273,9 +279,12 @@ done
 # ########
 
 # Bind any parent directory of Neovim arguments
-for f in "${@:-$PWD/README.md}"; do
+for f in "${@:-$FALLBACK_FILE}"; do
     # Skip if it starts with -
     [[ "$f" == -* ]] && continue
+
+    # Normalize the path first (thx, ChatGPT)
+    f=$(realpath -m "$f" 2>/dev/null || echo "$f")
 
     # Check if it's whitelisted
     for dir in "${WHITELISTED_DIRS[@]}"; do
@@ -314,7 +323,7 @@ for f in "${@:-$PWD/README.md}"; do
             esac
             ;;
         / | /home | /home/*)
-            echo >&2 "$0: '$f': This path exposes personal files. Bind a subdirectory."
+            echo >&2 "$0: '$f': This path exposes personal files. Bind a sub-subdirectory of $HOME."
             exit 1
             ;;
         esac
@@ -345,11 +354,27 @@ done
 cd "$PARENT_DIR" >/dev/null 2>&1 || true
 
 # ########
+# Git
+# ########
+
+# Get path to .git folder
+GIT_DIR="$(git rev-parse --git-dir 2>/dev/null || true)"
+
+# If we are inside a git repository
+if [ -n "${GIT_DIR:-}" ]; then
+    # Set PROJECT_DIR to the parent of .git folder
+    PROJECT_DIR="$(dirname "$(realpath "$GIT_DIR")")"
+
+    # Change directory again
+    cd "$PROJECT_DIR" >/dev/null 2>&1 || true
+fi
+
+# ########
 # Run
 # ########
 
 # Uncomment to see options (hidden verbose flag)
-# printf '%s\n' "${BWRAP_ARGS[@]}"
+printf '%s\n' "${BWRAP_ARGS[@]}"
 
 # Keep child process running (exec triggers trap early)
 bwrap "${BWRAP_ARGS[@]}" "$NEOVIM_BIN" "${args[@]}"
