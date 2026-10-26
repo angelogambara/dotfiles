@@ -1,0 +1,52 @@
+#!/bin/sh
+# Open marked galleries in sxiv (calls sxiv twice)
+
+# ########
+# Arguments
+# ########
+
+# Exit on failure (no unset)
+set -eu
+
+# Path to pixiv users
+USERS_DIR="$HOME/gallery-dl/pixiv/users"
+
+# ########
+# Main
+# ########
+
+(
+  cd "$USERS_DIR" || {
+    echo >&2 "$0: $USERS_DIR: No such file or directory"
+    exit 1
+  }
+
+  NOTIFY_SEND_BIN="$(command -v notify-send 2>/dev/null || true)"
+
+  # Send optional desktop notification
+  if [ -n "$NOTIFY_SEND_BIN" ]; then
+    notify-send --urgency low "Users Overview" "Use 'm' to mark/unmark current image"
+  fi
+
+  # Use awk instead of searching each subdirectory (optimization)
+  MARKED_DIRS="$(
+    find . -mindepth 1 -maxdepth 2 | awk -F'/' '
+      NF == 2 {
+          if (dir && !printed) print dir;
+          dir = $0;
+          printed = 0;
+      }
+      NF == 3 && !printed {
+          print $0;
+          printed = 1;
+      }
+      END {
+          if (dir && !printed) print dir;
+      }' | tr '\n' '\000' | xargs -0 sxiv -io
+  )"
+
+  # Open galleries
+  for dir in $MARKED_DIRS; do
+    dirname "$dir"
+  done | tr '\n' '\000' | xargs -0 sxiv -roi
+)

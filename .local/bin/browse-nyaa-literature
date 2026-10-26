@@ -1,0 +1,3 @@
+#!/bin/sh
+(cd ~/gallery-dl/nyaa/literature && find . -maxdepth 1 |
+  dmenu -l 10 -i -p "Which LN to read?" | tr '\n' '\000' | xargs -0 sxiv -roi)

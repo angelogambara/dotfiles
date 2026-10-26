@@ -71,6 +71,7 @@ krita
 lazygit
 libva-utils
 libvdpau-va-gl
+libxres
 linux
 linux-firmware-amdgpu
 linux-firmware-intel
