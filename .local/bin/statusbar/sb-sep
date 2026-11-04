@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Source theme
+. sb-theme
+
+# Separate
+echo "$reset"
