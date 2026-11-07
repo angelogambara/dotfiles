@@ -30,6 +30,9 @@ NEOVIM_BIN="$(command -v nvim || exit 1)"
 PROJECT_ROOT=$HOME/git
 SHELL_ROOT=$HOME/bin
 
+# Open this file instead of empty buffer
+FALLBACK_FILE="$PWD/README.md"
+
 # Always bind any directory in the XDG Base Directories
 DOTFILES=(
     nvim
@@ -78,6 +81,11 @@ RESOLV_DIRS=(
 : "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
 : "${XDG_STATE_HOME:=$HOME/.local/state}"
 
+# Paths to restore before binding (default is skip bind)
+RESTORE_DIRS=(
+    "$XDG_RUNTIME_DIR/nvim"
+)
+
 # Store in a clean array
 XDG_BASE_DIRS=(
     "$XDG_CACHE_HOME"
@@ -93,9 +101,6 @@ WHITELISTED_DIRS=(
     "$SHELL_ROOT"
     "${XDG_BASE_DIRS[@]}"
 )
-
-# Binds working directory
-FALLBACK_FILE="$PWD/README.md"
 
 # ########
 # Bwrap
@@ -115,11 +120,17 @@ BWRAP_ARGS=(
     --bind "$PROJECT_ROOT" "$PROJECT_ROOT"
     --bind "$SHELL_ROOT" "$SHELL_ROOT"
 
+    # Set XDG envs
+    --setenv XDG_CACHE_HOME "$XDG_CACHE_HOME"
+    --setenv XDG_CONFIG_HOME "$XDG_CONFIG_HOME"
+    --setenv XDG_DATA_HOME "$XDG_DATA_HOME"
+    --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+    --setenv XDG_STATE_HOME "$XDG_STATE_HOME"
+
     # Process and session isolation
     --unshare-pid
     --unshare-uts
     --unshare-ipc
-    # --new-session
     --die-with-parent
 
     # Explicitly connect to network
@@ -154,7 +165,6 @@ if [ -n "${WAYLAND_DISPLAY:-}" ] \
     BWRAP_ARGS+=(
         --ro-bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
         --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
-        --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
     )
 elif [ -n "${DISPLAY:-}" ]; then
     # 1. Set DISPLAY
@@ -249,14 +259,19 @@ done
 # Users
 # ########
 
-# Bind the config dir (safe and always writable)
+# Fix: Create emphimeral paths before binding
+for dir in "${RESTORE_DIRS[@]}"; do
+    mkdir -p "$dir"
+done
+
+# Bind user configs (navigate without reopen)
 BWRAP_ARGS+=(--bind "$XDG_CONFIG_HOME" "$XDG_CONFIG_HOME")
 
 # Bind all other XDG paths for dirs in DOTFILES
 for basedir in "${XDG_BASE_DIRS[@]/"$XDG_CONFIG_HOME"/}"; do
     # Bind dotfile directory
     for dir in "${DOTFILES[@]}"; do
-        # Do the thing
+        # Do it
         if [ -d "$basedir/$dir" ]; then
             BWRAP_ARGS+=(--bind "$basedir/$dir" "$basedir/$dir")
         fi
@@ -267,7 +282,7 @@ done
 for basedir in "${XDG_BASE_DIRS[@]}"; do
     # Bind shadows directory
     for shadow in "${SHADOWS[@]}"; do
-        # Do the thing
+        # Do it
         if [ -d "$basedir/$shadow" ]; then
             BWRAP_ARGS+=(--bind /tmp "$basedir/$shadow")
         fi
@@ -329,7 +344,7 @@ for f in "${@:-$FALLBACK_FILE}"; do
         esac
     fi
 
-    # Do the thing (Allow binding child of HOME at your own risk)
+    # Do it (Allow binding child of HOME at your own risk)
     PARENT_DIR="$(dirname "$(realpath "$f")")"
     if [ -d "$PARENT_DIR" ]; then
         BWRAP_ARGS+=(--bind "$PARENT_DIR" "$PARENT_DIR")
