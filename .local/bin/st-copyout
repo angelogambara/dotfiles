@@ -1,0 +1,35 @@
+#!/bin/sh
+# Copy output of any command on st.
+
+# -----------------------------------------------------------------------------
+# Description: Uses an external pipe with st (suckless terminal) to provide a dmenu prompt of recent commands,
+#              allowing the user to copy the output of a selected command to the clipboard.
+# Authors    : Jaywalker and Luke Smith (Refactored)
+# Dependencies: xclip, dmenu, coreutils, sed, awk, grep
+# -----------------------------------------------------------------------------
+
+# Create a secure temporary file and ensure cleanup on exit or interruption
+tmpfile=$(mktemp /tmp/st-cmd-output.XXXXXX)
+trap 'rm -f "$tmpfile"' EXIT INT TERM
+
+# Read stdin (terminal buffer) into the temp file and strip null bytes
+sed -n "w $tmpfile"
+sed -i 's/\x0//g' "$tmpfile"
+
+# Detect the prompt/command indicator (PS1) from the last non-empty line
+ps1="$(grep '\S' "$tmpfile" | tail -n 1 | sed 's/^\s*//' | cut -d' ' -f1)"
+
+# Escape special regex characters in the prompt string
+esc_ps1="$(printf '%s\n' "$ps1" | sed 's/[^^]/[&]/g; s/\^/\\^/g')"
+
+# Present recent commands in dmenu for selection
+chosen="$(grep -F "$ps1" "$tmpfile" | sed '$ d' | tac | dmenu -p "Copy which command's output?" -i -l 10)"
+
+# Exit cleanly if the user canceled dmenu (pressed Esc)
+[ -z "$chosen" ] && exit 0
+
+# Escape special regex characters in the chosen command for awk matching
+esc_chosen="$(printf '%s\n' "$chosen" | sed 's/[^^]/[&]/g; s/\^/\\^/g')"
+
+# Extract the output block of the chosen command and copy it to the clipboard
+awk "/^$esc_chosen$/{p=1;print;next} p&&/$esc_ps1/{p=0};p" "$tmpfile" | xclip -selection clipboard

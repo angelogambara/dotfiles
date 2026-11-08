@@ -1,0 +1,24 @@
+#!/bin/sh
+# Script to start llama.cpp faster.
+
+# PROVIDING MORE "CONTEXT":
+#   -c is the context size in tokens. With --cache-type-k q8_0, RAM will be
+#   capped at (double for default 16-bit):
+#
+#   | Flag     | Ctx Window | Equivalent Text / Code    | Extra RAM | Total RAM |
+#   | :------- | :--------- | :------------------------ | :-------- | :-------- |
+#   | -c 8192  | 8k tokens  | ~6,000 words (~15 pages)  | ~0.24 GiB | ~5.10 GiB |
+#   | -c 16384 | 16k tokens | ~12,000 words (~30 pages) | ~0.48 GiB | ~5.40 GiB |
+#   | -c 32768 | 32k tokens | ~24,000 words (~60 pages) | ~0.96 GiB | ~5.90 GiB |
+#
+#   -fa is flash attention. This is harmless and doesn't dumb down the LLM,
+#   it has zero drawbacks and it's normal with q8_0 cache.
+
+llama-server \
+  -m ~/LLMs/qwen/qwen2.5-coder-7b-instruct-q4_k_m.gguf \
+  --port 8080 \
+  -c 8192 \
+  --threads "$(nproc)" \
+  --cache-type-k q8_0 \
+  --cache-type-v q8_0 \
+  -fa

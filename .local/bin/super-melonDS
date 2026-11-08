@@ -1,4 +1,5 @@
 #!/bin/sh
+# Launch instances of melonDS attached to unique save file
 
 # ########
 # Prep
@@ -37,14 +38,40 @@ bak() {
   done
 }
 
+# Check if values are integers
+isint() {
+  # Loop until no more arguments are left
+  while [ -n "$1" ]; do
+  # Ignore minus sign
+  abs="${1#-}"
+
+  # Match anything that isn't a number
+  case "$abs" in
+  *[!0-9]*)
+    return 1
+    ;;
+  esac
+
+  # Next argument
+  shift
+  done
+}
+
 # ########
-# Args
+# Arguments
 # ########
 
 # Loop until '--'
 while [ -n "$1" ] && [ "$1" != '--' ]; do
   # Match the current argument
   case "$1" in
+  -m | --max-instances)
+    # Next argument is the instance count
+    shift
+
+    # Get it
+    MAX_INSTANCES="$1"
+    ;;
   -n | --number)
     # Next argument is the number
     shift
@@ -66,103 +93,87 @@ while [ -n "$1" ] && [ "$1" != '--' ]; do
 done
 
 # Shift '--'
-shift
+shift 2>/dev/null
 
 # ########
 # Validate
 # ########
 
-# Supported emulators
-SAFE_PATTERNS="melonDS|mgba-qt"
-
-# shellcheck disable=SC2254
-case "$EMULATOR" in
-$SAFE_PATTERNS)
-  # Get binary location
-  EMULATOR_BIN="$(which "$EMULATOR" 2> /dev/null)"
-  ;;
-*)
-  echo >&2 "$SCRIPT_BASENAME: '$EMULATOR': Unknown emulator"
+# Numbers are expected to be integers
+if isint "$MAX_INSTANCES" "$NUMBER" || true; then
+  echo >&2 "$SCRIPT_BASENAME: ['$MAX_INSTANCES', '$NUMBER']: Not an integer"
   exit 1
-  ;;
-esac
+fi
+
+# Get binary location
+EMULATOR_BIN="$(which "$EMULATOR" 2> /dev/null || true)"
 
 # Exit if specified emulator is not installed
 if [ -z "$EMULATOR_BIN" ]; then
-  echo >&2 "$SCRIPT_BASENAME: '$EMULATOR': Not found"
+  echo >&2 "$SCRIPT_BASENAME: '$EMULATOR': Command not found"
   exit 1
 fi
 
 # ########
-# Loop
+# ROM
 # ########
 
-# Do something different based on emulators
-case "$EMULATOR" in
-melonDS)
-  # Loop until 3rd to last argument
-  while [ -z "$3" ]; do
-    # Save options in a temporary buffer
-    opts="${opts:+$opts }$1"
+#
+# NOTE: We need to pass arguments, avoid shift.
+#
 
-    # Next argument
+# If melonDS, get second to last...
+if [ "$EMULATOR" = 'melonDS' ]; then
+  # Loop until 2rd to last argument
+  while [ -n "$3" ]; do
     shift
   done
 
-  # while [ "$#" -eq 0 ]; do
-  #   :
-  # done
+  # Next is the ROM, if and only if last is GBA
+  ROM="$1"
 
-  # Decide what to do with last two arguments
-  case "$1" in
-  -*)
-    case "$2" in
-    -*)
-      opts="${opts:+$opts }$1"
-      ;;
-    *)
-      opts="${opts:+$opts }$1 $2"
-      ;;
-    esac
-    ;;
-  *)
-    [ -z "$ROM" ] && ROM="$1" || GBA="$2"
-    ;;
-  esac
-  ;;
-*)
-  # Loop until 2nd to last argument
-  while [ -z "$2" ]; do
-    # Save options in a temporary buffer
-    opts="${opts:+$opts }$1"
-
-    # Next argument
+  # Test
+  if [ ! -r "$ROM" ]; then
+    # Last chance
+    ROM="$2"
+  fi
+else
+  # Loop until last argument
+  while [ -n "$2" ]; do
     shift
   done
 
-  # Decide what to do with last argument
-  case "$1" in
-  -*)
-    opts="${opts:+$opts }$1"
-    ;;
-  *)
-    # Get it
-    ROM="$1"
-    ;;
-  esac
-  ;;
-esac
-
-# Clear positional arguments
-set --
+  # Next is the ROM
+  ROM="$1"
+fi
 
 # ########
 # Launch
 # ########
 
-# Exit if no rom was passed
-if [ ! -f "$ROM" ]; then
-  echo >&2 "$SCRIPT_BASENAME: '$ROM': No such file or directory"
+# Terminate early
+if [ -z "$ROM" ]; then
+  # Launch without symlinks
+  while [ "$cnt" -lt "$NUMBER" ] && [ "$cnt" -le "$MAX_INSTANCES" ]; do
+    "$EMULATOR_BIN" "$@"
+  done
+
+  # We are done
+  exit 0
+fi
+
+# Exit if ROM isn't readable
+if [ ! -r "$ROM" ]; then
+  echo >&2 "$SCRIPT_BASENAME: '$ROM': Cannot read file"
+  exit 1
+fi
+
+# Get ROM's parent directory
+PARENT_DIR="$(dirname "$(realpath "$ROM")")"
+
+# # Exit if PARENT_DIR isn't writable
+if [ ! -w "$PARENT_DIR" ]; then
+  echo >&2 "$SCRIPT_BASENAME: '$PARENT_DIR': Cannot write to directory"
   exit 1
 fi
 
@@ -174,8 +185,8 @@ cnt=0
 while [ "$cnt" -lt "$NUMBER" ] && [ "$cnt" -le "$MAX_INSTANCES" ]; do
   # Assign names depending on count
   if [ "$cnt" -eq 0 ]; then
-    file="$basename.nds"
-    save="$basename.sav"
+    file="$ROM"
+    save="$SAV"
   else
     file="$basename ($cnt).nds"
     save="$basename ($cnt).sav"
@@ -193,5 +204,5 @@ while [ "$cnt" -lt "$NUMBER" ] && [ "$cnt" -le "$MAX_INSTANCES" ]; do
   fi
 
   # Launch
-  melonDS "$opts" -- "$file" "$GBA"
+  "$EMULATOR_BIN" "$@"
 done
