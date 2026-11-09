@@ -1,0 +1,92 @@
+#!/bin/sh
+# Open marked galleries in sxiv (calls sxiv twice)
+
+# ########
+# Prep
+# ########
+
+# Exit on failure (no unset)
+set -eu
+
+# Set sxiv command (unquoted tilde will expand to $HOME)
+set -- sxiv -ro
+
+# Set path to your ICC profile
+ICC_PROFILE="/path/to/profile.icc"
+
+# Set paths to use without overview
+FALLBACK_PATHS="$HOME/camera $HOME/gallery-dl"
+
+# Helper menu to prompt user with y/n questions
+dmenuconfirmcmd() {
+  selection="$(printf '%s\n' 'Yes' 'No' | dmenu -l 2 -i -p "$1")"
+
+  # Remove from the end the remainder of that which matches with any character
+  # in the beginning (aka, get the first character).
+  first_char="${selection%"${selection#?}"}"
+
+  # We care only about 'Yes'.
+  echo "${first_char}" | tr 'Y' 'y'
+}
+
+# ########
+# Config
+# ########
+
+# Remember to open with ICC profile
+if [ "$(dmenuconfirmcmd 'ICC profile?')" = 'y' ]; then
+  if [ -f "$ICC_PROFILE" ]; then
+    set -- "$@" -P "$ICC_PROFILE"
+  else
+    echo >&2 "$0: '$ICC_PROFILE': No such file or directory"
+    exit 1
+  fi
+fi
+
+# ########
+# Main
+# ########
+
+# Replace with normal sxiv if no overview
+if [ "$(dmenuconfirmcmd 'Open gallery overview?')" != 'y' ]; then
+  exec "$@" $FALLBACK_PATHS
+fi
+
+# Paths to choose from
+PARENT_DIR=$(dmenu -l 10 -i -p "Change directory:" < ~/gallery-dl/.overview)
+
+(
+  cd "$PARENT_DIR" || {
+    echo >&2 "$0: $PARENT_DIR: No such file or directory"
+    exit 1
+  }
+
+  NOTIFY_SEND_BIN="$(command -v notify-send 2>/dev/null || true)"
+
+  # Send optional desktop notification
+  if [ -n "$NOTIFY_SEND_BIN" ]; then
+    notify-send --urgency=low "Overview" "Use 'm' to mark/unmark current image."
+  fi
+
+  # Use awk instead of searching each subdirectory (optimization)
+  MARKED_DIRS="$(
+    find . -mindepth 1 -maxdepth 2 | sort | awk -F'/' '
+      NF == 2 {
+          if (dir && !printed) print dir;
+          dir = $0;
+          printed = 0;
+      }
+      NF == 3 && !printed {
+          print $0;
+          printed = 1;
+      }
+      END {
+          if (dir && !printed) print dir;
+      }' | tr '\n' '\000' | xargs -0 "$@" -i
+  )"
+
+  # Open galleries
+  for dir in $MARKED_DIRS; do
+    dirname "$dir"
+  done | tr '\n' '\000' | xargs -0 "$@" -i
+)

@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Configuration
+: "${BROWSER:=firefox}"
+: "${FILE_MANAGER:-thunar}"
+
+dmenuconfirmcmd() {
+  selection="$(printf '%s\n' 'Yes' 'No' | dmenu -l 2 -i -p 'Confirm?')"
+
+  # Remove from the end the remainder of that which matches with any character
+  # in the beginning (aka, get the first character).
+  first_char="${selection%"${selection#?}"}"
+
+  # We care only about 'Yes'.
+  echo "${first_char}" | tr 'Y' 'y'
+}
+
+read_all_quote_print_zeros() {
+  # Read each file one by one and enclose it in quotes. Separate them with the
+  # null terminator (\0).
+  while read -r jpg; do
+    printf '"%s"\0' "$jpg"
+  done
+}
+
+read_all_quote_print() {
+  # Read each file one by one and enclose it in quotes. Separate them with the
+  # newline terminator (\n).
+  while read -r jpg; do
+    printf '"%s"\n' "$jpg"
+  done
+}
+
+
+case "$1" in
+  "e") read -r f && setsid -f "$FILE_MANAGER" "$f" ;;
+  "w") read -r f && setbg "$f" ;;
+
+  "R") read -r f && convert -rotate -90 "$f" "$f" ;;
+  "r") read -r f && convert -rotate +90 "$f" "$f" ;;
+
+  "F") read -r f && convert -flip "$f" "$f" ;;
+  "f") read -r f && convert -flop "$f" "$f" ;;
+
+  # Open artist page from 
+  "a") read -r f; echo "$f" | awk -F '/' '{gsub(/^0+/,"",$6); gsub(/_.*$/,"",$6); printf("https://www.pixiv.net/artworks/%s\n", $6)}' ;;
+  "u") read -r f; echo "$f" | awk -F '/' '{gsub(/^0+/,"",$7); printf("https://www.pixiv.net/users/%s\n", $7)}' ;;
+
+
+  # Ask once, truncate all images
+  # (If filename exists, gallery-dl skips download)
+  "0") 
+    if [ "$(dmenuconfirmcmd)" = 'y' ]; then
+      read_all_quote_print_zeros | xargs -0 -I{} truncate -s 0 -- {}
+    fi
+    ;;
+
+  # Ask once, delete all images
+  "d") 
+    if [ "$(dmenuconfirmcmd)" = 'y' ]; then
+      read_all_quote_print_zeros | xargs -0 -I{} rm -- {}
+    fi
+    ;;
+
+  "C") while read -r f; do echo "$f"; done | xclip -sel clip -in ;;
+  "c") read -r f && echo "$f" | xclip -sel clip -in ;;
+esac
